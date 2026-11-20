@@ -609,7 +609,7 @@ fr:{
  v0:'Vous êtes surtout passé par la cafeteria. C’est déjà un bon début.',
  shareText:'J’ai marqué {pts}/{max} à CLIKEA ({good}/{total} noms trouvés). Saurez-vous faire mieux ?',
  tName:'Entrez votre nom pour commencer', tPhoto:'Photo indisponible, on passe au suivant',
- tEmpty:'Écrivez un nom', tCopied:'Score copié', tCopyFail:'Copie impossible',
+ tEmpty:'Écrivez un nom', tCopied:'Score copié', tCopyFail:'Partage impossible', tDownload:'Ticket téléchargé en image',
  f1:'CLIKEA — pastiche non officiel, fait pour s’amuser entre deux montages.', f2:'Photos produit : ikea.com'
 },
 en:{
@@ -652,7 +652,7 @@ en:{
  v0:'You mostly went for the meatballs. That is a start.',
  shareText:'I scored {pts}/{max} at CLIKEA ({good}/{total} names found). Can you do better?',
  tName:'Enter your name to start', tPhoto:'Photo unavailable, skipping',
- tEmpty:'Type a name', tCopied:'Score copied', tCopyFail:'Copy failed',
+ tEmpty:'Type a name', tCopied:'Score copied', tCopyFail:'Sharing failed', tDownload:'Ticket saved as an image',
  f1:'CLIKEA — unofficial parody, made for fun between two flat-packs.', f2:'Product photos: ikea.com'
 },
 es:{
@@ -695,7 +695,7 @@ es:{
  v0:'Sobre todo has pasado por la cafetería. Ya es un comienzo.',
  shareText:'He hecho {pts}/{max} en CLIKEA ({good}/{total} nombres acertados). ¿Puedes hacerlo mejor?',
  tName:'Escribe tu nombre para empezar', tPhoto:'Foto no disponible, pasamos a la siguiente',
- tEmpty:'Escribe un nombre', tCopied:'Puntuación copiada', tCopyFail:'No se pudo copiar',
+ tEmpty:'Escribe un nombre', tCopied:'Puntuación copiada', tCopyFail:'No se pudo compartir', tDownload:'Ticket guardado como imagen',
  f1:'CLIKEA — parodia no oficial, hecha para divertirse entre dos montajes.', f2:'Fotos de producto: ikea.com'
 },
 de:{
@@ -738,7 +738,7 @@ de:{
  v0:'Sie waren vor allem in der Cafeteria. Das ist ein Anfang.',
  shareText:'Ich habe {pts}/{max} bei CLIKEA geschafft ({good}/{total} Namen erraten). Schaffen Sie mehr?',
  tName:'Geben Sie Ihren Namen ein', tPhoto:'Foto nicht verfügbar, weiter zum nächsten',
- tEmpty:'Namen eingeben', tCopied:'Punktzahl kopiert', tCopyFail:'Kopieren nicht möglich',
+ tEmpty:'Namen eingeben', tCopied:'Punktzahl kopiert', tCopyFail:'Teilen nicht möglich', tDownload:'Ticket als Bild gespeichert',
  f1:'CLIKEA — inoffizielle Parodie, zum Spaß zwischen zwei Aufbauten.', f2:'Produktfotos: ikea.com'
 },
 it:{
@@ -781,7 +781,7 @@ it:{
  v0:'Sei passato soprattutto dalla caffetteria. È già un inizio.',
  shareText:'Ho fatto {pts}/{max} a CLIKEA ({good}/{total} nomi indovinati). Sapete fare meglio?',
  tName:'Inserisci il tuo nome per iniziare', tPhoto:'Foto non disponibile, passiamo avanti',
- tEmpty:'Scrivi un nome', tCopied:'Punteggio copiato', tCopyFail:'Copia non riuscita',
+ tEmpty:'Scrivi un nome', tCopied:'Punteggio copiato', tCopyFail:'Condivisione non riuscita', tDownload:'Ticket salvato come immagine',
  f1:'CLIKEA — parodia non ufficiale, fatta per ridere tra due montaggi.', f2:'Foto prodotto: ikea.com'
 }
 };
@@ -892,6 +892,7 @@ const state = {
   submitted: false,
   submitOk: null,
   rank: null,
+  timeLabel: '',
   boardDiff: 'easy',
   boardBack: 'intro'
 };
@@ -1326,7 +1327,8 @@ function finish(){
   $('#rcTotal').textContent = total;
   $('#rcPts').textContent = state.pts + ' / ' + MAX_PTS;
   $('#rcStreak').textContent = state.bestStreak;
-  $('#rcTime').textContent = mm + ':' + pad(ss);
+  state.timeLabel = mm + ':' + pad(ss);
+  $('#rcTime').textContent = state.timeLabel;
   $('#rcScore').textContent = state.pts + '/' + MAX_PTS;
 
   $('#rcName').textContent = state.player || '—';
@@ -1383,13 +1385,185 @@ document.querySelector('select#lang').addEventListener('change', (e) => {
   track('clikea_lang_changed', {lang: e.target.value});
 });
 
-$('#shareBtn').addEventListener('click', async () => {
+$('#shareBtn').addEventListener('click', () => shareTrophy());
+
+/* ---------- trophée : ticket de caisse en image ---------- */
+function drawTrophy(){
+  const W = 1080, H = 1350;
+  const c = document.createElement('canvas');
+  c.width = W; c.height = H;
+  const x = c.getContext('2d');
+
+  const BLUE = '#0058A3', YELLOW = '#FFDB00', INK = '#111111', GREY = '#6b6b6b';
+  const F = '"Noto Sans","Helvetica Neue",Helvetica,Arial,sans-serif';
+  const font = (size, weight) => (weight || '400') + ' ' + size + 'px ' + F;
+
+  x.fillStyle = BLUE;
+  x.fillRect(0, 0, W, H);
+
+  const cx = 70, cy = 110, cw = W - 140, ch = 1120;
+  x.save();
+  x.shadowColor = 'rgba(0,0,0,.35)';
+  x.shadowBlur = 40;
+  x.shadowOffsetY = 18;
+  x.fillStyle = '#ffffff';
+  x.fillRect(cx, cy, cw, ch);
+  x.restore();
+
+  x.fillStyle = BLUE;
+  const r = 15, gap = 38;
+  for(let px = cx + gap/2; px < cx + cw; px += gap){
+    x.beginPath(); x.arc(px, cy, r, 0, Math.PI); x.fill();
+    x.beginPath(); x.arc(px, cy + ch, r, Math.PI, Math.PI * 2); x.fill();
+  }
+
+  const cxMid = cx + cw / 2;
+  const left = cx + 78, right = cx + cw - 78;
+
+  // logo ovale
+  x.fillStyle = YELLOW;
+  const ow = 340, oh = 92, ox = cxMid - ow/2, oy = cy + 62;
+  x.beginPath();
+  x.moveTo(ox + 46, oy); x.lineTo(ox + ow - 46, oy);
+  x.quadraticCurveTo(ox + ow, oy, ox + ow, oy + oh/2);
+  x.quadraticCurveTo(ox + ow, oy + oh, ox + ow - 46, oy + oh);
+  x.lineTo(ox + 46, oy + oh);
+  x.quadraticCurveTo(ox, oy + oh, ox, oy + oh/2);
+  x.quadraticCurveTo(ox, oy, ox + 46, oy);
+  x.fill();
+  x.fillStyle = BLUE;
+  x.font = font(44, '800');
+  x.textAlign = 'center'; x.textBaseline = 'middle';
+  x.fillText('CLIKEA', cxMid, oy + oh/2 + 2);
+
+  x.fillStyle = INK;
+  x.font = font(34, '800');
+  x.fillText(t('rcTitle').toUpperCase(), cxMid, cy + 212);
+
+  x.fillStyle = GREY;
+  x.font = font(22, '700');
+  x.fillText(t('rcCaisse').toUpperCase() + ' · ' + new Date().toLocaleDateString(LOCALES[lang]), cxMid, cy + 252);
+
+  const dash = (y) => {
+    x.save();
+    x.strokeStyle = '#cfcfcf'; x.lineWidth = 2; x.setLineDash([7, 7]);
+    x.beginPath(); x.moveTo(left, y); x.lineTo(right, y); x.stroke();
+    x.restore();
+  };
+  dash(cy + 288);
+
+  const rows = [
+    [t('rcClient'), (state.player || '—').toUpperCase()],
+    [t('rcDiff'), diffLabel(state.difficulty).toUpperCase()],
+    [t('rcGood'), String(state.good) + ' / ' + state.queue.length],
+    [t('rcStreak'), String(state.bestStreak)],
+    [t('rcTime'), state.timeLabel || '—']
+  ];
+  let ry = cy + 340;
+  rows.forEach(([label, value]) => {
+    x.textAlign = 'left';
+    x.fillStyle = '#3b3b3b'; x.font = font(27, '400');
+    x.fillText(label, left, ry);
+    x.textAlign = 'right';
+    x.fillStyle = INK; x.font = font(27, '800');
+    x.fillText(value, right, ry);
+    ry += 54;
+  });
+
+  dash(ry + 6);
+
+  // score
+  const scoreBase = ry + 118;
+  x.textAlign = 'left';
+  x.fillStyle = GREY; x.font = font(24, '800');
+  x.fillText(t('rcScore').toUpperCase(), left, ry + 30);
+
+  x.textAlign = 'right';
+  x.font = font(44, '800');
+  const sufW = x.measureText('/100').width;
+  x.fillStyle = GREY;
+  x.fillText('/100', right, scoreBase);
+  x.font = font(132, '800');
+  x.fillStyle = INK;
+  x.fillText(String(state.pts), right - sufW - 10, scoreBase);
+
+  // rang
+  if(state.rank && state.submitOk){
+    const txt = t('rankLine', {rank: state.rank, diff: diffLabel(state.difficulty)});
+    x.font = font(25, '800');
+    const tw = x.measureText(txt).width + 56;
+    const bx = cxMid - tw/2, by = scoreBase + 44, bh = 52;
+    x.fillStyle = YELLOW;
+    x.beginPath();
+    const rr = bh/2;
+    x.moveTo(bx + rr, by); x.lineTo(bx + tw - rr, by);
+    x.quadraticCurveTo(bx + tw, by, bx + tw, by + rr);
+    x.quadraticCurveTo(bx + tw, by + bh, bx + tw - rr, by + bh);
+    x.lineTo(bx + rr, by + bh);
+    x.quadraticCurveTo(bx, by + bh, bx, by + rr);
+    x.quadraticCurveTo(bx, by, bx + rr, by);
+    x.fill();
+    x.fillStyle = BLUE; x.textAlign = 'center';
+    x.fillText(txt, cxMid, by + bh/2 + 1);
+    x.textAlign = 'left';
+  }
+
+  // code-barres
+  const by2 = cy + ch - 200, bx0 = cxMid - 250, bw = 500, bh2 = 84;
+  x.fillStyle = INK;
+  let px = bx0, seed = (state.pts + 7) * 31 + state.good * 17 + 11;
+  const rnd = () => { seed = (seed * 1103515245 + 12345) % 2147483648; return seed / 2147483648; };
+  while(px < bx0 + bw){
+    const w = 2 + Math.floor(rnd() * 8);
+    const h = bh2 - Math.floor(rnd() * 14);
+    x.fillRect(px, by2 + (bh2 - h), w, h);
+    px += w + 2 + Math.floor(rnd() * 7);
+  }
+
+  x.textAlign = 'center';
+  x.fillStyle = '#2b2b2b'; x.font = font(25, '800');
+  x.fillText(t('rcThanks').toUpperCase(), cxMid, cy + ch - 66);
+  x.fillStyle = GREY; x.font = font(21, '600');
+  x.fillText(location.host + location.pathname, cxMid, cy + ch - 34);
+
+  x.fillStyle = 'rgba(255,255,255,.78)';
+  x.font = font(21, '700');
+  x.fillText(t('f1'), cxMid, H - 36);
+
+  return c;
+}
+
+async function shareTrophy(){
+  const canvas = drawTrophy();
+  const blob = await new Promise(res => canvas.toBlob(res, 'image/png'));
+  if(!blob) { toast(t('tCopyFail')); return; }
+  const file = new File([blob], 'clikea-ticket.png', {type: 'image/png'});
   const text = state.share + ' ' + location.href;
+
   try{
-    if(navigator.share){ await navigator.share({text}); }
-    else { await navigator.clipboard.writeText(text); toast(t('tCopied')); }
-  }catch(e){ toast(t('tCopyFail')); }
-});
+    if(navigator.canShare && navigator.canShare({files: [file]})){
+      await navigator.share({files: [file], text: text, title: 'CLIKEA'});
+      track('clikea_share', {mode: 'native'});
+      return;
+    }
+  }catch(e){
+    if(e && e.name === 'AbortError'){ return; }
+  }
+
+  try{
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'clikea-ticket.png';
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    setTimeout(() => URL.revokeObjectURL(a.href), 4000);
+    toast(t('tDownload'));
+    track('clikea_share', {mode: 'download'});
+  }catch(e){
+    toast(t('tCopyFail'));
+  }
+}
 
 document.addEventListener('keydown', (e) => {
   if(!$('#game').classList.contains('on')){
@@ -1531,6 +1705,15 @@ if(location.search.includes('selftest')){
     ok(state.queue.length===20,'20 produits en difficile');
     state.difficulty = 'easy';
     ok(document.querySelectorAll('#boardTabs .tab').length===2,'onglets du classement');
+
+    document.querySelector('#playerName').value = 'Testeur';
+    state.player = 'Testeur'; state.difficulty = 'easy'; state.good = 10;
+    state.pts = 34; state.bestStreak = 4; state.queue = new Array(20).fill(0);
+    state.timeLabel = '3:12'; state.rank = 7; state.submitOk = true;
+    const trophy = drawTrophy();
+    ok(trophy && trophy.width === 1080 && trophy.height === 1350, 'image du ticket 1080x1350');
+    ok(trophy.toDataURL('image/png').length > 20000, 'PNG non vide (' + trophy.toDataURL('image/png').length + ')');
+    ok(trophy.toDataURL('image/png').indexOf('data:image/png') === 0, 'format PNG');
 
     const probes = {
       en: { btn:'Start shopping', name:'Guess the name', chip:'5 pts' },
