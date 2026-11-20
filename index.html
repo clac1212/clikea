@@ -580,7 +580,7 @@ fr:{
  r3t:'Cash', r3x:'Aucune proposition, vous écrivez le nom. <i class="pt">5 pts</i>.',
  who:'Votre nom', whoPh:'Ex. César', start:'Commencer mes achats',
  dEasy:'Facile', dMedium:'Moyen', dHard:'Difficile',
- dEasyS:'45 produits connus, trois modes', dMediumS:'109 produits, trois modes', dHardS:'109 produits, cash uniquement',
+ dEasyS:'{n} produits cultes, trois modes', dHardS:'{n} produits moins connus, cash uniquement',
  boardTitle:'Classement public', boardOpen:'Voir le classement', boardPlay:'Jouer', boardBack:'Retour',
  boardNote:'20 meilleurs scores par niveau. Une ligne par partie.',
  boardLoading:'Chargement du classement…', boardEmpty:'Personne encore. Soyez le premier.',
@@ -623,7 +623,7 @@ en:{
  r3t:'Cash', r3x:'No options, you type the name. <i class="pt">5 pts</i>.',
  who:'Your name', whoPh:'e.g. Alex', start:'Start shopping',
  dEasy:'Easy', dMedium:'Medium', dHard:'Hard',
- dEasyS:'45 well-known products, three modes', dMediumS:'109 products, three modes', dHardS:'109 products, cash only',
+ dEasyS:'{n} cult products, three modes', dHardS:'{n} lesser-known products, cash only',
  boardTitle:'Public leaderboard', boardOpen:'See the leaderboard', boardPlay:'Play', boardBack:'Back',
  boardNote:'Top 20 per level. One row per game.',
  boardLoading:'Loading the leaderboard…', boardEmpty:'Nobody yet. Be the first.',
@@ -666,7 +666,7 @@ es:{
  r3t:'Cash', r3x:'Sin opciones, escribes el nombre. <i class="pt">5 pts</i>.',
  who:'Tu nombre', whoPh:'Ej. Marta', start:'Empezar la compra',
  dEasy:'Fácil', dMedium:'Medio', dHard:'Difícil',
- dEasyS:'45 productos conocidos, tres modos', dMediumS:'109 productos, tres modos', dHardS:'109 productos, solo cash',
+ dEasyS:'{n} productos míticos, tres modos', dHardS:'{n} productos menos conocidos, solo cash',
  boardTitle:'Clasificación pública', boardOpen:'Ver la clasificación', boardPlay:'Jugar', boardBack:'Volver',
  boardNote:'Los 20 mejores por nivel. Una línea por partida.',
  boardLoading:'Cargando la clasificación…', boardEmpty:'Nadie todavía. Sé el primero.',
@@ -709,7 +709,7 @@ de:{
  r3t:'Cash', r3x:'Keine Vorschläge, Sie tippen den Namen. <i class="pt">5 Pkt.</i>',
  who:'Ihr Name', whoPh:'z. B. Alex', start:'Einkauf starten',
  dEasy:'Einfach', dMedium:'Mittel', dHard:'Schwer',
- dEasyS:'45 bekannte Produkte, drei Modi', dMediumS:'109 Produkte, drei Modi', dHardS:'109 Produkte, nur Cash',
+ dEasyS:'{n} Kultprodukte, drei Modi', dHardS:'{n} weniger bekannte Produkte, nur Cash',
  boardTitle:'Öffentliche Rangliste', boardOpen:'Rangliste ansehen', boardPlay:'Spielen', boardBack:'Zurück',
  boardNote:'Die 20 besten je Stufe. Eine Zeile pro Partie.',
  boardLoading:'Rangliste wird geladen…', boardEmpty:'Noch niemand. Seien Sie der Erste.',
@@ -752,7 +752,7 @@ it:{
  r3t:'Cash', r3x:'Nessuna opzione, scrivi il nome. <i class="pt">5 pt</i>.',
  who:'Il tuo nome', whoPh:'es. Marco', start:'Inizia la spesa',
  dEasy:'Facile', dMedium:'Medio', dHard:'Difficile',
- dEasyS:'45 prodotti conosciuti, tre modalità', dMediumS:'109 prodotti, tre modalità', dHardS:'109 prodotti, solo cash',
+ dEasyS:'{n} prodotti cult, tre modalità', dHardS:'{n} prodotti meno noti, solo cash',
  boardTitle:'Classifica pubblica', boardOpen:'Vedi la classifica', boardPlay:'Gioca', boardBack:'Indietro',
  boardNote:'I 20 migliori per livello. Una riga per partita.',
  boardLoading:'Caricamento della classifica…', boardEmpty:'Nessuno per ora. Sii il primo.',
@@ -837,8 +837,8 @@ function applyLang(next, opts){
   set('#rcScoreL', L.rcScore); set('#rcThanks', L.rcThanks);
   set('#shareBtn', L.share); set('#replayBtn', L.replay);
   set('#f1', L.f1); set('#f2', L.f2);
-  set('#d1t', L.dEasy); set('#d1s', L.dEasyS);
-  set('#d3t', L.dHard); set('#d3s', L.dHardS);
+  set('#d1t', L.dEasy); set('#d1s', L.dEasyS.replace('{n}', poolIndexes('easy').length));
+  set('#d3t', L.dHard); set('#d3s', L.dHardS.replace('{n}', poolIndexes('hard').length));
   set('#boardOpen', L.boardOpen); set('#boardTitle', L.boardTitle);
   set('#boardPlay', L.boardPlay); set('#boardBack', L.boardBack);
   set('#rcDiffL', L.rcDiff);
@@ -928,7 +928,7 @@ function diffLabel(d){ return t(DIFFKEY[d] || 'dEasy'); }
 
 const DIFFS = {
   easy: { pool: EASY_NAMES, modes: ['duo','carre','cash'] },
-  hard: { pool: null,        modes: ['cash'] }
+  hard: { pool: 'rest',      modes: ['cash'] }
 };
 
 /* ---------- analytics (PostHog, sans dépendance) ---------- */
@@ -1116,8 +1116,10 @@ function matchName(input, target){
 
 function poolIndexes(diff){
   const cfg = DIFFS[diff] || DIFFS.easy;
-  return PRODUCTS.map((p, idx) => idx)
-    .filter(idx => !cfg.pool || cfg.pool.indexOf(PRODUCTS[idx].n) !== -1);
+  const all = PRODUCTS.map((p, idx) => idx);
+  if(!cfg.pool) return all;
+  if(cfg.pool === 'rest') return all.filter(idx => EASY_NAMES.indexOf(PRODUCTS[idx].n) === -1);
+  return all.filter(idx => cfg.pool.indexOf(PRODUCTS[idx].n) !== -1);
 }
 
 function startGame(){
@@ -1514,7 +1516,11 @@ if(location.search.includes('selftest')){
     ok(document.getElementById('rcTime').textContent.length>0,'temps affiché');
     ok(Object.keys(DIFFS).length===2,'deux niveaux');
     ok(poolIndexes('easy').length>=40 && poolIndexes('easy').length<PRODUCTS.length,'pool facile restreint ('+poolIndexes('easy').length+')');
-    ok(poolIndexes('hard').length===PRODUCTS.length,'pool difficile complet');
+    ok(poolIndexes('hard').length>=20,'pool difficile >= 20 ('+poolIndexes('hard').length+')');
+    ok(poolIndexes('easy').length + poolIndexes('hard').length === PRODUCTS.length,'les deux tiers couvrent toute la base');
+    ok(poolIndexes('easy').every(i => poolIndexes('hard').indexOf(i) === -1),'aucun produit dans les deux tiers');
+    ok(poolIndexes('hard').indexOf(PRODUCTS.findIndex(p=>p.n==='BILLY')) === -1,'BILLY reste en facile');
+    ok(poolIndexes('hard').indexOf(PRODUCTS.findIndex(p=>p.n==='BROGRUND')) !== -1,'BROGRUND passe en difficile');
     ok(document.querySelectorAll('#diffs .diff').length===2,'sélecteur de niveau');
     state.difficulty = 'hard';
     document.querySelector('#playerName').value = 'Testeur';
