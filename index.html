@@ -1427,6 +1427,7 @@ $('#metaScore').textContent = '0 pt';
   applyLang(saved || (LANGS.includes(nav) ? nav : 'fr'));
   const sel = $('#lang');
   if(sel) sel.addEventListener('change', (e) => applyLang(e.target.value));
+  track('clikea_view', {lang: lang, referrer: document.referrer || null});
 })();
 
 // little shelf on the intro, with price tags
