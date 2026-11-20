@@ -1,0 +1,1574 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CLIKEA — Devinez le nom</title>
+<meta name="description" content="CLIKEA : 20 produits IKEA tirés au sort, en duo, carré ou cash. Devinez le nom.">
+<meta name="theme-color" content="#0058A3">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cellipse cx='32' cy='32' rx='31' ry='20' fill='%23FFDB00'/%3E%3Ctext x='32' y='40' font-family='Arial' font-weight='bold' font-size='18' fill='%230058A3' text-anchor='middle'%3EC%3C/text%3E%3C/svg%3E">
+<style>
+:root{
+  --blue:#0058A3;
+  --blue-dark:#00437D;
+  --blue-deep:#00335F;
+  --yellow:#FFDB00;
+  --yellow-deep:#F5C500;
+  --ink:#111111;
+  --grey:#F5F5F5;
+  --line:#DFDFDF;
+  --green:#0A8A3C;
+  --red:#E00751;
+  --radius:12px;
+  --font:"Noto Sans","Helvetica Neue",Helvetica,Arial,sans-serif;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{
+  font-family:var(--font);
+  background:var(--blue);
+  color:#fff;
+  -webkit-font-smoothing:antialiased;
+  min-height:100vh;
+  display:flex;
+  flex-direction:column;
+}
+button{font-family:inherit}
+.wrap{width:100%;max-width:720px;margin:0 auto;padding:0 16px}
+a{color:inherit}
+
+/* ---------- top bar ---------- */
+.topbar{
+  background:var(--blue);
+  border-bottom:1px solid rgba(255,255,255,.16);
+  position:sticky;top:0;z-index:20;
+}
+.topbar .wrap{display:flex;align-items:center;gap:12px;height:60px}
+.logo{display:inline-flex;align-items:center;text-decoration:none}
+.logo .oval{
+  background:var(--yellow);color:var(--blue);
+  font-weight:800;font-size:19px;letter-spacing:.14em;
+  padding:5px 16px 6px;border-radius:999px;line-height:1;
+  font-family:var(--font);
+}
+.logo .sub{
+  margin-left:10px;font-size:11px;font-weight:700;letter-spacing:.18em;
+  text-transform:uppercase;color:rgba(255,255,255,.75);
+}
+.spacer{flex:1}
+.meta{display:flex;align-items:center;gap:14px;font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase}
+.meta .count{color:rgba(255,255,255,.72)}
+#lang{
+  appearance:none;-webkit-appearance:none;background:rgba(255,255,255,.16);color:#fff;
+  border:1px solid rgba(255,255,255,.4);border-radius:999px;padding:6px 9px;
+  font:inherit;font-size:11px;font-weight:800;letter-spacing:.08em;cursor:pointer;
+}
+#lang:focus-visible{outline:3px solid var(--yellow);outline-offset:2px}
+#lang option{color:#111;background:#fff}
+.meta .score{
+  background:var(--yellow);color:var(--blue);border-radius:999px;
+  padding:5px 12px;font-size:12px;letter-spacing:.06em;
+}
+
+/* ---------- layout ---------- */
+main{flex:1;display:flex;flex-direction:column}
+.screen{display:none;flex:1;flex-direction:column}
+.screen.on{display:flex;animation:fade .28s ease both}
+@keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+
+/* ---------- buttons ---------- */
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:10px;
+  border:0;cursor:pointer;text-decoration:none;
+  font-weight:800;letter-spacing:.02em;
+  border-radius:999px;padding:16px 30px;font-size:16px;
+  background:var(--yellow);color:var(--blue);
+  transition:transform .12s ease,background .15s ease,box-shadow .15s ease;
+  box-shadow:0 2px 0 rgba(0,0,0,.18);
+}
+.btn:hover{background:var(--yellow-deep);transform:translateY(-1px)}
+.btn:active{transform:translateY(1px);box-shadow:none}
+.btn:focus-visible{outline:3px solid #fff;outline-offset:3px}
+.btn.ghost{
+  background:transparent;color:#fff;box-shadow:none;
+  border:2px solid rgba(255,255,255,.55);
+}
+.btn.ghost:hover{background:rgba(255,255,255,.12)}
+.btn.big{padding:20px 44px;font-size:19px}
+.btn.block{width:100%}
+
+/* ---------- intro ---------- */
+.intro{padding:26px 0 18px;text-align:center}
+.kicker{
+  display:inline-block;background:rgba(255,255,255,.12);
+  border:1px solid rgba(255,255,255,.25);
+  color:#fff;font-size:11px;font-weight:800;letter-spacing:.2em;text-transform:uppercase;
+  padding:6px 14px;border-radius:999px;margin-bottom:20px;
+}
+.intro h1{
+  font-size:clamp(32px,8vw,54px);line-height:.96;margin:0 0 14px;
+  font-weight:800;letter-spacing:-.03em;text-transform:uppercase;
+}
+.intro h1 .hl{
+  background:var(--yellow);color:var(--blue);
+  display:inline-block;padding:2px 12px 6px;border-radius:8px;
+  transform:rotate(-1.2deg);
+}
+.intro p.lede{
+  font-size:clamp(15px,3.6vw,18px);line-height:1.5;color:rgba(255,255,255,.85);
+  max-width:44ch;margin:0 auto 22px;
+}
+.rules{
+  display:grid;grid-template-columns:repeat(3,1fr);gap:10px;
+  margin:0 auto 24px;max-width:560px;text-align:left;
+}
+.rule{
+  background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.18);
+  border-radius:var(--radius);padding:12px 14px;
+}
+.rule b{display:block;font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--yellow);margin-bottom:5px}
+.rule span{font-size:12.5px;line-height:1.35;color:rgba(255,255,255,.8)}
+.rule .pt{color:var(--yellow);font-weight:800;font-style:normal}
+.intro .cta{display:flex;flex-direction:column;align-items:center;gap:14px}
+.intro .fine{font-size:12px;color:rgba(255,255,255,.6);letter-spacing:.02em}
+.who{display:flex;gap:10px;align-items:center;justify-content:center;flex-wrap:wrap;margin:0 0 16px}
+.who label{font-size:11px;font-weight:800;letter-spacing:.18em;text-transform:uppercase;color:rgba(255,255,255,.72)}
+.who input{
+  width:230px;border:0;border-radius:999px;padding:13px 18px;font-family:inherit;
+  font-size:15px;font-weight:800;color:var(--blue);outline:none;background:#fff;
+  box-shadow:0 2px 0 rgba(0,0,0,.18);
+}
+.who input::placeholder{color:#9a9a9a;font-weight:600}
+.who input:focus{box-shadow:0 0 0 4px rgba(255,219,0,.55)}
+
+.diffs{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;max-width:560px;margin:0 auto 14px}
+.diff{
+  background:rgba(255,255,255,.07);border:2px solid rgba(255,255,255,.22);
+  border-radius:12px;padding:10px 12px;text-align:left;color:#fff;cursor:pointer;
+  transition:background .14s ease,border-color .14s ease,color .14s ease;
+}
+.diff b{display:block;font-size:11.5px;letter-spacing:.13em;text-transform:uppercase;margin-bottom:3px;font-weight:800}
+.diff span{font-size:11px;opacity:.72;line-height:1.25;display:block}
+.diff:hover{border-color:rgba(255,255,255,.5)}
+.diff.on{background:var(--yellow);border-color:var(--yellow);color:var(--blue)}
+.diff.on span{opacity:.85}
+.diff:focus-visible{outline:3px solid var(--yellow);outline-offset:2px}
+
+.ghostlink{
+  background:none;border:0;color:rgba(255,255,255,.82);text-decoration:underline;
+  font:inherit;font-size:12.5px;cursor:pointer;padding:6px;margin-top:4px;
+}
+.ghostlink:hover{color:#fff}
+
+.board{padding:22px 0 30px}
+.board h2{
+  text-align:center;font-size:13px;letter-spacing:.2em;text-transform:uppercase;
+  margin:0 0 16px;font-weight:800;color:rgba(255,255,255,.8);
+}
+.tabs{display:flex;gap:8px;justify-content:center;margin-bottom:16px;flex-wrap:wrap}
+.tab{
+  padding:9px 16px;border-radius:999px;border:2px solid rgba(255,255,255,.45);
+  background:transparent;color:#fff;font:inherit;font-weight:800;font-size:11.5px;
+  letter-spacing:.08em;text-transform:uppercase;cursor:pointer;
+}
+.tab.on{background:var(--yellow);color:var(--blue);border-color:var(--yellow)}
+.board-card{background:#fff;border-radius:14px;overflow:hidden;color:var(--ink);box-shadow:0 18px 40px -18px rgba(0,0,0,.5)}
+.row{display:grid;grid-template-columns:30px 1fr auto;gap:10px;align-items:center;padding:11px 16px;border-bottom:1px solid var(--line)}
+.row:last-child{border-bottom:0}
+.row .pos{font-weight:800;color:#9a9a9a;text-align:right;font-size:13px}
+.row .nm{font-weight:800;text-transform:uppercase;letter-spacing:.02em;font-size:14px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.row .sc{font-weight:800;font-size:15px}
+.row .sc i{font-style:normal;font-size:10.5px;color:#9a9a9a;font-weight:700}
+.row.me{background:rgba(255,219,0,.28)}
+.row.me .pos{color:var(--blue)}
+.empty{padding:26px 20px;text-align:center;color:#777;font-size:13.5px;line-height:1.4}
+.board-note{text-align:center;font-size:11.5px;color:rgba(255,255,255,.6);margin:12px 0 20px;line-height:1.5}
+.board .actions{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+.rankline{
+  display:block;text-align:center;margin:12px auto 0;font-size:13px;font-weight:800;
+  background:var(--yellow);color:var(--blue);border-radius:999px;padding:8px 16px;max-width:320px;
+}
+
+.shelf{display:flex;gap:12px;justify-content:center;margin:26px 0 0;overflow:hidden;padding:4px}
+.tile{
+  display:flex;flex-direction:column;
+  background:#fff;border-radius:10px;padding:8px 8px 6px;
+  box-shadow:0 14px 26px -16px rgba(0,0,0,.6);
+  transform:rotate(-2deg);flex:0 0 auto;
+}
+.tile:nth-child(2n){transform:rotate(1.6deg)}
+.tile:nth-child(3n){transform:rotate(-.8deg)}
+.tile img{width:92px;height:92px;object-fit:contain;background:var(--grey);border-radius:6px;display:block}
+.tile .pt{
+  display:block;order:-1;margin:0 0 6px;background:var(--yellow);color:var(--blue);
+  font-size:10.5px;font-weight:800;border-radius:4px;padding:2px 6px;text-align:center;letter-spacing:.02em;
+}
+
+/* ---------- game ---------- */
+.game{padding:18px 0 28px}
+.progress{
+  height:8px;background:rgba(255,255,255,.18);border-radius:999px;overflow:hidden;margin-bottom:14px;
+}
+.progress i{display:block;height:100%;width:0;background:var(--yellow);border-radius:999px;transition:width .3s ease}
+.teamline{
+  display:flex;justify-content:space-between;align-items:center;
+  font-size:11px;font-weight:800;letter-spacing:.16em;text-transform:uppercase;
+  color:rgba(255,255,255,.7);margin-bottom:12px;
+}
+.teamline .streak{color:var(--yellow)}
+
+.card{
+  background:#fff;border-radius:16px;overflow:hidden;color:var(--ink);
+  box-shadow:0 18px 40px -18px rgba(0,0,0,.5);
+}
+.photo{
+  position:relative;background:var(--grey);width:100%;
+  height:clamp(250px,40vh,400px);
+  display:flex;align-items:center;justify-content:center;
+  overflow:hidden;
+}
+.photo img{width:100%;height:100%;object-fit:contain;display:block}
+.photo{transition:height .22s ease}
+.card.answered .photo{height:clamp(160px,23vh,220px)}
+.photo .tag{
+  position:absolute;top:12px;left:12px;background:var(--yellow);color:var(--blue);
+  font-size:10.5px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;
+  padding:6px 11px;border-radius:999px;
+}
+.photo .tag.num{left:auto;right:12px;background:#111;color:#fff}
+.photo.loading::after{
+  content:"";position:absolute;inset:0;
+  background:linear-gradient(100deg,#efefef 20%,#f8f8f8 40%,#efefef 60%);
+  background-size:200% 100%;animation:shimmer 1.1s linear infinite;
+}
+@keyframes shimmer{from{background-position:120% 0}to{background-position:-20% 0}}
+
+.answers{padding:16px}
+.answers h2{
+  font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:#767676;
+  margin:0 0 12px;font-weight:800;
+}
+.choices{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.choice{
+  display:flex;align-items:center;gap:10px;
+  background:#fff;border:2px solid var(--blue);color:var(--blue);
+  border-radius:999px;padding:13px 16px;font-size:15px;font-weight:800;
+  letter-spacing:.02em;cursor:pointer;text-align:left;
+  transition:background .14s ease,color .14s ease,transform .1s ease,border-color .14s;
+  min-height:52px;
+}
+.choice .k{
+  flex:none;width:22px;height:22px;border-radius:50%;
+  background:rgba(0,88,163,.12);color:var(--blue);
+  font-size:11px;display:flex;align-items:center;justify-content:center;font-weight:800;
+}
+.choice:hover:not(:disabled){background:rgba(0,88,163,.07)}
+.choice:disabled{cursor:default}
+.choice.correct{background:var(--blue);color:#fff;border-color:var(--blue)}
+.choice.correct .k{background:rgba(255,255,255,.2);color:#fff}
+.choice.wrong{background:#fff;border-color:var(--red);color:var(--red);opacity:.9}
+.choice.wrong .k{background:rgba(224,7,81,.1);color:var(--red)}
+.choice.dim{opacity:.42}
+.choice:focus-visible{outline:3px solid var(--yellow);outline-offset:2px}
+
+.modes{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.modes[hidden],.choices[hidden],.cashbox[hidden]{display:none}
+.mode{
+  display:flex;flex-direction:column;gap:2px;align-items:flex-start;
+  background:#fff;border:2px solid var(--blue);color:var(--blue);cursor:pointer;
+  border-radius:12px;padding:11px 13px;text-align:left;
+  transition:background .14s ease,transform .1s ease;
+}
+.mode b{font-size:13px;letter-spacing:.12em;text-transform:uppercase;font-weight:800}
+.mode span{font-size:11.5px;font-weight:600;opacity:.75;line-height:1.2}
+.mode .pts{
+  margin-top:auto;background:var(--yellow);color:var(--blue);
+  border-radius:4px;padding:2px 7px;font-size:11px;font-weight:800;font-style:normal;
+}
+.mode:hover:not(:disabled){background:rgba(0,88,163,.07);transform:translateY(-1px)}
+.mode:focus-visible{outline:3px solid var(--yellow);outline-offset:2px}
+.mode.cash{border-color:#111;color:#111}
+.mode.cash .pts{background:#111;color:var(--yellow)}
+
+.cashbox{display:flex;gap:10px}
+.cashbox input{
+  flex:1;min-width:0;border:2px solid var(--blue);border-radius:999px;
+  padding:14px 18px;font-size:16px;font-weight:800;font-family:inherit;
+  letter-spacing:.08em;text-transform:uppercase;color:var(--ink);outline:none;
+}
+.cashbox input::placeholder{color:#9a9a9a;font-weight:600;letter-spacing:.02em;text-transform:none}
+.cashbox input:focus{border-color:var(--yellow-deep);box-shadow:0 0 0 4px rgba(255,219,0,.35)}
+.cashbox input:disabled{background:#f3f3f3;color:#666}
+.cashbox .btn{padding:14px 22px;flex:none}
+
+.feedback .verdict .gain{
+  display:inline-block;margin-left:9px;padding:2px 9px;border-radius:999px;
+  background:var(--yellow);color:var(--blue);font-size:11px;letter-spacing:.06em;
+}
+.feedback .verdict.ko .gain{background:#f0e6e9;color:var(--red)}
+
+.feedback{
+  margin-top:14px;border-top:1px solid var(--line);padding-top:14px;
+  display:none;
+}
+.feedback.on{display:block;animation:fade .2s ease both}
+.feedback .verdict{
+  font-size:13px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;
+  margin-bottom:8px;
+}
+.feedback .verdict.ok{color:var(--green)}
+.feedback .verdict.ko{color:var(--red)}
+.feedback .name{font-size:19px;font-weight:800;color:var(--ink);line-height:1.2}
+.feedback .desc{font-size:13.5px;color:#5f5f5f;margin-top:3px}
+.feedback .price{
+  display:inline-block;margin-top:10px;background:var(--yellow);color:var(--blue);
+  font-weight:800;font-size:13.5px;padding:6px 12px;border-radius:6px;letter-spacing:.02em;
+}
+.feedback .actions{display:flex;gap:10px;margin-top:16px}
+.feedback .actions .btn{flex:1;padding:14px 18px}
+.feedback .actions .btn.ghost{color:var(--blue);border-color:var(--blue);background:transparent}
+.feedback .actions .btn.ghost:hover{background:rgba(0,88,163,.08)}
+
+/* ---------- receipt / end ---------- */
+.end{padding:26px 0 40px}
+.receipt{
+  background:#fff;color:var(--ink);border-radius:4px;
+  padding:26px 22px 22px;max-width:420px;margin:0 auto;
+  box-shadow:0 18px 40px -18px rgba(0,0,0,.5);
+  position:relative;
+  font-variant-numeric:tabular-nums;
+}
+.receipt::before,.receipt::after{
+  content:"";position:absolute;left:0;right:0;height:10px;
+  background:
+    radial-gradient(circle at 6px -2px, transparent 6px, #fff 6.5px) repeat-x;
+  background-size:12px 12px;
+}
+.receipt::before{top:-9px;transform:rotate(180deg)}
+.receipt::after{bottom:-9px}
+.rc-head{text-align:center;margin-bottom:16px}
+.rc-head .oval{background:var(--yellow);color:var(--blue);font-weight:800;letter-spacing:.16em;padding:4px 14px;border-radius:999px;font-size:15px}
+.rc-head h2{font-size:15px;letter-spacing:.18em;text-transform:uppercase;margin:14px 0 4px;font-weight:800}
+.rc-head p{margin:0;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:#8a8a8a}
+.rc-dash{border-top:1px dashed #bdbdbd;margin:16px 0}
+.rc-row{display:flex;justify-content:space-between;font-size:13.5px;padding:4px 0;color:#333}
+.rc-row b{font-weight:800;color:#111}
+.rc-total{display:flex;justify-content:space-between;align-items:baseline;margin-top:6px}
+.rc-total span{font-size:11px;letter-spacing:.16em;text-transform:uppercase;font-weight:800;color:#555}
+.rc-total b{font-size:38px;font-weight:800;letter-spacing:-.03em}
+.rc-msg{text-align:center;font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:#555;margin:14px 0 10px;font-weight:700}
+.barcode{height:46px;margin:0 auto 6px;max-width:250px;
+  background:repeating-linear-gradient(90deg,#111 0 2px,transparent 2px 4px,#111 4px 5px,transparent 5px 9px,#111 9px 12px,transparent 12px 14px);
+}
+.end .actions{display:flex;gap:10px;justify-content:center;margin-top:22px;flex-wrap:wrap}
+.end .verdict{text-align:center;font-size:15px;color:rgba(255,255,255,.85);margin:16px auto 0;max-width:36ch;line-height:1.45}
+.toast{
+  position:fixed;left:50%;bottom:22px;transform:translate(-50%,20px);
+  background:#111;color:#fff;padding:11px 18px;border-radius:999px;
+  font-size:13px;font-weight:700;opacity:0;pointer-events:none;transition:.22s ease;z-index:50;
+}
+.toast.on{opacity:1;transform:translate(-50%,0)}
+
+/* ---------- footer ---------- */
+footer{
+  border-top:1px solid rgba(255,255,255,.16);
+  padding:16px 0 26px;font-size:11px;color:rgba(255,255,255,.55);line-height:1.6;
+}
+footer .wrap{display:flex;gap:14px;justify-content:space-between;flex-wrap:wrap}
+
+@media (max-width:520px){
+  .tile:nth-child(n+5){display:none}
+  .tile img{width:78px;height:78px}
+  .shelf{margin-top:26px;gap:9px}
+  .rules{grid-template-columns:1fr;gap:8px}
+  .rule{display:flex;gap:10px;align-items:baseline;padding:10px 12px}
+  .rule b{margin:0;flex:none;width:74px}
+  .intro{padding:26px 0 24px}
+  .choices{gap:8px}
+  .choice{padding:11px 11px;font-size:13px;min-height:48px;line-height:1.15}
+  .answers{padding:13px}
+  .meta .count{display:none}
+  .logo .sub{display:none}
+}
+@media (prefers-reduced-motion:reduce){
+  *{animation:none!important;transition:none!important}
+}
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="wrap">
+    <a class="logo" href="#" aria-label="CLIKEA, devinez le nom">
+      <span class="oval">CLIKEA</span>
+      <span class="sub" id="i18nSub">Devinez le nom</span>
+    </a>
+    <span class="spacer"></span>
+    <div class="meta">
+      <select id="lang" aria-label="Langue / Language">
+        <option value="fr">FR</option>
+        <option value="en">EN</option>
+        <option value="es">ES</option>
+        <option value="de">DE</option>
+        <option value="it">IT</option>
+      </select>
+      <span class="count" id="metaCount">20 produits</span>
+      <span class="score" id="metaScore">0 pt</span>
+    </div>
+  </div>
+</header>
+
+<main>
+  <!-- INTRO -->
+  <section class="screen on" id="intro">
+    <div class="wrap intro">
+      <span class="kicker" id="kicker">20 produits tirés au sort · duo, carré, cash</span>
+      <h1><span id="h1a">Une photo.</span><br><span class="hl" id="h1b">Duo, carré</span><br><span id="h1c">ou cash.</span></h1>
+      <p class="lede" id="lede">Vous avez déjà monté un BILLY un dimanche soir. Sur les 109 produits de la maison, 20 vont défiler. À vous de les nommer.</p>
+
+      <div class="rules">
+        <div class="rule"><b id="r1t">Duo</b><span id="r1x">Deux noms au choix. Le plus sûr, le moins payé : <i class="pt">1 pt</i>.</span></div>
+        <div class="rule"><b id="r2t">Carré</b><span id="r2x">Quatre noms, trois pièges. <i class="pt">2 pts</i>.</span></div>
+        <div class="rule"><b id="r3t">Cash</b><span id="r3x">Aucune proposition, vous écrivez le nom. <i class="pt">3 pts</i>.</span></div>
+      </div>
+
+            <div class="who">
+        <label for="playerName" id="whoLabel">Votre nom</label>
+        <input id="playerName" type="text" maxlength="24" autocomplete="name" placeholder="Ex. César" aria-label="Votre nom">
+      </div>
+
+      <div class="diffs" id="diffs" role="radiogroup" aria-label="Difficulté">
+        <button class="diff" type="button" data-diff="easy" role="radio" aria-checked="false">
+          <b id="d1t">Facile</b><span id="d1s">45 produits connus, trois modes</span>
+        </button>
+        <button class="diff on" type="button" data-diff="medium" role="radio" aria-checked="true">
+          <b id="d2t">Moyen</b><span id="d2s">109 produits, trois modes</span>
+        </button>
+        <button class="diff" type="button" data-diff="hard" role="radio" aria-checked="false">
+          <b id="d3t">Difficile</b><span id="d3s">109 produits, cash uniquement</span>
+        </button>
+      </div>
+
+      <div class="cta">
+        <button class="btn big" id="startBtn">Commencer mes achats</button>
+        <span class="fine" id="fine">20 produits · 60 points en jeu · pas de notice de montage</span>
+      </div>
+
+      <button class="ghostlink" type="button" id="boardOpen">Voir le classement</button>
+
+      <div class="shelf" id="shelf" aria-hidden="true"></div>
+    </div>
+  </section>
+
+  <!-- GAME -->
+  <section class="screen" id="game">
+    <div class="wrap game">
+      <div class="progress"><i id="bar"></i></div>
+      <div class="teamline">
+        <span id="qLabel">Question 1 / 50</span>
+        <span class="streak" id="streakLabel"></span>
+      </div>
+
+      <div class="card">
+        <div class="photo loading" id="photo">
+          <span class="tag" id="photoTag">À vous de jouer</span>
+          <span class="tag num" id="numTag">01</span>
+          <img id="img" alt="Produit mystère" width="700" height="700">
+        </div>
+        <div class="answers">
+          <h2 id="prompt">Choisissez votre mode</h2>
+
+          <div class="modes" id="modes">
+            <button class="mode" type="button" data-mode="duo">
+              <b id="m1t">Duo</b><span id="m1s">2 noms</span><i class="pts" id="m1p">1 pt</i>
+            </button>
+            <button class="mode" type="button" data-mode="carre">
+              <b id="m2t">Carré</b><span id="m2s">4 noms</span><i class="pts" id="m2p">3 pts</i>
+            </button>
+            <button class="mode cash" type="button" data-mode="cash">
+              <b id="m3t">Cash</b><span id="m3s">sans filet</span><i class="pts" id="m3p">5 pts</i>
+            </button>
+          </div>
+
+          <div class="choices" id="choices" hidden></div>
+
+          <div class="cashbox" id="cashBox" hidden>
+            <input id="cashInput" type="text" placeholder="Votre réponse…" aria-label="Votre réponse"
+                   autocomplete="off" autocapitalize="characters" spellcheck="false">
+            <button class="btn" type="button" id="cashBtn">Valider</button>
+          </div>
+
+          <div class="feedback" id="feedback" aria-live="polite"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CLASSEMENT -->
+  <section class="screen" id="board">
+    <div class="wrap board">
+      <h2 id="boardTitle">Classement public</h2>
+      <div class="tabs" id="boardTabs">
+        <button class="tab" type="button" data-diff="easy">Facile</button>
+        <button class="tab" type="button" data-diff="medium">Moyen</button>
+        <button class="tab" type="button" data-diff="hard">Difficile</button>
+      </div>
+      <div class="board-card" id="boardRows"></div>
+      <p class="board-note" id="boardNote">20 meilleurs scores par niveau.</p>
+      <div class="actions">
+        <button class="btn" id="boardPlay">Jouer</button>
+        <button class="btn ghost" id="boardBack">Retour</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- END -->
+  <section class="screen" id="end">
+    <div class="wrap end">
+      <div class="receipt">
+        <div class="rc-head">
+          <span class="oval">CLIKEA</span>
+          <h2 id="rcTitle">Ticket de caisse</h2>
+          <p><span id="rcCaisse">Caisse 7</span> · <span id="rcDate"></span></p>
+        </div>
+        <div class="rc-dash"></div>
+        <div class="rc-row"><span id="rcClient">Client</span><b id="rcName">—</b></div>
+        <div class="rc-row"><span id="rcDiffL">Niveau</span><b id="rcDiff">—</b></div>
+        <div class="rc-row"><span id="rcGoodL">Produits reconnus</span><b id="rcGood">0</b></div>
+        <div class="rc-row"><span id="rcTotalL">Produits présentés</span><b id="rcTotal">20</b></div>
+        <div class="rc-row"><span id="rcPtsL">Points</span><b id="rcPts">0 / 100</b></div>
+        <div class="rc-row"><span id="rcStreakL">Meilleure série</span><b id="rcStreak">0</b></div>
+        <div class="rc-row"><span id="rcTimeL">Temps</span><b id="rcTime">0:00</b></div>
+        <div class="rc-dash"></div>
+        <div class="rc-row"><span id="rcBestL">Record personnel</span><b id="rcBest">—</b></div>
+        <div class="rc-total"><span id="rcScoreL">Score</span><b id="rcScore">0/100</b></div>
+        <div class="rc-msg" id="rcThanks">Merci de votre visite</div>
+        <div class="barcode"></div>
+      </div>
+      <p class="verdict" id="verdict"></p>
+      <span class="rankline" id="rankLine" hidden></span>
+      <div class="actions">
+        <button class="btn" id="shareBtn">Partager mon score</button>
+        <button class="btn ghost" id="boardFromEnd">Classement</button>
+        <button class="btn ghost" id="replayBtn">Rejouer</button>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <span id="f1">CLIKEA — pastiche non officiel, fait pour s'amuser entre deux montages.</span>
+    <span id="f2">Photos produit : ikea.com</span>
+  </div>
+</footer>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const PRODUCTS = [{"n":"BILLY","t":{"fr":"Bibliothèque","en":"Bookcase","es":"Librería","de":"Bücherregal","it":"Libreria"},"p":59.99,"i":"https://www.ikea.com/fr/fr/images/products/billy-bibliotheque-blanc__1590272_pe1038911_s5.jpg"},{"n":"KALLAX","t":{"fr":"Étagère","en":"Shelving unit","es":"Estantería","de":"Regal","it":"Scaffale"},"p":59.99,"i":"https://www.ikea.com/fr/fr/images/products/kallax-etagere-blanc__0644757_pe702939_s5.jpg"},{"n":"MALM","t":{"fr":"Coiffeuse","en":"Chest of 2 drawers","es":"Escritorio con tablero extraíble","de":"Bettgestell mit Aufbewahrung","it":"Struttura letto con contenitore"},"p":149.0,"i":"https://www.ikea.com/fr/fr/images/products/malm-coiffeuse-blanc__1400013_pe968487_s5.jpg"},{"n":"POÄNG","t":{"fr":"Fauteuil","en":"Armchair","es":"Sillón","de":"Polster für Sessel","it":"Poltrona"},"p":69.99,"i":"https://www.ikea.com/fr/fr/images/products/poaeng-fauteuil-plaque-bouleau-knisa-beige-clair__0571500_pe666933_s5.jpg"},{"n":"LACK","t":{"fr":"Table basse","en":"Coffee table","es":"Mesa de centro","de":"Couchtisch","it":"Tavolino"},"p":22.99,"i":"https://www.ikea.com/fr/fr/images/products/lack-table-basse-effet-chene-blanchi__0411538_pe570463_s5.jpg"},{"n":"HEMNES","t":{"fr":"Lit banquette 2 places (structure)","en":"Glass-door cabinet with 3 drawers","es":"Vitrina con cajones","de":"Vitrine mit 3 Schubladen","it":"Vetrina con 3 cassetti"},"p":299.0,"i":"https://www.ikea.com/fr/fr/images/products/hemnes-lit-banquette-2-places-structure-blanc__1180454_pe896328_s5.jpg"},{"n":"PAX","t":{"fr":"Armoire-penderie","en":"Wardrobe frame","es":"Armoire-penderie","de":"Anbauelement Mittelteil","it":"Elemento supplementare centrale"},"p":408.0,"i":"https://www.ikea.com/fr/fr/images/products/pax-armoire-penderie-blanc__0383291_pe557275_s5.jpg"},{"n":"ALEX","t":{"fr":"Caisson à tiroirs","en":"Drawer unit","es":"Cajonera","de":"Schubladenelement","it":"Cassettiera"},"p":79.99,"i":"https://www.ikea.com/fr/fr/images/products/alex-caisson-a-tiroirs-blanc__0977775_pe813763_s5.jpg"},{"n":"MICKE","t":{"fr":"Bureau","en":"Desk","es":"Escritorio","de":"Schreibtisch","it":"Scrivania"},"p":89.99,"i":"https://www.ikea.com/fr/fr/images/products/micke-bureau-blanc__0736018_pe740345_s5.jpg"},{"n":"TROFAST","t":{"fr":"Combinaison structure + bacs","en":"Storage combination with boxes","es":"Combinación de almacenaje con cajas","de":"Regalrahmen","it":"Combinazione con contenitori"},"p":129.0,"i":"https://www.ikea.com/fr/fr/images/products/trofast-combinaison-structure-bacs-pin-teinte-blanc-clair-blanc__1354528_pe952681_s5.jpg"},{"n":"MAMMUT","t":{"fr":"Table enfant","en":"Children's table","es":"Mesa para niños","de":"Kindertisch","it":"Tavolo per bambini"},"p":29.99,"i":"https://www.ikea.com/fr/fr/images/products/mammut-table-enfant-interieur-exterieur-blanc__0735842_pe740215_s5.jpg"},{"n":"ANTILOP","t":{"fr":"Structure chaise haute+tablette","en":"Highchair with tray","es":"Trona con bandeja","de":"Kinderhochstuhl mit Tablett","it":"Seggiolone con vassoio"},"p":24.99,"i":"https://www.ikea.com/fr/fr/images/products/antilop-structure-chaise-haute-tablette-blanc-blanc__1416405_pe975540_s5.jpg"},{"n":"DUKTIG","t":{"fr":"Lit poupée+linge de lit","en":"Play kitchen","es":"Cama muñeca","de":"Spielküche","it":"Lettino per bambole con biancheria"},"p":19.99,"i":"https://www.ikea.com/fr/fr/images/products/duktig-lit-poupee-linge-de-lit-pin-multicolore__1293807_pe935271_s5.jpg"},{"n":"BLÅHAJ","t":{"fr":"Peluche","en":"Soft toy","es":"Peluche","de":"Stoffspielzeug","it":"Peluche"},"p":24.99,"i":"https://www.ikea.com/fr/fr/images/products/blahaj-peluche-requin__0710175_pe727378_s5.jpg"},{"n":"RÅSKOG","t":{"fr":"Desserte","en":"Trolley","es":"Carrito","de":"Servierwagen","it":"Carrello"},"p":29.99,"i":"https://www.ikea.com/fr/fr/images/products/raskog-desserte-blanc__1366882_pe957173_s5.jpg"},{"n":"BEKVÄM","t":{"fr":"Étagère à épices","en":"Spice rack","es":"Estante especiero","de":"Gewürzregal","it":"Scaffaletto per spezie"},"p":6.99,"i":"https://www.ikea.com/fr/fr/images/products/bekvaem-etagere-a-epices-tremble__0993240_pe814904_s5.jpg"},{"n":"MARIUS","t":{"fr":"Tabouret","en":"Stool","es":"Taburete","de":"Hocker","it":"Sgabello"},"p":5.99,"i":"https://www.ikea.com/fr/fr/images/products/marius-tabouret-noir__0727386_pe735638_s5.jpg"},{"n":"INGOLF","t":{"fr":"Chaise junior","en":"Junior chair","es":"Chaise junior","de":"Kinderstuhl","it":"Sedia junior"},"p":69.99,"i":"https://www.ikea.com/fr/fr/images/products/ingolf-chaise-junior-vernis-effet-anc__0727933_pe735945_s5.jpg"},{"n":"NORDVIKEN","t":{"fr":"Chaise de bar","en":"Extendable table","es":"Mesa extensible","de":"Ausziehtisch","it":"Tavolo allungabile"},"p":99.95,"i":"https://www.ikea.com/fr/fr/images/products/nordviken-chaise-de-bar-noir__0714185_pe729959_s5.jpg"},{"n":"STRANDMON","t":{"fr":"Fauteuil à oreilles","en":"Wing chair","es":"Sillón orejero","de":"Ohrensessel mit Hocker","it":"Poltrona"},"p":299.0,"i":"https://www.ikea.com/fr/fr/images/products/strandmon-fauteuil-a-oreilles-nordvalla-gris-fonce__0325432_pe517964_s5.jpg"},{"n":"EKTORP","t":{"fr":"Canapé 3 places","en":"3-seat sofa","es":"Sofá de 3 plazas","de":"3er-Sofa","it":"Divano a 2 posti"},"p":649.0,"i":"https://www.ikea.com/fr/fr/images/products/ektorp-canape-3-places-kilanda-beige-clair__1577723_pe1033470_s5.jpg"},{"n":"SÖDERHAMN","t":{"fr":"Module 3 places","en":"3-seat sofa","es":"Sofá cama 3 plazas","de":"4er-Sofa","it":"Elemento a 1 posto"},"p":479.0,"i":"https://www.ikea.com/fr/fr/images/products/soederhamn-module-3-places-fridtuna-beige-clair__1057705_pe848919_s5.jpg"},{"n":"VIMLE","t":{"fr":"Canapé 3 places","en":"2-seat sofa","es":"Sofá de 3 plazas","de":"3er-Sofa","it":"Divano a 3 posti"},"p":699.0,"i":"https://www.ikea.com/fr/fr/images/products/vimle-canape-3-places-gunnared-beige__1576859_pe1032778_s5.jpg"},{"n":"KIVIK","t":{"fr":"Canapé 2 places","en":"3-seat sofa","es":"Sofá de 3 plazas","de":"3er-Sofa mit Récamiere","it":"Divano a 2 posti"},"p":479.0,"i":"https://www.ikea.com/fr/fr/images/products/kivik-canape-2-places-tibbleby-beige-gris__1577305_pe1033079_s5.jpg"},{"n":"FJÄLLBO","t":{"fr":"Banc TV","en":"TV bench","es":"Estantería","de":"TV-Bank","it":"Buffet"},"p":179.0,"i":"https://www.ikea.com/fr/fr/images/products/fjaellbo-banc-tv-noir__0473390_pe614545_s5.jpg"},{"n":"VITTSJÖ","t":{"fr":"Étagère","en":"Shelving unit","es":"Estantería","de":"Regal","it":"Scaffale"},"p":79.99,"i":"https://www.ikea.com/fr/fr/images/products/vittsjoe-etagere-brun-noir-verre__0767557_pe754140_s5.jpg"},{"n":"KNOXHULT","t":{"fr":"Élément bas avec portes et tiroir","en":"Base cabinet with doors and drawer","es":"Armario bajo con puertas y cajón","de":"Wandschrank mit Tür","it":"Mobile base con ante e cassetto"},"p":124.0,"i":"https://www.ikea.com/fr/fr/images/products/knoxhult-element-bas-avec-portes-et-tiroir-blanc__0630754_pe694882_s5.jpg"},{"n":"SUNDVIK","t":{"fr":"Lit bébé","en":"Wardrobe","es":"Cuna","de":"Babybett","it":"Guardaroba"},"p":199.0,"i":"https://www.ikea.com/fr/fr/images/products/sundvik-lit-bebe-blanc__0637925_pe698610_s5.jpg"},{"n":"SMÅSTAD","t":{"fr":"Banc avec rangement jouets","en":"Loft bed","es":"Banco con almacenaje juguetes","de":"Bank mit Kasten","it":"Panca con contenitore giocattoli"},"p":119.99,"i":"https://www.ikea.com/fr/fr/images/products/smastad-banc-avec-rangement-jouets-blanc-blanc__0918197_pe786134_s5.jpg"},{"n":"KURA","t":{"fr":"Lit réversible","en":"Reversible bed","es":"Cama reversible","de":"Bett umbaufähig","it":"Letto reversibile"},"p":189.0,"i":"https://www.ikea.com/fr/fr/images/products/kura-lit-reversible-blanc-pin__0636268_pe697768_s5.jpg"},{"n":"MULIG","t":{"fr":"Portant","en":"Clothes rack","es":"Barra extensible para ropa","de":"Garderobenständer","it":"Bastone appendiabiti"},"p":9.99,"i":"https://www.ikea.com/fr/fr/images/products/mulig-portant-blanc__0710723_pe727744_s5.jpg"},{"n":"SKUBB","t":{"fr":"Rangement, 6 pièces","en":"Box, set of 6","es":"Bolsa de almacenaje","de":"Tasche","it":"Custodia"},"p":4.99,"i":"https://www.ikea.com/fr/fr/images/products/skubb-rangement-6-pieces-blanc__1190772_pe900309_s5.jpg"},{"n":"ORDNING","t":{"fr":"Égouttoir à couverts","en":"Cutlery stand","es":"Escurrecubiertos","de":"Besteckständer","it":"Scolaposate"},"p":2.99,"i":"https://www.ikea.com/fr/fr/images/products/ordning-egouttoir-a-couverts-acier-inoxydable__0815884_pe773081_s5.jpg"},{"n":"FÖRNUFTIG","t":{"fr":"Purificateur d'air","en":"Air purifier","es":"Purificador de aire","de":"Luftreiniger","it":"Purificatore d'aria"},"p":70.0,"i":"https://www.ikea.com/fr/fr/images/products/foernuftig-purificateur-dair-blanc__0832294_pe777645_s5.jpg"},{"n":"TRÅDFRI","t":{"fr":"Transformateur électrique connecté","en":"Driver for wireless control","es":"Driver para control inalámbrico","de":"Treiber für kabellose Steuerung","it":"Driver per controllo wireless"},"p":25.0,"i":"https://www.ikea.com/fr/fr/images/products/tradfri-transformateur-electrique-connecte-connecte-gris__0625253_pe692161_s5.jpg"},{"n":"KLIPPAN","t":{"fr":"Canapé 2 places","en":"2-seat sofa","es":"Sofá de 2 plazas","de":"2er-Sofa","it":"Divano a 2 posti"},"p":269.0,"i":"https://www.ikea.com/fr/fr/images/products/klippan-canape-2-places-vissle-gris__1576907_pe1032801_s5.jpg"},{"n":"GOSIG GOLDEN","t":{"fr":"Peluche","en":"Soft toy","es":"Peluche","de":"Stofftier","it":"Peluche"},"p":9.99,"i":"https://www.ikea.com/fr/fr/images/products/gosig-golden-peluche-chien-golden-retriever__0710164_pe727367_s5.jpg"},{"n":"FABLER","t":{"fr":"Couverts, 3 pièces","en":"3-piece cutlery set","es":"Cubiertos, 3 piezas","de":"Besteck 3 Teile","it":"Set di posate, 3 pezzi"},"p":3.99,"i":"https://www.ikea.com/fr/fr/images/products/fabler-couverts-3-pieces-acier-inoxydable__0711359_pe728202_s5.jpg"},{"n":"STOCKHOLM","t":{"fr":"Table basse","en":"Coffee table","es":"Table basse","de":"Table basse","it":"Table basse"},"p":299.0,"i":"https://www.ikea.com/fr/fr/images/products/stockholm-table-basse-plaque-noyer__0181245_pe332924_s5.jpg"},{"n":"HAUGA","t":{"fr":"Armoire 2 portes","en":"High cabinet with 2 doors","es":"Armario con puertas correderas","de":"Hochschrank mit 2 Türen","it":"Mobile con 2 ante"},"p":179.0,"i":"https://www.ikea.com/fr/fr/images/products/hauga-armoire-2-portes-blanc__0914112_pe783851_s5.jpg"},{"n":"GULLIVER","t":{"fr":"Lit bébé","en":"Cot","es":"Cuna","de":"Babybett","it":"Lettino"},"p":149.0,"i":"https://www.ikea.com/fr/fr/images/products/gulliver-lit-bebe-blanc__0637927_pe698612_s5.jpg"},{"n":"SONGESAND","t":{"fr":"Commode 3 tiroirs","en":"Commode 3 tiroirs","es":"Cajones de almacenaje para cama","de":"Kleiderschrank","it":"Struttura letto"},"p":139.0,"i":"https://www.ikea.com/fr/fr/images/products/songesand-commode-3-tiroirs-blanc__0552190_pe658947_s5.jpg"},{"n":"BRIMNES","t":{"fr":"Armoire 3 portes","en":"Wardrobe with 3 doors","es":"Armario con 3 puertas","de":"Kleiderschrank 3-türig","it":"Guardaroba a 3 ante"},"p":199.0,"i":"https://www.ikea.com/fr/fr/images/products/brimnes-armoire-3-portes-blanc__0176787_pe329567_s5.jpg"},{"n":"HAVSTA","t":{"fr":"Armoire avec plinthe","en":"Cabinet with plinth","es":"Armario con zócalo","de":"Schrank mit Sockel","it":"Combinaz ante a vetro scorrevoli"},"p":219.0,"i":"https://www.ikea.com/fr/fr/images/products/havsta-armoire-avec-plinthe-blanc__1296025_pe935659_s5.jpg"},{"n":"IDANÄS","t":{"fr":"Élément haut portes vitrées, 1 tir","en":"Wardrobe","es":"Armario puertas plegables","de":"Bettgestell gepolstert mit Aufbew.","it":"Mobile alto/ante vetro/1 cassetto"},"p":349.0,"i":"https://www.ikea.com/fr/fr/images/products/idanaes-element-haut-portes-vitrees-1-tir-blanc__1008949_pe827391_s5.jpg"},{"n":"RISATORP","t":{"fr":"Panier","en":"Basket","es":"Cesta","de":"Schreibutensilienfach","it":"Cestino"},"p":6.99,"i":"https://www.ikea.com/fr/fr/images/products/risatorp-panier-blanc__0711025_pe727906_s5.jpg"},{"n":"KVISTBRO","t":{"fr":"Table de rangement","en":"Storage table","es":"Mesa de almacenaje","de":"Aufbewahrungstisch","it":"Tavolino/contenitore"},"p":29.99,"i":"https://www.ikea.com/fr/fr/images/products/kvistbro-table-de-rangement-blanc__0477822_pe618485_s5.jpg"},{"n":"VATTENKRASSE","t":{"fr":"Ensemble de vases à bouture","en":"Propagation set","es":"Regadera","de":"Gießkanne","it":"Nebulizzatore per piante"},"p":14.99,"i":"https://www.ikea.com/fr/fr/images/products/vattenkrasse-ensemble-de-vases-a-bouture-verre-transparent-ivoire-couleur-or__1227658_pe915641_s5.jpg"},{"n":"FEJKA","t":{"fr":"Plante artificielle","en":"Artificial potted plant","es":"Planta artificial","de":"Topfpflanze, künstlich","it":"Pianta artificiale in vaso"},"p":4.99,"i":"https://www.ikea.com/fr/fr/images/products/fejka-plante-artificielle-interieur-exterieur-a-accrocher__0748917_pe745318_s5.jpg"},{"n":"LISABO","t":{"fr":"Table","en":"Table","es":"Silla","de":"Stuhl","it":"Tavolo"},"p":129.0,"i":"https://www.ikea.com/fr/fr/images/products/lisabo-table-plaque-frene__0737105_pe740883_s5.jpg"},{"n":"DAGOTTO","t":{"fr":"Repose-pieds","en":"Foot-rest","es":"Reposapiés","de":"Fußstütze","it":"Poggiapiedi"},"p":29.99,"i":"https://www.ikea.com/fr/fr/images/products/dagotto-repose-pieds-noir__0156454_pe315498_s5.jpg"},{"n":"TERTIAL","t":{"fr":"Lampe de bureau","en":"Work lamp","es":"Lámpara flexo de trabajo","de":"Arbeitsleuchte","it":"Lampada da lavoro"},"p":9.99,"i":"https://www.ikea.com/fr/fr/images/products/tertial-lampe-de-bureau-gris-fonce__0609306_pe684440_s5.jpg"},{"n":"NÄVLINGE","t":{"fr":"Spot à pince à LED","en":"LED clamp spotlight","es":"Lámpara trabajo","de":"Klemmspot, LED","it":"Faretto a LED con morsetto"},"p":9.99,"i":"https://www.ikea.com/fr/fr/images/products/naevlinge-spot-a-pince-a-led-blanc__0710474_pe727575_s5.jpg"},{"n":"KORKEN","t":{"fr":"Bocal avec couvercle","en":"Jar with lid","es":"Bote con tapa","de":"Dose mit Deckel","it":"Contenitore con coperchio"},"p":2.99,"i":"https://www.ikea.com/fr/fr/images/products/korken-bocal-avec-couvercle-verre-transparent__0713739_pe729738_s5.jpg"},{"n":"VARDAGEN","t":{"fr":"Faitout avec couvercle","en":"Jar with lid","es":"Olla con tapa","de":"Bratentopf mit Deckel","it":"Caraffa"},"p":49.99,"i":"https://www.ikea.com/fr/fr/images/products/vardagen-faitout-avec-couvercle-fonte-emaillee-rose-clair__1543306_pe1018665_s5.jpg"},{"n":"FJÄLLBERGET","t":{"fr":"Chaise conférence","en":"Conference chair","es":"Silla de confidente con ruedas","de":"Konferenzstuhl","it":"Sedia per riunioni con rotelle"},"p":199.0,"i":"https://www.ikea.com/fr/fr/images/products/fjaellberget-chaise-conference-plaque-chene-blanchi-gunnared-beige__0724716_pe734599_s5.jpg"},{"n":"PÅHL","t":{"fr":"Bureau","en":"Desk top shelf","es":"Escritorio","de":"Schreibtisch","it":"Scrivania"},"p":79.99,"i":"https://www.ikea.com/fr/fr/images/products/pahl-bureau-hauteur-reglable-blanc__1484138_pe1001466_s5.jpg"},{"n":"TROMMA","t":{"fr":"Horloge murale","en":"Wall clock","es":"Reloj de pared","de":"Wanduhr","it":"Orologio da parete"},"p":1.99,"i":"https://www.ikea.com/fr/fr/images/products/tromma-horloge-murale-blanc__0836082_pe778497_s5.jpg"},{"n":"BONDHOLMEN","t":{"fr":"Table, extérieur","en":"Bench with backrest, outdoor","es":"Sofá 2 plazas exterior","de":"2er-Sofa/außen","it":"Divano a 2 posti da esterno"},"p":299.0,"i":"https://www.ikea.com/fr/fr/images/products/bondholmen-table-exterieur-blanc-beige__1333204_pe946402_s5.jpg"},{"n":"FÖRHÖJA","t":{"fr":"Desserte","en":"Kitchen trolley","es":"Carrito","de":"Servierwagen","it":"Carrello"},"p":149.0,"i":"https://www.ikea.com/fr/fr/images/products/foerhoeja-desserte-bouleau__0736865_pe740780_s5.jpg"},{"n":"LÄCKÖ","t":{"fr":"Étagère","en":"Shelving unit, outdoor","es":"Estantería","de":"Regal","it":"Étagère"},"p":49.99,"i":"https://www.ikea.com/fr/fr/images/products/laeckoe-etagere-gris-exterieur-interieur__1468505_pe996171_s5.jpg"},{"n":"TÄRNÖ","t":{"fr":"Table+2 chaises, extérieur","en":"Table+2 chairs, outdoor","es":"Mesa con 2 sillas de exterior","de":"Tisch/außen","it":"Tavolo da giardino"},"p":74.97,"i":"https://www.ikea.com/fr/fr/images/products/taernoe-table-2-chaises-exterieur-noir-teinte-brun-clair__0736028_pe740355_s5.jpg"},{"n":"BÄSTIS","t":{"fr":"Brosse adhésive","en":"Lint roller","es":"Rodillo quitapelusas ropa / tejidos","de":"Haken","it":"Ricambio per rotolo levapeli"},"p":0.99,"i":"https://www.ikea.com/fr/fr/images/products/baestis-brosse-adhesive-gris__0654805_pe708843_s5.jpg"},{"n":"KALAS","t":{"fr":"Assiette","en":"Mug","es":"Cuenco","de":"Becher","it":"Bicchiere"},"p":1.49,"i":"https://www.ikea.com/fr/fr/images/products/kalas-assiette-multicolore__0998030_pe822920_s5.jpg"},{"n":"PLUFSIG","t":{"fr":"Tapis de gymnastique pliant","en":"Folding gym mat","es":"Alfombrilla gimnasia plegable","de":"Gymnastikmatte, faltbar","it":"Tappetino ginnastica pieghevole"},"p":29.99,"i":"https://www.ikea.com/fr/fr/images/products/plufsig-tapis-de-gymnastique-pliant-rouge-mauve__1523381_pe1013866_s5.jpg"},{"n":"MÅLA","t":{"fr":"Chevalet","en":"Easel","es":"Portarrollos con almacenaje","de":"Glitter/fluoresz. Farbe","it":"Cavalletto da pittore"},"p":29.99,"i":"https://www.ikea.com/fr/fr/images/products/mala-chevalet-bois-de-conifere__0995590_pe821771_s5.jpg"},{"n":"SUNNERSTA","t":{"fr":"Récipient","en":"Container","es":"Riel 4 ganchos 2 recipientes","de":"Behälter","it":"Minicucina"},"p":1.0,"i":"https://www.ikea.com/fr/fr/images/products/sunnersta-recipient-blanc__0409165_pe601916_s5.jpg"},{"n":"UPPDATERA","t":{"fr":"Boîte","en":"Box","es":"Caja","de":"Box","it":"Pannello per organizzare cassetto"},"p":1.99,"i":"https://www.ikea.com/fr/fr/images/products/uppdatera-boite-blanc__1215004_pe911802_s5.jpg"},{"n":"SAMLA","t":{"fr":"Boîte avec couvercle","en":"Box with lid","es":"Caja con tapa","de":"Box mit Deckel","it":"Contenitore con coperchio"},"p":7.99,"i":"https://www.ikea.com/fr/fr/images/products/samla-boite-avec-couvercle-transparent__0711813_pe728492_s5.jpg"},{"n":"DRÖNA","t":{"fr":"Rangement tissu","en":"Box","es":"Caja","de":"Fach","it":"Contenitore"},"p":3.99,"i":"https://www.ikea.com/fr/fr/images/products/droena-rangement-tissu-gris-fonce__0386600_pe558365_s5.jpg"},{"n":"LOTE","t":{"fr":"Commode 3 tiroirs","en":"Commode 3 tiroirs","es":"Commode 3 tiroirs","de":"Commode 3 tiroirs","it":"Commode 3 tiroirs"},"p":39.99,"i":"https://www.ikea.com/fr/fr/images/products/lote-commode-3-tiroirs-blanc__0651173_pe706785_s5.jpg"},{"n":"GUNDE","t":{"fr":"Chaise pliante","en":"Folding table","es":"Silla plegable","de":"Klappstuhl","it":"Sedia pieghevole"},"p":9.99,"i":"https://www.ikea.com/fr/fr/images/products/gunde-chaise-pliante-noir__0728313_pe736184_s5.jpg"},{"n":"SVALKA","t":{"fr":"Verre à vin","en":"Wine glass","es":"Copa de vino","de":"Weinglas","it":"Bicchiere da vino"},"p":6.99,"i":"https://www.ikea.com/fr/fr/images/products/svalka-verre-a-vin-verre-transparent__1328247_pe944761_s5.jpg"},{"n":"PEPPRIG","t":{"fr":"Kit de nettoyage","en":"Cleaning set","es":"Juego de limpieza","de":"Putz-Set","it":"Set per le pulizie"},"p":19.99,"i":"https://www.ikea.com/fr/fr/images/products/pepprig-kit-de-nettoyage-bleu-jaune__1240399_pe919359_s5.jpg"},{"n":"EKENÄSET","t":{"fr":"Fauteuil","en":"Armchair","es":"Sillón","de":"Sessel","it":"Poltrona"},"p":199.0,"i":"https://www.ikea.com/fr/fr/images/products/ekenaeset-fauteuil-kilanda-beige-clair__1109687_pe870153_s5.jpg"},{"n":"PÄRUP","t":{"fr":"Housse canapé 2 pl","en":"Housse canapé 2 pl","es":"Funda para sofá de 3 plazas","de":"Bezug 3er-Sofa","it":"Fodera per divano a 3 posti"},"p":169.0,"i":"https://www.ikea.com/fr/fr/images/products/paerup-housse-canape-2-pl-kelinge-gris-turquoise__1241938_pe919982_s5.jpg"},{"n":"FRIHETEN","t":{"fr":"Canapé convertible angle+rangement","en":"Corner sofa-bed with storage","es":"Sofá cama con chaiselongue","de":"Eckbettsofa mit Bettkasten","it":"Divano letto angolare/contenitore"},"p":549.0,"i":"https://www.ikea.com/fr/fr/images/products/friheten-canape-convertible-angle-rangement-skiftebo-gris-fonce__0175610_pe328883_s5.jpg"},{"n":"JÄTTEBO","t":{"fr":"Module 1,5 place avec rangement","en":"2,5-seat mod sofa w chaise longue","es":"Sofá modular 3 plazas","de":"4er-Sitzelement + Récamiere","it":"Elemento 1,5 posti con contenitore"},"p":445.0,"i":"https://www.ikea.com/fr/fr/images/products/jaettebo-module-1-5-place-avec-rangement-samsala-vert-jaune-fonce__1577478_pe1033229_s5.jpg"},{"n":"NORDLI","t":{"fr":"Commode modulable 2 tir","en":"Chest of 3 drawers","es":"Cómoda de 3 cajones","de":"Ansatzkleiderstange","it":"Struttura letto con cassetti"},"p":80.0,"i":"https://www.ikea.com/fr/fr/images/products/nordli-commode-modulable-2-tir-blanc__0555211_pe660201_s5.jpg"},{"n":"SNIGLAR","t":{"fr":"Lit bébé","en":"Cot","es":"Estructura de cama con somier","de":"Babybett","it":"Struttura letto con base a doghe"},"p":59.99,"i":"https://www.ikea.com/fr/fr/images/products/sniglar-lit-bebe-hetre__0637930_pe698615_s5.jpg"},{"n":"FLISAT","t":{"fr":"Rangement mural","en":"Wall storage","es":"Almacenaje de colgar","de":"Wandaufbewahrung","it":"Elemento da parete"},"p":14.99,"i":"https://www.ikea.com/fr/fr/images/products/flisat-rangement-mural-pin-teinte-blanc-clair__0642799_pe701440_s5.jpg"},{"n":"KUGGIS","t":{"fr":"Boîte de rangement avec couvercle","en":"Box with lid","es":"Caja","de":"Box mit Deckel","it":"Contenitore con coperchio"},"p":19.99,"i":"https://www.ikea.com/fr/fr/images/products/kuggis-boite-de-rangement-avec-couvercle-blanc__1139591_pe880451_s5.jpg"},{"n":"DIRIGERA","t":{"fr":"Passerelle pour produits connectés","en":"Hub for smart products","es":"Base para productos inteligentes","de":"Hub für smarte Produkte","it":"Hub prodotti smart"},"p":89.99,"i":"https://www.ikea.com/fr/fr/images/products/dirigera-passerelle-pour-produits-connectes-blanc-connecte__1032017_pe836737_s5.jpg"},{"n":"RANARP","t":{"fr":"Suspension","en":"Floor/reading lamp","es":"Foco de pared/con pinza","de":"Wand-/Klemmspot","it":"Faretto da parete/con morsetto"},"p":39.99,"i":"https://www.ikea.com/fr/fr/images/products/ranarp-suspension-blanc-casse__0613060_pe686150_s5.jpg"},{"n":"HEKTAR","t":{"fr":"Lampadaire avec 3 spots","en":"Floor lamp with 3-spot","es":"Lámpara de pie 3 focos","de":"Hängeleuchte","it":"Lampada a sospensione"},"p":49.99,"i":"https://www.ikea.com/fr/fr/images/products/hektar-lampadaire-avec-3-spots-gris-fonce__0606224_pe682139_s5.jpg"},{"n":"FORSÅ","t":{"fr":"Lampe de bureau","en":"Work lamp","es":"Lámpara flexo de trabajo","de":"Arbeitsleuchte","it":"Lampada da lavoro"},"p":24.99,"i":"https://www.ikea.com/fr/fr/images/products/forsa-lampe-de-bureau-nickele__0121576_pe278160_s5.jpg"},{"n":"KONCIS","t":{"fr":"Plat à four avec grille","en":"Roasting tin","es":"Molde para horno con rejilla","de":"Ofenform mit Rost","it":"Teglia da forno con griglia"},"p":14.99,"i":"https://www.ikea.com/fr/fr/images/products/koncis-plat-a-four-avec-grille-acier-inoxydable__0710557_pe727643_s5.jpg"},{"n":"STOENSE","t":{"fr":"Tapis, poils ras","en":"Rug, low pile","es":"Alfombra, pelo corto","de":"Teppich Kurzflor","it":"Tappeto, pelo corto"},"p":149.0,"i":"https://www.ikea.com/fr/fr/images/products/stoense-tapis-poils-ras-blanc-casse__0624402_pe691814_s5.jpg"},{"n":"TIPHEDE","t":{"fr":"Tapis tissé à plat","en":"Rug, flatwoven","es":"Alfombra","de":"Teppich flach gewebt","it":"Tappeto, tessitura piatta"},"p":9.99,"i":"https://www.ikea.com/fr/fr/images/products/tiphede-tapis-tisse-a-plat-naturel-noir__0772066_pe755879_s5.jpg"},{"n":"VOXNAN","t":{"fr":"Étagère douche","en":"Shower shelf","es":"Set ducha mezclador/termostato","de":"Kombidusche mit Umschalter","it":"Miscelatore per lavabo"},"p":12.99,"i":"https://www.ikea.com/fr/fr/images/products/voxnan-etagere-douche-chrome__0710464_pe727565_s5.jpg"},{"n":"BROGRUND","t":{"fr":"Poubelle ouverture à pression","en":"Touch top bin","es":"Estantería de esquina para pared","de":"Abfalleimer mit Druckdeckel","it":"Portasciugamani"},"p":14.99,"i":"https://www.ikea.com/fr/fr/images/products/brogrund-poubelle-ouverture-a-pression-acier-inoxydable__0733267_pe738907_s5.jpg"},{"n":"SUNDSÖ","t":{"fr":"Rangement","en":"Cabinet","es":"Mueble de almacenaje","de":"Schrank","it":"Mobile"},"p":89.99,"i":"https://www.ikea.com/fr/fr/images/products/sundsoe-rangement-anthracite-exterieur-interieur__1352213_pe952157_s5.jpg"},{"n":"LOMMARP","t":{"fr":"Rangement","en":"Cabinet with glass doors","es":"Mueble de almacenaje","de":"Schrank","it":"Mobile"},"p":349.0,"i":"https://www.ikea.com/fr/fr/images/products/lommarp-rangement-beige-clair__0739329_pe741693_s5.jpg"},{"n":"SOTENÄS","t":{"fr":"Fauteuil","en":"Armchair","es":"Sillón","de":"Sessel","it":"Poltrona"},"p":199.0,"i":"https://www.ikea.com/fr/fr/images/products/sotenaes-fauteuil-hakebo-rouge__1322509_pe942197_s5.jpg"},{"n":"ÅRSTID","t":{"fr":"Lampe de table","en":"Table lamp","es":"Lámpara de mesa","de":"Tischleuchte","it":"Lampada da tavolo"},"p":19.99,"i":"https://www.ikea.com/fr/fr/images/products/arstid-lampe-de-table-pied-laiton-blanc__0609329_pe684454_s5.jpg"},{"n":"LUNNOM","t":{"fr":"Ampoule LED E27 470 lumen","en":"LED bulb E27 806 lumen","es":"Bombilla LED E27 150 lúmenes","de":"LED-Leuchtmittel E27 470 lm","it":"Lampadina a LED E27 150 lumen"},"p":5.99,"i":"https://www.ikea.com/fr/fr/images/products/lunnom-ampoule-led-e27-470-lumen-intensite-lumineuse-reglable-globe-verre-transparent__1447411_pe989099_s5.jpg"},{"n":"SKAFTET","t":{"fr":"Pied lampadaire, arceau noir","en":"Floor lamp base, arched","es":"Base para lámpara de pie","de":"Standleuchtenfuß Bogenform","it":"Base per lampada da terra, ad arco"},"p":65.0,"i":"https://www.ikea.com/fr/fr/images/products/skaftet-pied-lampadaire-arceau-noir-noir__0760537_pe750808_s5.jpg"},{"n":"NYMÅNE","t":{"fr":"Applique/liseuse, inst fixe","en":"Table lamp","es":"Lámpara aplique fija de pared","de":"Deckenspot/4 Spots","it":"Faretto da soffitto a 4 luci"},"p":24.99,"i":"https://www.ikea.com/fr/fr/images/products/nymane-applique-liseuse-inst-fixe-blanc__0556021_pe660379_s5.jpg"},{"n":"VARMBLIXT","t":{"fr":"Lampe de table/applique LED","en":"LED table/wall lamp","es":"Lámpara mesa/pared LED","de":"Tisch-/Wandleuchte, LED","it":"Lampada da tavolo/parete a LED"},"p":49.99,"i":"https://www.ikea.com/fr/fr/images/products/varmblixt-lampe-de-table-applique-led-orange-verre-rond__1116616_pe872535_s5.jpg"},{"n":"LÅNESPELARE","t":{"fr":"Support pour écran","en":"Computer cart with shelf","es":"Soporte para PC con balda","de":"Computerrollwagen mit Ablage","it":"Carrello per computer con ripiano"},"p":19.99,"i":"https://www.ikea.com/fr/fr/images/products/lanespelare-support-pour-ecran-noir__1336702_pe947450_s5.jpg"},{"n":"MATCHSPEL","t":{"fr":"Chaise gaming","en":"Gaming chair","es":"Silla gaming","de":"Gamingstuhl","it":"Chaise gaming"},"p":179.0,"i":"https://www.ikea.com/fr/fr/images/products/matchspel-chaise-gaming-bomstad-gris-clair__1248931_pe923288_s5.jpg"},{"n":"HUVUDSPELARE","t":{"fr":"Chaise gaming","en":"Gaming desk","es":"Escritorio gaming","de":"Gamingstuhl","it":"Sedia da gaming"},"p":79.99,"i":"https://www.ikea.com/fr/fr/images/products/huvudspelare-chaise-gaming-noir__1039672_pe840417_s5.jpg"},{"n":"MARKUS","t":{"fr":"Chaise de bureau","en":"Office chair","es":"Silla de trabajo","de":"Drehstuhl","it":"Sedia da ufficio"},"p":199.0,"i":"https://www.ikea.com/fr/fr/images/products/markus-chaise-de-bureau-vissle-gris-fonce__0724714_pe734597_s5.jpg"},{"n":"JÄRVFJÄLLET","t":{"fr":"Chaise de bureau av accoudoirs","en":"Office chair with armrests","es":"Silla de trabajo con reposabrazos","de":"Drehstuhl mit Armlehnen","it":"Sedia da ufficio con braccioli"},"p":249.0,"i":"https://www.ikea.com/fr/fr/images/products/jaervfjaellet-chaise-de-bureau-av-accoudoirs-glose-noir__1009906_pe827773_s5.jpg"},{"n":"NORDKISA","t":{"fr":"Armoire ouverte av porte couliss","en":"Open wardrobe with sliding door","es":"Armario abierto puerta corredera","de":"Kleiderschrank, offen/Schiebetür","it":"Guardaroba a giorno/ante scorrevoli"},"p":369.0,"i":"https://www.ikea.com/fr/fr/images/products/nordkisa-armoire-ouverte-av-porte-couliss-bambou__0756084_pe748766_s5.jpg"},{"n":"HAMNÖN","t":{"fr":"Hamac","en":"Hammock","es":"Hamaca","de":"Hängematte","it":"Amaca"},"p":50.0,"i":"https://www.ikea.com/fr/fr/images/products/hamnoen-hamac-anthracite-blanc__1164846_pe890687_s5.jpg"},{"n":"KOLBJÖRN","t":{"fr":"Élément rangement int/extérieur","en":"Cabinet","es":"Mueble de almacenaje","de":"Schrank drinnen/draußen","it":"Mobile"},"p":149.0,"i":"https://www.ikea.com/fr/fr/images/products/kolbjoern-element-rangement-int-exterieur-beige__0664606_pe718444_s5.jpg"},{"n":"HYLLIS","t":{"fr":"Étagère","en":"Shelving unit","es":"Estantería","de":"Regal","it":"Scaffale"},"p":14.99,"i":"https://www.ikea.com/fr/fr/images/products/hyllis-etagere-interieur-exterieur__0639121_pe704408_s5.jpg"},{"n":"OMAR","t":{"fr":"Étagère","en":"Shelving unit with clothes rail","es":"Estantería","de":"Regal","it":"1 sezione"},"p":59.99,"i":"https://www.ikea.com/fr/fr/images/products/omar-etagere-acier-zingue__0650980_pe706616_s5.jpg"}];
+const DECOR = [{"p":3.99,"i":"https://www.ikea.com/fr/fr/images/products/fabler-couverts-3-pieces-acier-inoxydable__0711359_pe728202_s5.jpg"},{"p":9.99,"i":"https://www.ikea.com/fr/fr/images/products/gunde-chaise-pliante-noir__0728313_pe736184_s5.jpg"},{"p":6.99,"i":"https://www.ikea.com/fr/fr/images/products/svalka-verre-a-vin-verre-transparent__1328247_pe944761_s5.jpg"},{"p":0.99,"i":"https://www.ikea.com/fr/fr/images/products/baestis-brosse-adhesive-gris__0654805_pe708843_s5.jpg"},{"p":2.99,"i":"https://www.ikea.com/fr/fr/images/products/korken-bocal-avec-couvercle-verre-transparent__0713739_pe729738_s5.jpg"}];
+
+const LANGS = ['fr','en','es','de','it'];
+const LOCALES = { fr:'fr-FR', en:'en-GB', es:'es-ES', de:'de-DE', it:'it-IT' };
+
+const I18N = {
+fr:{
+ title:'CLIKEA — Devinez le nom',
+ desc:'CLIKEA : 20 produits IKEA tirés au sort, en duo, carré ou cash. Devinez le nom.',
+ sub:'Devinez le nom', kicker:'20 produits tirés au sort · duo, carré, cash',
+ h1a:'Une photo.', h1b:'Duo, carré', h1c:'ou cash.',
+ lede:'Vous avez déjà monté un BILLY un dimanche soir. Sur les {n} produits de la maison, 20 vont défiler. À vous de les nommer.',
+ r1t:'Duo', r1x:'Deux noms au choix. Le plus sûr, le moins payé : <i class="pt">1 pt</i>.',
+ r2t:'Carré', r2x:'Quatre noms, trois pièges. <i class="pt">3 pts</i>.',
+ r3t:'Cash', r3x:'Aucune proposition, vous écrivez le nom. <i class="pt">5 pts</i>.',
+ who:'Votre nom', whoPh:'Ex. César', start:'Commencer mes achats',
+ dEasy:'Facile', dMedium:'Moyen', dHard:'Difficile',
+ dEasyS:'45 produits connus, trois modes', dMediumS:'109 produits, trois modes', dHardS:'109 produits, cash uniquement',
+ boardTitle:'Classement public', boardOpen:'Voir le classement', boardPlay:'Jouer', boardBack:'Retour',
+ boardNote:'20 meilleurs scores par niveau. Une ligne par partie.',
+ boardLoading:'Chargement du classement…', boardEmpty:'Personne encore. Soyez le premier.',
+ boardError:'Classement indisponible pour le moment.', rcDiff:'Niveau',
+ rankLine:'Ta place : {rank}e en {diff}', savedLine:'Score enregistré',
+ fine:'20 produits · 100 points en jeu · pas de notice de montage',
+ count:'20 produits', photoTag:'À vous de jouer',
+ promptMode:'Choisissez votre mode',
+ promptDuo:'Duo : deux noms, un seul est vrai',
+ promptCarre:'Carré : quatre noms, un seul est vrai',
+ promptCash:'Cash : écrivez le nom, sans filet',
+ m1:'Duo', m1s:'2 noms', m2:'Carré', m2s:'4 noms', m3:'Cash', m3s:'sans filet',
+ p1:'1 pt', p3:'3 pts', p5:'5 pts',
+ cashPh:'Votre réponse…', cashOk:'Valider',
+ q:'Question {i} / {n}', streak:'série {n}', metaScore:'{n} pt', metaScoreMany:'{n} pts',
+ ok:'Exact', ko:'Raté', gain:'+{n} pt', gainMany:'+{n} pts', gainNone:'0 pt',
+ next:'Produit suivant', seeReceipt:'Voir le ticket',
+ rcTitle:'Ticket de caisse', rcCaisse:'Caisse 7', rcClient:'Client',
+ rcGood:'Produits reconnus', rcTotal:'Produits présentés', rcPts:'Points',
+ rcStreak:'Meilleure série', rcTime:'Temps', rcBest:'Record personnel', rcScore:'Score',
+ rcThanks:'Merci de votre visite', share:'Partager mon score', replay:'Rejouer',
+ v100:'Sans faute, et en Cash. Vous pourriez prendre la place.',
+ v80:'Impressionnant. Vous pourriez guider les clients dans le magasin les yeux fermés.',
+ v55:'Solide. Vous avez fait le tour du magasin au moins une fois dans votre vie.',
+ v30:'Honorable. On monte le BILLY, on devine le reste plus tard.',
+ v0:'Vous êtes surtout passé par la cafeteria. C’est déjà un bon début.',
+ shareText:'J’ai marqué {pts}/{max} à CLIKEA ({good}/{total} noms trouvés). Saurez-vous faire mieux ?',
+ tName:'Entrez votre nom pour commencer', tPhoto:'Photo indisponible, on passe au suivant',
+ tEmpty:'Écrivez un nom', tCopied:'Score copié', tCopyFail:'Copie impossible',
+ f1:'CLIKEA — pastiche non officiel, fait pour s’amuser entre deux montages.', f2:'Photos produit : ikea.com'
+},
+en:{
+ title:'CLIKEA — Guess the name',
+ desc:'CLIKEA: 20 random IKEA products, in duo, square or cash. Guess the name.',
+ sub:'Guess the name', kicker:'20 random products · duo, square, cash',
+ h1a:'One photo.', h1b:'Duo, square', h1c:'or cash.',
+ lede:'You have already assembled a BILLY on a Sunday night. Out of the {n} products in the house, 20 will come up. Name them.',
+ r1t:'Duo', r1x:'Two names to pick from. Safest, lowest pay: <i class="pt">1 pt</i>.',
+ r2t:'Square', r2x:'Four names, three traps. <i class="pt">3 pts</i>.',
+ r3t:'Cash', r3x:'No options, you type the name. <i class="pt">5 pts</i>.',
+ who:'Your name', whoPh:'e.g. Alex', start:'Start shopping',
+ dEasy:'Easy', dMedium:'Medium', dHard:'Hard',
+ dEasyS:'45 well-known products, three modes', dMediumS:'109 products, three modes', dHardS:'109 products, cash only',
+ boardTitle:'Public leaderboard', boardOpen:'See the leaderboard', boardPlay:'Play', boardBack:'Back',
+ boardNote:'Top 20 per level. One row per game.',
+ boardLoading:'Loading the leaderboard…', boardEmpty:'Nobody yet. Be the first.',
+ boardError:'Leaderboard unavailable right now.', rcDiff:'Level',
+ rankLine:'Your rank: {rank} in {diff}', savedLine:'Score saved',
+ fine:'20 products · 100 points up for grabs · no assembly required',
+ count:'20 products', photoTag:'Your turn',
+ promptMode:'Pick your mode',
+ promptDuo:'Duo: two names, only one is right',
+ promptCarre:'Square: four names, only one is right',
+ promptCash:'Cash: type the name, no safety net',
+ m1:'Duo', m1s:'2 names', m2:'Square', m2s:'4 names', m3:'Cash', m3s:'no net',
+ p1:'1 pt', p3:'3 pts', p5:'5 pts',
+ cashPh:'Your answer…', cashOk:'Check',
+ q:'Question {i} / {n}', streak:'streak {n}', metaScore:'{n} pt', metaScoreMany:'{n} pts',
+ ok:'Correct', ko:'Missed', gain:'+{n} pt', gainMany:'+{n} pts', gainNone:'0 pt',
+ next:'Next product', seeReceipt:'See the receipt',
+ rcTitle:'Receipt', rcCaisse:'Checkout 7', rcClient:'Customer',
+ rcGood:'Products named', rcTotal:'Products shown', rcPts:'Points',
+ rcStreak:'Best streak', rcTime:'Time', rcBest:'Personal best', rcScore:'Score',
+ rcThanks:'Thank you for shopping', share:'Share my score', replay:'Play again',
+ v100:'Flawless, and in Cash. You could take the chair.',
+ v80:'Impressive. You could guide customers through the store with your eyes closed.',
+ v55:'Solid. You have walked the whole store at least once in your life.',
+ v30:'Respectable. We build the BILLY, the rest comes later.',
+ v0:'You mostly went for the meatballs. That is a start.',
+ shareText:'I scored {pts}/{max} at CLIKEA ({good}/{total} names found). Can you do better?',
+ tName:'Enter your name to start', tPhoto:'Photo unavailable, skipping',
+ tEmpty:'Type a name', tCopied:'Score copied', tCopyFail:'Copy failed',
+ f1:'CLIKEA — unofficial parody, made for fun between two flat-packs.', f2:'Product photos: ikea.com'
+},
+es:{
+ title:'CLIKEA — Adivina el nombre',
+ desc:'CLIKEA: 20 productos IKEA al azar, en dúo, cuadrado o cash. Adivina el nombre.',
+ sub:'Adivina el nombre', kicker:'20 productos al azar · dúo, cuadrado, cash',
+ h1a:'Una foto.', h1b:'Dúo, cuadrado', h1c:'o cash.',
+ lede:'Ya has montado un BILLY un domingo por la noche. De los {n} productos de la casa, 20 van a desfilar. Ponles nombre.',
+ r1t:'Dúo', r1x:'Dos nombres a elegir. Lo más seguro, lo peor pagado: <i class="pt">1 pt</i>.',
+ r2t:'Cuadrado', r2x:'Cuatro nombres, tres trampas. <i class="pt">3 pts</i>.',
+ r3t:'Cash', r3x:'Sin opciones, escribes el nombre. <i class="pt">5 pts</i>.',
+ who:'Tu nombre', whoPh:'Ej. Marta', start:'Empezar la compra',
+ dEasy:'Fácil', dMedium:'Medio', dHard:'Difícil',
+ dEasyS:'45 productos conocidos, tres modos', dMediumS:'109 productos, tres modos', dHardS:'109 productos, solo cash',
+ boardTitle:'Clasificación pública', boardOpen:'Ver la clasificación', boardPlay:'Jugar', boardBack:'Volver',
+ boardNote:'Los 20 mejores por nivel. Una línea por partida.',
+ boardLoading:'Cargando la clasificación…', boardEmpty:'Nadie todavía. Sé el primero.',
+ boardError:'Clasificación no disponible por ahora.', rcDiff:'Nivel',
+ rankLine:'Tu puesto: {rank} en {diff}', savedLine:'Puntuación guardada',
+ fine:'20 productos · 100 puntos en juego · sin instrucciones de montaje',
+ count:'20 productos', photoTag:'Tu turno',
+ promptMode:'Elige tu modo',
+ promptDuo:'Dúo: dos nombres, solo uno es correcto',
+ promptCarre:'Cuadrado: cuatro nombres, solo uno es correcto',
+ promptCash:'Cash: escribe el nombre, sin red',
+ m1:'Dúo', m1s:'2 nombres', m2:'Cuadrado', m2s:'4 nombres', m3:'Cash', m3s:'sin red',
+ p1:'1 pt', p3:'3 pts', p5:'5 pts',
+ cashPh:'Tu respuesta…', cashOk:'Validar',
+ q:'Pregunta {i} / {n}', streak:'racha {n}', metaScore:'{n} pt', metaScoreMany:'{n} pts',
+ ok:'Correcto', ko:'Fallado', gain:'+{n} pt', gainMany:'+{n} pts', gainNone:'0 pt',
+ next:'Siguiente producto', seeReceipt:'Ver el ticket',
+ rcTitle:'Ticket de compra', rcCaisse:'Caja 7', rcClient:'Cliente',
+ rcGood:'Productos acertados', rcTotal:'Productos mostrados', rcPts:'Puntos',
+ rcStreak:'Mejor racha', rcTime:'Tiempo', rcBest:'Récord personal', rcScore:'Puntuación',
+ rcThanks:'Gracias por su visita', share:'Compartir mi puntuación', replay:'Jugar otra vez',
+ v100:'Sin fallos y en Cash. Podrías ocupar la silla.',
+ v80:'Impresionante. Podrías guiar a los clientes por la tienda con los ojos cerrados.',
+ v55:'Sólido. Has recorrido la tienda entera al menos una vez en tu vida.',
+ v30:'Honorable. Montamos el BILLY, lo demás ya vendrá.',
+ v0:'Sobre todo has pasado por la cafetería. Ya es un comienzo.',
+ shareText:'He hecho {pts}/{max} en CLIKEA ({good}/{total} nombres acertados). ¿Puedes hacerlo mejor?',
+ tName:'Escribe tu nombre para empezar', tPhoto:'Foto no disponible, pasamos a la siguiente',
+ tEmpty:'Escribe un nombre', tCopied:'Puntuación copiada', tCopyFail:'No se pudo copiar',
+ f1:'CLIKEA — parodia no oficial, hecha para divertirse entre dos montajes.', f2:'Fotos de producto: ikea.com'
+},
+de:{
+ title:'CLIKEA — Erraten Sie den Namen',
+ desc:'CLIKEA: 20 zufällige IKEA-Produkte, als Duo, Quadrat oder Cash. Erraten Sie den Namen.',
+ sub:'Namen raten', kicker:'20 zufällige Produkte · Duo, Quadrat, Cash',
+ h1a:'Ein Foto.', h1b:'Duo, Quadrat', h1c:'oder Cash.',
+ lede:'Sie haben schon einmal ein BILLY an einem Sonntagabend aufgebaut. Von den {n} Produkten des Hauses kommen 20. Benennen Sie sie.',
+ r1t:'Duo', r1x:'Zwei Namen zur Auswahl. Am sichersten, am schlechtesten bezahlt: <i class="pt">1 Pkt.</i>',
+ r2t:'Quadrat', r2x:'Vier Namen, drei Fallen. <i class="pt">3 Pkt.</i>',
+ r3t:'Cash', r3x:'Keine Vorschläge, Sie tippen den Namen. <i class="pt">5 Pkt.</i>',
+ who:'Ihr Name', whoPh:'z. B. Alex', start:'Einkauf starten',
+ dEasy:'Einfach', dMedium:'Mittel', dHard:'Schwer',
+ dEasyS:'45 bekannte Produkte, drei Modi', dMediumS:'109 Produkte, drei Modi', dHardS:'109 Produkte, nur Cash',
+ boardTitle:'Öffentliche Rangliste', boardOpen:'Rangliste ansehen', boardPlay:'Spielen', boardBack:'Zurück',
+ boardNote:'Die 20 besten je Stufe. Eine Zeile pro Partie.',
+ boardLoading:'Rangliste wird geladen…', boardEmpty:'Noch niemand. Seien Sie der Erste.',
+ boardError:'Rangliste derzeit nicht verfügbar.', rcDiff:'Stufe',
+ rankLine:'Ihr Platz: {rank} in {diff}', savedLine:'Punktzahl gespeichert',
+ fine:'20 Produkte · 100 Punkte zu holen · keine Aufbauanleitung',
+ count:'20 Produkte', photoTag:'Sie sind dran',
+ promptMode:'Wählen Sie den Modus',
+ promptDuo:'Duo: zwei Namen, nur einer stimmt',
+ promptCarre:'Quadrat: vier Namen, nur einer stimmt',
+ promptCash:'Cash: tippen Sie den Namen, ohne Netz',
+ m1:'Duo', m1s:'2 Namen', m2:'Quadrat', m2s:'4 Namen', m3:'Cash', m3s:'ohne Netz',
+ p1:'1 Pkt.', p3:'3 Pkt.', p5:'5 Pkt.',
+ cashPh:'Ihre Antwort…', cashOk:'Prüfen',
+ q:'Frage {i} / {n}', streak:'Serie {n}', metaScore:'{n} Pkt.', metaScoreMany:'{n} Pkt.',
+ ok:'Richtig', ko:'Daneben', gain:'+{n} Pkt.', gainMany:'+{n} Pkt.', gainNone:'0 Pkt.',
+ next:'Nächstes Produkt', seeReceipt:'Zum Kassenbon',
+ rcTitle:'Kassenbon', rcCaisse:'Kasse 7', rcClient:'Kunde',
+ rcGood:'Erkannte Produkte', rcTotal:'Gezeigte Produkte', rcPts:'Punkte',
+ rcStreak:'Beste Serie', rcTime:'Zeit', rcBest:'Persönlicher Rekord', rcScore:'Punkte',
+ rcThanks:'Danke für Ihren Einkauf', share:'Punktzahl teilen', replay:'Nochmal spielen',
+ v100:'Fehlerfrei, und das in Cash. Sie könnten den Stuhl übernehmen.',
+ v80:'Beeindruckend. Sie könnten Kunden mit geschlossenen Augen durch den Markt führen.',
+ v55:'Solide. Sie sind mindestens einmal durch den ganzen Markt gelaufen.',
+ v30:'Ordentlich. Das BILLY steht, der Rest kommt später.',
+ v0:'Sie waren vor allem in der Cafeteria. Das ist ein Anfang.',
+ shareText:'Ich habe {pts}/{max} bei CLIKEA geschafft ({good}/{total} Namen erraten). Schaffen Sie mehr?',
+ tName:'Geben Sie Ihren Namen ein', tPhoto:'Foto nicht verfügbar, weiter zum nächsten',
+ tEmpty:'Namen eingeben', tCopied:'Punktzahl kopiert', tCopyFail:'Kopieren nicht möglich',
+ f1:'CLIKEA — inoffizielle Parodie, zum Spaß zwischen zwei Aufbauten.', f2:'Produktfotos: ikea.com'
+},
+it:{
+ title:'CLIKEA — Indovina il nome',
+ desc:'CLIKEA: 20 prodotti IKEA estratti a sorte, in duo, quadrato o cash. Indovina il nome.',
+ sub:'Indovina il nome', kicker:'20 prodotti estratti · duo, quadrato, cash',
+ h1a:'Una foto.', h1b:'Duo, quadrato', h1c:'o cash.',
+ lede:'Hai già montato un BILLY una domenica sera. Dei {n} prodotti della casa, 20 sfileranno. Dai loro un nome.',
+ r1t:'Duo', r1x:'Due nomi tra cui scegliere. Il più sicuro, il meno pagato: <i class="pt">1 pt</i>.',
+ r2t:'Quadrato', r2x:'Quattro nomi, tre trappole. <i class="pt">3 pt</i>.',
+ r3t:'Cash', r3x:'Nessuna opzione, scrivi il nome. <i class="pt">5 pt</i>.',
+ who:'Il tuo nome', whoPh:'es. Marco', start:'Inizia la spesa',
+ dEasy:'Facile', dMedium:'Medio', dHard:'Difficile',
+ dEasyS:'45 prodotti conosciuti, tre modalità', dMediumS:'109 prodotti, tre modalità', dHardS:'109 prodotti, solo cash',
+ boardTitle:'Classifica pubblica', boardOpen:'Vedi la classifica', boardPlay:'Gioca', boardBack:'Indietro',
+ boardNote:'I 20 migliori per livello. Una riga per partita.',
+ boardLoading:'Caricamento della classifica…', boardEmpty:'Nessuno per ora. Sii il primo.',
+ boardError:'Classifica non disponibile al momento.', rcDiff:'Livello',
+ rankLine:'Il tuo posto: {rank} in {diff}', savedLine:'Punteggio salvato',
+ fine:'20 prodotti · 100 punti in palio · senza istruzioni di montaggio',
+ count:'20 prodotti', photoTag:'Tocca a te',
+ promptMode:'Scegli la modalità',
+ promptDuo:'Duo: due nomi, uno solo è giusto',
+ promptCarre:'Quadrato: quattro nomi, uno solo è giusto',
+ promptCash:'Cash: scrivi il nome, senza rete',
+ m1:'Duo', m1s:'2 nomi', m2:'Quadrato', m2s:'4 nomi', m3:'Cash', m3s:'senza rete',
+ p1:'1 pt', p3:'3 pt', p5:'5 pt',
+ cashPh:'La tua risposta…', cashOk:'Conferma',
+ q:'Domanda {i} / {n}', streak:'serie {n}', metaScore:'{n} pt', metaScoreMany:'{n} pt',
+ ok:'Giusto', ko:'Sbagliato', gain:'+{n} pt', gainMany:'+{n} pt', gainNone:'0 pt',
+ next:'Prodotto successivo', seeReceipt:'Vedi lo scontrino',
+ rcTitle:'Scontrino', rcCaisse:'Cassa 7', rcClient:'Cliente',
+ rcGood:'Prodotti indovinati', rcTotal:'Prodotti mostrati', rcPts:'Punti',
+ rcStreak:'Serie migliore', rcTime:'Tempo', rcBest:'Record personale', rcScore:'Punteggio',
+ rcThanks:'Grazie della visita', share:'Condividi il punteggio', replay:'Gioca ancora',
+ v100:'Senza errori, e in Cash. Potresti prendere la sedia.',
+ v80:'Impressionante. Potresti guidare i clienti nel negozio a occhi chiusi.',
+ v55:'Solido. Hai girato tutto il negozio almeno una volta nella vita.',
+ v30:'Onorevole. Montiamo il BILLY, il resto arriva dopo.',
+ v0:'Sei passato soprattutto dalla caffetteria. È già un inizio.',
+ shareText:'Ho fatto {pts}/{max} a CLIKEA ({good}/{total} nomi indovinati). Sapete fare meglio?',
+ tName:'Inserisci il tuo nome per iniziare', tPhoto:'Foto non disponibile, passiamo avanti',
+ tEmpty:'Scrivi un nome', tCopied:'Punteggio copiato', tCopyFail:'Copia non riuscita',
+ f1:'CLIKEA — parodia non ufficiale, fatta per ridere tra due montaggi.', f2:'Foto prodotto: ikea.com'
+}
+};
+
+let lang = 'fr';
+function t(key, vars){
+  const pack = I18N[lang] || I18N.fr;
+  let s = (pack[key] !== undefined ? pack[key] : I18N.fr[key]);
+  if(s === undefined) return key;
+  if(vars) for(const k in vars) s = s.split('{' + k + '}').join(vars[k]);
+  return s;
+}
+function fmtPrice(p){
+  if(p == null) return null;
+  try{ return new Intl.NumberFormat(LOCALES[lang], {style:'currency', currency:'EUR'}).format(p); }
+  catch(e){ return p.toFixed(2).replace('.',',') + ' €'; }
+}
+function ptsLabel(n){ return t(n > 1 ? 'gainMany' : 'gain').replace('{n}', n); }
+function metaScoreLabel(n){ return t(n > 1 ? 'metaScoreMany' : 'metaScore').replace('{n}', n); }
+
+function applyLang(next, opts){
+  lang = LANGS.includes(next) ? next : 'fr';
+  const L = I18N[lang];
+  document.documentElement.lang = lang;
+  document.title = L.title;
+  const md = document.querySelector('meta[name="description"]'); if(md) md.setAttribute('content', L.desc);
+  const set = (sel, val) => { const el = document.querySelector(sel); if(el) el.textContent = val; };
+  const html = (sel, val) => { const el = document.querySelector(sel); if(el) el.innerHTML = val; };
+
+  set('#i18nSub', L.sub);
+  set('#kicker', L.kicker);
+  set('#h1a', L.h1a); set('#h1b', L.h1b); set('#h1c', L.h1c);
+  html('#lede', L.lede.replace('{n}', PRODUCTS.length));
+  set('#r1t', L.r1t); html('#r1x', L.r1x);
+  set('#r2t', L.r2t); html('#r2x', L.r2x);
+  set('#r3t', L.r3t); html('#r3x', L.r3x);
+  set('#whoLabel', L.who);
+  const nameInput = document.querySelector('#playerName');
+  if(nameInput) nameInput.placeholder = L.whoPh;
+  set('#startBtn', L.start);
+  set('#fine', L.fine);
+  set('#photoTag', L.photoTag);
+  set('#m1t', L.m1); set('#m1s', L.m1s);
+  set('#m2t', L.m2); set('#m2s', L.m2s);
+  set('#m3t', L.m3); set('#m3s', L.m3s);
+  set('#m1p', L.p1); set('#m2p', L.p3); set('#m3p', L.p5);
+  const cashInput = document.querySelector('#cashInput');
+  if(cashInput) cashInput.placeholder = L.cashPh;
+  set('#cashBtn', L.cashOk);
+  set('#rcTitle', L.rcTitle); set('#rcCaisse', L.rcCaisse); set('#rcClient', L.rcClient);
+  set('#rcGoodL', L.rcGood); set('#rcTotalL', L.rcTotal); set('#rcPtsL', L.rcPts);
+  set('#rcStreakL', L.rcStreak); set('#rcTimeL', L.rcTime); set('#rcBestL', L.rcBest);
+  set('#rcScoreL', L.rcScore); set('#rcThanks', L.rcThanks);
+  set('#shareBtn', L.share); set('#replayBtn', L.replay);
+  set('#f1', L.f1); set('#f2', L.f2);
+  set('#d1t', L.dEasy); set('#d1s', L.dEasyS);
+  set('#d2t', L.dMedium); set('#d2s', L.dMediumS);
+  set('#d3t', L.dHard); set('#d3s', L.dHardS);
+  set('#boardOpen', L.boardOpen); set('#boardTitle', L.boardTitle);
+  set('#boardPlay', L.boardPlay); set('#boardBack', L.boardBack);
+  set('#rcDiffL', L.rcDiff);
+  const bnote = document.querySelector('#boardNote'); if(bnote) bnote.textContent = L.boardNote;
+  if(typeof renderBoardTabs === 'function') renderBoardTabs();
+  if(typeof setSubmitLine === 'function') setSubmitLine();
+
+  const sel = document.querySelector('#lang'); if(sel) sel.value = lang;
+  if(!opts || opts.keepMeta !== true){
+    if(state.started && state.i >= 0 && !document.getElementById('end').classList.contains('on')){
+      const label = document.querySelector('#qLabel');
+      if(label && state.queue.length) label.textContent = t('q', {i: state.i + 1, n: state.queue.length});
+      const count = document.querySelector('#metaCount');
+      if(count && state.queue.length) count.textContent = (state.i + 1) + ' / ' + state.queue.length;
+      const score = document.querySelector('#metaScore');
+      if(score) score.textContent = metaScoreLabel(state.pts);
+      document.querySelector('#streakLabel').textContent = state.streak >= 2 ? t('streak', {n: state.streak}) : '';
+      if(state.mode){
+        document.querySelector('#prompt').textContent = t(
+          state.mode === 'cash' ? 'promptCash' : state.mode === 'duo' ? 'promptDuo' : 'promptCarre');
+      } else {
+        document.querySelector('#prompt').textContent = t('promptMode');
+      }
+    } else {
+      const count = document.querySelector('#metaCount');
+      if(count && !state.started) count.textContent = t('count');
+    }
+  }
+  if(state.last) renderFeedback();
+  if(document.getElementById('end').classList.contains('on')) renderVerdict();
+  try{ localStorage.setItem('clikea-lang', lang); }catch(e){}
+}
+
+
+const $ = (s) => document.querySelector(s);
+const state = {
+  queue: [],
+  player: '',
+  i: 0,
+  good: 0,
+  pts: 0,
+  streak: 0,
+  bestStreak: 0,
+  mode: null,
+  locked: false,
+  started: 0,
+  answered: 0,
+  skipped: 0,
+  last: null,
+  difficulty: 'medium',
+  submitted: false,
+  submitOk: null,
+  rank: null,
+  boardDiff: 'medium',
+  boardBack: 'intro'
+};
+
+const SELFTEST = location.search.includes('selftest');
+
+const MODES = {
+  duo:   { n: 2, pts: 1, label: 'Duo' },
+  carre: { n: 4, pts: 3, label: 'Carré' },
+  cash:  { n: 0, pts: 5, label: 'Cash' }
+};
+const GAME_SIZE = 20;
+const MAX_PTS = GAME_SIZE * MODES.cash.pts;
+
+function shuffle(a){ for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];} return a; }
+function pad(n){ return String(n).padStart(2,'0'); }
+function typeOf(p){
+  const v = p && p.t;
+  if(!v) return '';
+  if(typeof v === 'string') return v;
+  return v[lang] || v.en || v.fr || '';
+}
+const MODEKEY = { duo:'m1', carre:'m2', cash:'m3' };
+
+/* ---------- difficulté ---------- */
+const EASY_NAMES = ["BILLY","KALLAX","POÄNG","LACK","MALM","STRANDMON","BLÅHAJ","RÅSKOG","ALEX","PAX",
+"HEMNES","EKTORP","KLIPPAN","KIVIK","VIMLE","SÖDERHAMN","MICKE","TROFAST","MAMMUT","ANTILOP","DUKTIG",
+"GOSIG GOLDEN","BEKVÄM","MARIUS","INGOLF","FJÄLLBO","VITTSJÖ","HAUGA","BRIMNES","HAVSTA","KNOXHULT",
+"SUNDVIK","SMÅSTAD","KURA","MULIG","SKUBB","FÖRNUFTIG","TRÅDFRI","STOCKHOLM","GULLIVER","SAMLA",
+"RISATORP","KVISTBRO","FEJKA","LISABO","DAGOTTO","TERTIAL","PÅHL","KALAS"];
+
+const DIFFKEY = { easy:'dEasy', medium:'dMedium', hard:'dHard' };
+function diffLabel(d){ return t(DIFFKEY[d] || 'dMedium'); }
+
+const DIFFS = {
+  easy:   { pool: EASY_NAMES, modes: ['duo','carre','cash'] },
+  medium: { pool: null,        modes: ['duo','carre','cash'] },
+  hard:   { pool: null,        modes: ['cash'] }
+};
+
+/* ---------- analytics (PostHog, sans dépendance) ---------- */
+const PH_HOST = 'https://eu.i.posthog.com';
+const PH_KEY = 'phc_ondPPnCQSLG6jFSgRU7bha7RZYQFwpxSipvaTT683L6u';
+function deviceId(){
+  let id = null;
+  try{ id = localStorage.getItem('clikea-did'); }catch(e){}
+  if(!id){
+    id = 'c-' + Math.random().toString(36).slice(2) + Date.now().toString(36);
+    try{ localStorage.setItem('clikea-did', id); }catch(e){}
+  }
+  return id;
+}
+function track(event, props){
+  if(SELFTEST) return;
+  try{
+    const body = JSON.stringify({
+      api_key: PH_KEY,
+      event: event,
+      properties: Object.assign({
+        distinct_id: deviceId(),
+        $current_url: location.href,
+        lang: lang,
+        difficulty: state.difficulty,
+        app: 'clikea'
+      }, props || {}),
+      timestamp: new Date().toISOString()
+    });
+    if(navigator.sendBeacon){
+      navigator.sendBeacon(PH_HOST + '/capture/', new Blob([body], {type: 'application/json'}));
+    } else {
+      fetch(PH_HOST + '/capture/', {method:'POST', headers:{'Content-Type':'application/json'}, body: body, keepalive: true}).catch(function(){});
+    }
+  }catch(e){}
+}
+
+/* ---------- classement public ---------- */
+const API_URL = 'https://zyoxinynnvukexsfnbdq.supabase.co/rest/v1/clikea_scores';
+const API_KEY = 'sb_publishable_ECk3UyP-mwXUhS1NzQL1DQ_ppcj9NoC';
+
+function boardQuery(diff){
+  return API_URL + '?select=name,score,correct,difficulty,created_at'
+    + '&difficulty=eq.' + encodeURIComponent(diff)
+    + '&order=score.desc,created_at.asc&limit=20';
+}
+function apiHeaders(extra){
+  return Object.assign({
+    'apikey': API_KEY,
+    'Authorization': 'Bearer ' + API_KEY,
+    'Content-Type': 'application/json'
+  }, extra || {});
+}
+async function submitScore(){
+  if(SELFTEST) return;
+  if(state.submitted) return;
+  state.submitted = true;
+  try{
+    const r = await fetch(API_URL, {
+      method: 'POST',
+      headers: apiHeaders({'Prefer': 'return=minimal'}),
+      body: JSON.stringify({
+        name: state.player.slice(0, 20),
+        score: state.pts,
+        correct: state.good,
+        total: state.queue.length,
+        difficulty: state.difficulty,
+        lang: lang,
+        duration_s: Math.min(7200, Math.round((Date.now() - state.started) / 1000))
+      })
+    });
+    state.submitOk = r.ok || r.status === 201;
+    track('clikea_score_submitted', {ok: state.submitOk, score: state.pts, difficulty: state.difficulty});
+    if(state.submitOk) loadRank();
+  }catch(e){
+    state.submitOk = false;
+    track('clikea_score_submitted', {ok: false, score: state.pts, difficulty: state.difficulty});
+  }
+  setSubmitLine();
+}
+async function loadRank(){
+  try{
+    const url = API_URL + '?select=id&difficulty=eq.' + encodeURIComponent(state.difficulty)
+      + '&score=gt.' + state.pts + '&limit=1';
+    const r = await fetch(url, {headers: apiHeaders({'Prefer': 'count=exact'})});
+    const range = r.headers.get('content-range') || '';
+    const n = parseInt((range.split('/')[1] || ''), 10);
+    if(!isNaN(n)){
+      state.rank = n + 1;
+      setSubmitLine();
+    }
+  }catch(e){}
+}
+function setSubmitLine(){
+  const el = $('#rankLine');
+  if(!el) return;
+  if(state.rank && state.submitOk){
+    el.textContent = t('rankLine', {rank: state.rank, diff: diffLabel(state.difficulty)});
+    el.hidden = false;
+  } else if(state.submitOk){
+    el.textContent = t('savedLine');
+    el.hidden = false;
+  } else {
+    el.hidden = true;
+  }
+}
+async function openBoard(diff, back){
+  state.boardBack = back || 'intro';
+  state.boardDiff = diff || state.difficulty || 'medium';
+  show('board');
+  renderBoardTabs();
+  await loadBoard();
+  track('clikea_leaderboard_opened', {difficulty: state.boardDiff});
+}
+function renderBoardTabs(){
+  document.querySelectorAll('#boardTabs .tab').forEach(b=>{
+    b.classList.toggle('on', b.dataset.diff === state.boardDiff);
+    b.textContent = diffLabel(b.dataset.diff);
+  });
+}
+async function loadBoard(){
+  const rows = $('#boardRows');
+  rows.innerHTML = '<div class="empty">' + t('boardLoading') + '</div>';
+  let data = null;
+  try{
+    const r = await fetch(boardQuery(state.boardDiff), {headers: apiHeaders()});
+    if(r.ok) data = await r.json();
+  }catch(e){}
+  if(!data){
+    rows.innerHTML = '<div class="empty">' + t('boardError') + '</div>';
+    return;
+  }
+  if(!data.length){
+    rows.innerHTML = '<div class="empty">' + t('boardEmpty') + '</div>';
+    return;
+  }
+  const me = (state.player || '').trim().toLowerCase();
+  rows.innerHTML = data.map((r, i) => {
+    const mine = me && r.name.trim().toLowerCase() === me;
+    return '<div class="row' + (mine ? ' me' : '') + '">'
+      + '<span class="pos">' + (i + 1) + '</span>'
+      + '<span class="nm">' + escapeHtml(r.name) + '</span>'
+      + '<span class="sc">' + r.score + '<i>/100</i></span>'
+      + '</div>';
+  }).join('');
+  $('#boardNote').textContent = t('boardNote');
+}
+function escapeHtml(s){
+  return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+
+function toast(msg){
+  const t=$('#toast'); t.textContent=msg; t.classList.add('on');
+  clearTimeout(toast._t); toast._t=setTimeout(()=>t.classList.remove('on'),2200);
+}
+
+/* --- comparaison tolérante pour le mode Cash --- */
+function norm(s){
+  return String(s||'')
+    .normalize('NFD').replace(/[\u0300-\u036f]/g,'')
+    .toLowerCase().replace(/[^a-z0-9]/g,'');
+}
+function lev(a,b){
+  const m=a.length, n=b.length;
+  if(!m) return n; if(!n) return m;
+  let prev=Array.from({length:n+1},(_,j)=>j), cur=new Array(n+1);
+  for(let i=1;i<=m;i++){
+    cur[0]=i;
+    for(let j=1;j<=n;j++){
+      cur[j]=Math.min(prev[j]+1, cur[j-1]+1, prev[j-1]+(a[i-1]===b[j-1]?0:1));
+    }
+    [prev,cur]=[cur,prev];
+  }
+  return prev[n];
+}
+function matchName(input, target){
+  const a=norm(input), b=norm(target);
+  if(!a) return false;
+  if(a===b) return true;
+  if(b.length>=6 && lev(a,b)<=1) return true;
+  const first=norm(String(target).split(' ')[0]);
+  if(first.length>=4 && a===first) return true;
+  return false;
+}
+
+function poolIndexes(diff){
+  const cfg = DIFFS[diff] || DIFFS.medium;
+  return PRODUCTS.map((p, idx) => idx)
+    .filter(idx => !cfg.pool || cfg.pool.indexOf(PRODUCTS[idx].n) !== -1);
+}
+
+function startGame(){
+  const input = $('#playerName');
+  const name = ((input && input.value) || '').trim();
+  if(!name){ toast(t('tName')); if(input) input.focus(); return; }
+  state.player = name;
+  state.queue = shuffle(poolIndexes(state.difficulty)).slice(0, GAME_SIZE);
+  state.i = 0; state.good = 0; state.pts = 0; state.streak = 0; state.bestStreak = 0;
+  state.mode = null; state.locked = false; state.answered = 0; state.skipped = 0; state.last = null;
+  state.submitted = false; state.submitOk = null; state.rank = null;
+  const rl = $('#rankLine'); if(rl) rl.hidden = true;
+  const sl = $('#submitLine'); if(sl) sl.textContent = '';
+  state.started = Date.now();
+  track('clikea_game_started', {difficulty: state.difficulty, pool: poolIndexes(state.difficulty).length, lang: lang});
+  show('game');
+  render();
+}
+
+function show(id){
+  ['intro','game','end','board'].forEach(s=>$('#'+s).classList.toggle('on', s===id));
+  window.scrollTo({top:0,behavior:'instant'});
+}
+
+function current(){ return PRODUCTS[state.queue[state.i]]; }
+
+function render(){
+  if(state.i >= state.queue.length){ return finish(); }
+  const n = state.i + 1;
+  state.locked = false;
+  state.mode = null;
+
+  $('#qLabel').textContent = t('q', {i: n, n: state.queue.length});
+  $('#metaCount').textContent = n + ' / ' + state.queue.length;
+  $('#numTag').textContent = pad(n);
+  $('#bar').style.width = ((state.i) / state.queue.length * 100) + '%';
+  $('#streakLabel').textContent = state.streak >= 2 ? t('streak', {n: state.streak}) : '';
+
+  $('#feedback').className = 'feedback';
+  $('#feedback').innerHTML = '';
+  $('#choices').hidden = true;
+  $('#choices').innerHTML = '';
+  $('#cashBox').hidden = true;
+  $('#cashInput').value = '';
+  $('#cashInput').disabled = false;
+  $('#cashBtn').disabled = false;
+  document.querySelector('.card').classList.remove('answered');
+
+  const allowed = (DIFFS[state.difficulty] || DIFFS.medium).modes;
+  if(allowed.length === 1){
+    $('#modes').hidden = true;
+    chooseMode(allowed[0]);
+  } else {
+    $('#prompt').textContent = t('promptMode');
+    $('#modes').hidden = false;
+  }
+
+  const photo = $('#photo');
+  photo.classList.add('loading');
+  const img = $('#img');
+  img.alt = 'Produit mystère numéro ' + n;
+  img.onload = () => photo.classList.remove('loading');
+  img.onerror = () => {
+    photo.classList.remove('loading');
+    state.skipped++;
+    toast(t('tPhoto'));
+    state.i++;
+    render();
+  };
+  img.src = current().i;
+
+  if(state.queue[state.i+1] !== undefined){
+    const nx = new Image(); nx.src = PRODUCTS[state.queue[state.i+1]].i;
+  }
+}
+
+function chooseMode(mode){
+  if(state.locked || state.mode) return;
+  state.mode = mode;
+  $('#modes').hidden = true;
+  const m = MODES[mode];
+
+  if(mode === 'cash'){
+    $('#prompt').textContent = t('promptCash');
+    $('#cashBox').hidden = false;
+    $('#cashInput').focus();
+    return;
+  }
+
+  $('#prompt').textContent = mode === 'duo' ? t('promptDuo') : t('promptCarre');
+
+  const p = current();
+  const others = shuffle(
+    PRODUCTS.filter((_,idx)=>idx!==state.queue[state.i]).map(x=>x.n)
+  ).slice(0, m.n - 1);
+  const opts = shuffle([p.n, ...others]);
+
+  const box = $('#choices');
+  box.innerHTML = '';
+  box.hidden = false;
+  opts.forEach((name, k) => {
+    const b = document.createElement('button');
+    b.className = 'choice';
+    b.type = 'button';
+    b.innerHTML = '<span class="k">' + (k+1) + '</span><span>' + name + '</span>';
+    b.dataset.name = name;
+    b.addEventListener('click', () => resolve(name === p.n, b));
+    box.appendChild(b);
+  });
+}
+
+function resolve(ok, pick){
+  if(state.locked) return;
+  state.locked = true;
+
+  const p = current();
+  const gain = MODES[state.mode].pts;
+  state.answered++;
+
+  document.querySelector('.card').classList.add('answered');
+
+  document.querySelectorAll('.choice').forEach(b=>{
+    b.disabled = true;
+    if(b.dataset.name === p.n) b.classList.add('correct');
+    else if(b === pick) b.classList.add('wrong');
+    else b.classList.add('dim');
+  });
+
+  if(ok){
+    state.good++;
+    state.pts += gain;
+    state.streak++;
+    state.bestStreak = Math.max(state.bestStreak, state.streak);
+  } else {
+    state.streak = 0;
+  }
+
+  $('#metaScore').textContent = metaScoreLabel(state.pts);
+  $('#streakLabel').textContent = state.streak >= 2 ? t('streak', {n: state.streak}) : '';
+  $('#cashInput').disabled = true;
+  const cashBtn = $('#cashBtn');
+  if(cashBtn) cashBtn.disabled = true;
+
+  track('clikea_question_answered', {
+    product: p.n, mode: state.mode, correct: ok, gain: ok ? gain : 0,
+    question: state.i + 1, difficulty: state.difficulty
+  });
+  state.last = { ok, gain, p, isLast: state.i + 1 >= state.queue.length };
+  renderFeedback();
+  const fb = $('#feedback');
+  $('#nextBtn').focus({preventScroll:true});
+  if(window.innerWidth < 720){
+    setTimeout(()=>fb.scrollIntoView({block:'nearest',behavior:'smooth'}),60);
+  }
+}
+
+function renderFeedback(){
+  const fb = $('#feedback');
+  if(!fb || !state.last) return;
+  const { ok, gain, p, isLast } = state.last;
+  const price = fmtPrice(p.p);
+  fb.className = 'feedback on';
+  fb.innerHTML =
+    '<div class="verdict ' + (ok?'ok':'ko') + '">' + (ok ? t('ok') : t('ko')) +
+      '<span class="gain">' + (ok ? ptsLabel(gain) : t('gainNone')) +
+      ' · ' + t(MODEKEY[state.mode] || 'm1') + '</span></div>' +
+    '<div class="name">' + p.n + '</div>' +
+    '<div class="desc">' + typeOf(p) + '</div>' +
+    (price ? '<div class="price">' + price + '</div>' : '') +
+    '<div class="actions">' +
+      '<button class="btn" id="nextBtn">' + (isLast ? t('seeReceipt') : t('next')) + '</button>' +
+    '</div>';
+  $('#nextBtn').addEventListener('click', next);
+}
+
+function submitCash(){
+  if(state.locked || state.mode !== 'cash') return;
+  const val = $('#cashInput').value;
+  if(!val.trim()){ toast(t('tEmpty')); $('#cashInput').focus(); return; }
+  resolve(matchName(val, current().n));
+}
+
+function next(){
+  state.i++;
+  if(state.i >= state.queue.length) return finish();
+  render();
+}
+
+function renderVerdict(){
+  const el = document.querySelector('#verdict');
+  if(el && state.msgKey) el.textContent = t(state.msgKey);
+}
+
+function finish(){
+  const total = state.queue.length;
+  const secs = Math.round((Date.now() - state.started)/1000);
+  const mm = Math.floor(secs/60), ss = secs%60;
+  const pct = Math.round(state.pts / MAX_PTS * 100);
+  const dateStr = new Date().toLocaleDateString(LOCALES[lang],{day:'2-digit',month:'2-digit',year:'numeric'});
+
+  $('#rcDate').textContent = dateStr;
+  $('#rcDiff').textContent = diffLabel(state.difficulty);
+  $('#rcGood').textContent = state.good;
+  $('#rcTotal').textContent = total;
+  $('#rcPts').textContent = state.pts + ' / ' + MAX_PTS;
+  $('#rcStreak').textContent = state.bestStreak;
+  $('#rcTime').textContent = mm + ':' + pad(ss);
+  $('#rcScore').textContent = state.pts + '/' + MAX_PTS;
+
+  $('#rcName').textContent = state.player || '—';
+  const bestKey = 'clikea-best:' + norm(state.player);
+  let best = Number(localStorage.getItem(bestKey) || 0);
+  if(state.pts > best){ best = state.pts; localStorage.setItem(bestKey, String(best)); }
+  $('#rcBest').textContent = best + '/' + MAX_PTS;
+
+  state.msgKey = pct === 100 ? 'v100' : pct >= 80 ? 'v80' : pct >= 55 ? 'v55' : pct >= 30 ? 'v30' : 'v0';
+  renderVerdict();
+
+  track('clikea_game_finished', {
+    score: state.pts, correct: state.good, total: total, difficulty: state.difficulty,
+    duration_s: secs, best_streak: state.bestStreak, lang: lang
+  });
+  submitScore();
+  state.share = t('shareText', {pts: state.pts, max: MAX_PTS, good: state.good, total: total});
+  show('end');
+}
+
+/* --- écouteurs --- */
+document.querySelectorAll('.mode').forEach(b => {
+  b.addEventListener('click', () => chooseMode(b.dataset.mode));
+});
+$('#startBtn').addEventListener('click', startGame);
+$('#replayBtn').addEventListener('click', startGame);
+$('#cashBtn').addEventListener('click', submitCash);
+$('#cashInput').addEventListener('keydown', (e) => {
+  if(e.key === 'Enter'){ e.preventDefault(); submitCash(); }
+});
+document.querySelectorAll('#diffs .diff').forEach(b => {
+  b.addEventListener('click', () => {
+    state.difficulty = b.dataset.diff;
+    document.querySelectorAll('#diffs .diff').forEach(x => {
+      const on = x.dataset.diff === state.difficulty;
+      x.classList.toggle('on', on);
+      x.setAttribute('aria-checked', on ? 'true' : 'false');
+    });
+    track('clikea_difficulty_selected', {difficulty: state.difficulty});
+  });
+});
+$('#boardOpen').addEventListener('click', () => openBoard(state.difficulty, 'intro'));
+$('#boardFromEnd').addEventListener('click', () => openBoard(state.difficulty, 'end'));
+$('#boardBack').addEventListener('click', () => show(state.boardBack));
+$('#boardPlay').addEventListener('click', () => show('intro'));
+document.querySelectorAll('#boardTabs .tab').forEach(b => {
+  b.addEventListener('click', async () => {
+    state.boardDiff = b.dataset.diff;
+    renderBoardTabs();
+    await loadBoard();
+  });
+});
+document.querySelector('select#lang').addEventListener('change', (e) => {
+  track('clikea_lang_changed', {lang: e.target.value});
+});
+
+$('#shareBtn').addEventListener('click', async () => {
+  const text = state.share + ' ' + location.href;
+  try{
+    if(navigator.share){ await navigator.share({text}); }
+    else { await navigator.clipboard.writeText(text); toast(t('tCopied')); }
+  }catch(e){ toast(t('tCopyFail')); }
+});
+
+document.addEventListener('keydown', (e) => {
+  if(!$('#game').classList.contains('on')){
+    if(e.key === 'Enter' && $('#intro').classList.contains('on')) startGame();
+    return;
+  }
+  if($('#cashBox').hidden === false && state.mode === 'cash') return;
+  if(!state.mode){
+    const m = { '1':'duo', '2':'carre', '3':'cash' }[e.key];
+    if(m) chooseMode(m);
+    return;
+  }
+  if(!state.locked){
+    const k = parseInt(e.key,10);
+    if(!isNaN(k)){
+      const b = document.querySelectorAll('.choice')[k-1];
+      if(b) b.click();
+    }
+  } else if(e.key === 'Enter' || e.key === ' '){
+    e.preventDefault();
+    next();
+  }
+});
+
+// first paint
+$('#metaScore').textContent = '0 pt';
+(function initLang(){
+  let saved = null;
+  try{ saved = localStorage.getItem('clikea-lang'); }catch(e){}
+  const nav = (navigator.language || 'fr').slice(0,2).toLowerCase();
+  applyLang(saved || (LANGS.includes(nav) ? nav : 'fr'));
+  const sel = $('#lang');
+  if(sel) sel.addEventListener('change', (e) => applyLang(e.target.value));
+})();
+
+// little shelf on the intro, with price tags
+(function shelf(){
+  const box = $('#shelf');
+  if(!box) return;
+  DECOR.forEach(p => {
+    const t = document.createElement('div');
+    t.className = 'tile';
+    const img = document.createElement('img');
+    img.src = p.i; img.alt = ''; img.loading = 'lazy';
+    t.appendChild(img);
+    if(p.p != null){
+      const tag = document.createElement('span');
+      tag.className = 'pt';
+      tag.textContent = fmtPrice(p.p);
+      t.appendChild(tag);
+    }
+    box.appendChild(t);
+  });
+})();
+
+// --- smoke test, invisible unless ?selftest=1 ---
+if(location.search.includes('selftest')){
+  const fails=[]; let n=0, passed=0;
+  const ok=(c,m)=>{ n++; if(c) passed++; else fails.push('FAIL ' + m); };
+  window.addEventListener('load', () => {
+    ok(PRODUCTS.length>=100,'base >= 100 produits ('+PRODUCTS.length+')');
+    ok(new Set(PRODUCTS.map(p=>p.n)).size===PRODUCTS.length,'noms uniques');
+    ok(new Set(PRODUCTS.map(p=>p.i)).size===PRODUCTS.length,'images uniques');
+    ok(PRODUCTS.every(p=>p.n&&p.t&&p.p!=null&&/^https:\/\//.test(p.i)),'champs complets');
+    ok(PRODUCTS.every(p=>typeof p.t==='object'&&p.t.fr&&p.t.en),'types localisés fr/en');
+    ok(PRODUCTS.filter(p=>p.t.es&&p.t.de&&p.t.it).length>=100,'types es/de/it >= 100');
+    ok(MAX_PTS===100,'max 100 points ('+MAX_PTS+')');
+    ok(GAME_SIZE===20,'20 produits par partie ('+GAME_SIZE+')');
+    ok(document.querySelector('#playerName')!==null,'champ nom présent');
+    document.querySelector('#playerName').value = 'Testeur';
+    startGame();
+    ok(state.queue.length===20,'tirage de 20 ('+state.queue.length+')');
+    ok(new Set(state.queue).size===20,'20 produits distincts');
+    ok(state.player==='Testeur','nom enregistré');
+    const firstDraw = state.queue.slice();
+    document.querySelector('#playerName').value = '';
+    startGame();
+    ok(state.queue.length===20,'toujours 20 sans nom (partie bloquée ?)');
+    document.querySelector('#playerName').value = 'Testeur';
+    startGame();
+    ok(state.player==='Testeur','nom relu');
+    const cycle=['duo','carre','cash'];
+    let expected=0;
+    for(let step=0; step<GAME_SIZE; step++){
+      const p = PRODUCTS[state.queue[state.i]];
+      const mode = cycle[step%3];
+      const right = step%2===0;
+      ok(document.querySelectorAll('.mode').length===3,'Q'+step+' trois modes');
+      ok(document.querySelector('#m1p').textContent==='1 pt','pastille duo 1 pt');
+      ok(document.querySelector('#m2p').textContent=='3 pts','pastille carré 3 pts');
+      ok(document.querySelector('#m3p').textContent=='5 pts','pastille cash 5 pts');
+      ok(document.querySelector('#modes').hidden===false,'Q'+step+' modes visibles');
+      document.querySelector('.mode[data-mode="'+mode+'"]').click();
+      ok(state.mode===mode,'Q'+step+' mode choisi');
+      ok(document.querySelector('#modes').hidden===true,'Q'+step+' modes masqués');
+      if(mode==='cash'){
+        ok(document.querySelector('#cashBox').hidden===false,'Q'+step+' champ cash');
+        ok(document.querySelectorAll('.choice').length===0,'Q'+step+' aucun choix en cash');
+        document.querySelector('#cashInput').value = right ? p.n.toLowerCase() : 'xyzzy';
+        document.querySelector('#cashBtn').click();
+      } else {
+        const want = mode==='duo' ? 2 : 4;
+        const btns=[...document.querySelectorAll('.choice')];
+        ok(btns.length===want,'Q'+step+' '+want+' choix ('+btns.length+')');
+        ok(new Set(btns.map(b=>b.dataset.name)).size===want,'Q'+step+' choix uniques');
+        ok(btns.filter(b=>b.dataset.name===p.n).length===1,'Q'+step+' une bonne réponse');
+        const target = right ? btns.find(b=>b.dataset.name===p.n) : btns.find(b=>b.dataset.name!==p.n);
+        target.click();
+      }
+      if(right) expected += MODES[mode].pts;
+      ok(state.locked===true,'Q'+step+' verrouillé');
+      ok(state.pts===expected,'Q'+step+' points '+state.pts+'/'+expected);
+      ok(document.querySelector('#feedback').classList.contains('on'),'Q'+step+' feedback');
+      ok(document.querySelector('#metaScore').textContent.indexOf(String(state.pts))===0,'Q'+step+' compteur header');
+      document.querySelector('#nextBtn').click();
+    }
+    ok(document.getElementById('end').classList.contains('on'),'écran final');
+    ok(state.good===10,'10 bonnes réponses ('+state.good+')');
+    ok(document.getElementById('rcScore').textContent===expected+'/100','score final '+expected+'/100');
+    ok(document.getElementById('rcPts').textContent===expected+' / 100','ligne points');
+    ok(document.getElementById('rcName').textContent==='Testeur','nom sur le ticket');
+    ok(document.getElementById('rcTotal').textContent==='20','ticket : 20 produits');
+    ok(document.getElementById('rcTime').textContent.length>0,'temps affiché');
+    ok(Object.keys(DIFFS).length===3,'trois niveaux');
+    ok(poolIndexes('easy').length>=40 && poolIndexes('easy').length<PRODUCTS.length,'pool facile restreint ('+poolIndexes('easy').length+')');
+    ok(poolIndexes('hard').length===PRODUCTS.length,'pool difficile complet');
+    ok(document.querySelectorAll('#diffs .diff').length===3,'sélecteur de niveau');
+    state.difficulty = 'hard';
+    document.querySelector('#playerName').value = 'Testeur';
+    startGame();
+    ok(document.querySelector('#modes').hidden===true,'modes masqués en difficile');
+    ok(state.mode==='cash','cash imposé en difficile');
+    ok(document.querySelector('#cashBox').hidden===false,'champ cash visible en difficile');
+    ok(state.queue.length===20,'20 produits en difficile');
+    state.difficulty = 'medium';
+    ok(document.querySelectorAll('#boardTabs .tab').length===3,'onglets du classement');
+
+    const probes = {
+      en: { btn:'Start shopping', name:'Guess the name', chip:'5 pts' },
+      es: { btn:'Empezar la compra', name:'Adivina el nombre', chip:'5 pts' },
+      de: { btn:'Einkauf starten', name:'Namen raten', chip:'5 Pkt.' },
+      it: { btn:'Inizia la spesa', name:'Indovina il nome', chip:'5 pt' }
+    };
+    Object.keys(probes).forEach(code => {
+      applyLang(code);
+      ok(document.documentElement.lang===code, 'lang '+code+' : html');
+      ok(document.querySelector('#startBtn').textContent===probes[code].btn, 'lang '+code+' : bouton');
+      ok(document.querySelector('#i18nSub').textContent===probes[code].name, 'lang '+code+' : sous-titre');
+      ok(document.title.indexOf('CLIKEA')===0, 'lang '+code+' : titre');
+      ok(document.querySelector('#lang').value===code, 'lang '+code+' : selecteur');
+      ok(document.querySelector('#rcTitle').textContent.length>3, 'lang '+code+' : ticket');
+      ok(document.querySelector('#m3p').textContent===probes[code].chip, 'lang '+code+' : pastille cash ('+document.querySelector('#m3p').textContent+')');
+    });
+    applyLang('en');
+    ok(document.querySelector('#rcTitle').textContent==='Receipt','ticket EN traduit');
+    ok(document.querySelector('#f1').textContent.indexOf('unofficial')>-1,'footer EN traduit');
+    const billy = PRODUCTS.find(p=>p.n==='BILLY');
+    ok(typeOf(billy)==='Bookcase','type EN BILLY ('+typeOf(billy)+')');
+    applyLang('es'); ok(typeOf(billy)==='Librería','type ES BILLY ('+typeOf(billy)+')');
+    applyLang('de'); ok(typeOf(billy)==='Bücherregal','type DE BILLY ('+typeOf(billy)+')');
+    applyLang('it'); ok(typeOf(billy)==='Libreria','type IT BILLY ('+typeOf(billy)+')');
+    applyLang('fr');
+    ok(typeOf(billy)==='Bibliothèque','type FR BILLY ('+typeOf(billy)+')');
+    ok(document.querySelector('#startBtn').textContent==='Commencer mes achats','retour FR');
+    ok(localStorage.getItem('clikea-lang')==='fr','langue mémorisée');
+    ok(document.getElementById('verdict').textContent===I18N.fr.v0,'verdict retraduit ('+document.getElementById('verdict').textContent.slice(0,20)+')');
+
+    const pre=document.createElement('pre');
+    pre.id='selftest';
+    pre.style.cssText='position:fixed;inset:auto 0 0 0;background:#fff;color:#111;font:11px monospace;padding:8px;z-index:99;max-height:40vh;overflow:auto';
+    pre.textContent = 'SELFTEST ' + (fails.length?'FAIL':'PASS') + ' ' + passed + '/' + n + '\n' + fails.slice(0,12).join('\n');
+    document.body.appendChild(pre);
+  });
+}
+
+</script>
+</body>
+</html>
