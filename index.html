@@ -30,7 +30,7 @@ button{font-family:inherit;color:inherit}
 img{display:block;max-width:100%}
 a{color:inherit}
 [hidden]{display:none !important}
-:focus-visible{outline:2px solid var(--blue);outline-offset:3px}
+:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
 .wrap{width:100%;max-width:1080px;margin:0 auto;padding:0 var(--pad)}
 .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
 
@@ -343,7 +343,7 @@ footer .wrap{padding:14px var(--pad);display:flex;gap:16px;flex-wrap:wrap;justif
   </section>
 
   <!-- PARTIE -->
-  <section class="screen" id="game">
+  <section class="screen game" id="game">
     <div class="wrap game">
       <div class="prog"><i id="bar"></i></div>
       <div class="qline">
@@ -470,7 +470,7 @@ footer .wrap{padding:14px var(--pad);display:flex;gap:16px;flex-wrap:wrap;justif
   <div class="sheetbox" role="dialog" aria-modal="true" aria-label="Partager">
     <h3 id="sheetTitle">Partager le ticket</h3>
     <div class="sm-img"><img id="sharePreview" alt="Aperçu du ticket"></div>
-    <p class="sm-note">Image 1080 × 1350 jointe automatiquement</p>
+    <p class="sm-note" id="shareImageNote">Image 1080 × 1350 jointe automatiquement</p>
     <button class="btn wide" type="button" id="shareNative" style="margin-bottom:10px">Partager maintenant</button>
     <div class="targets" id="shareTargetsSheet"></div>
     <button class="btn ghost wide" type="button" style="margin-top:10px" id="shareClose">Fermer</button>
@@ -720,11 +720,11 @@ function ptsLabel(n){ return t(n > 1 ? 'gainMany' : 'gain').replace('{n}', n); }
 function metaScoreLabel(n){ return t(n > 1 ? 'metaScoreMany' : 'metaScore').replace('{n}', n); }
 
 const UI = {
- fr:{quit:'Quitter la partie',shareLabel:'Partager le ticket',note:"L'image du ticket est jointe",boardLink:'Voir le classement',native:'Partager maintenant',close:'Fermer'},
- en:{quit:'Quit the game',shareLabel:'Share the receipt',note:'The receipt image is attached',boardLink:'See the leaderboard',native:'Share now',close:'Close'},
- es:{quit:'Salir de la partida',shareLabel:'Compartir el ticket',note:'La imagen del ticket se adjunta',boardLink:'Ver la clasificación',native:'Compartir ahora',close:'Cerrar'},
- de:{quit:'Spiel verlassen',shareLabel:'Ticket teilen',note:'Das Ticketbild wird angehängt',boardLink:'Rangliste ansehen',native:'Jetzt teilen',close:'Schließen'},
- it:{quit:'Esci dalla partita',shareLabel:'Condividi lo scontrino',note:"L'immagine dello scontrino è allegata",boardLink:'Vedi la classifica',native:'Condividi ora',close:'Chiudi'}
+ fr:{quit:'Quitter la partie',shareLabel:'Partager le ticket',note:"L'image du ticket est jointe",boardLink:'Voir le classement',native:'Partager maintenant',close:'Fermer',img:'Image 1080 × 1350 jointe automatiquement'},
+ en:{quit:'Quit the game',shareLabel:'Share the receipt',note:'The receipt image is attached',boardLink:'See the leaderboard',native:'Share now',close:'Close',img:'1080 × 1350 image attached automatically'},
+ es:{quit:'Salir de la partida',shareLabel:'Compartir el ticket',note:'La imagen del ticket se adjunta',boardLink:'Ver la clasificación',native:'Compartir ahora',close:'Cerrar',img:'Imagen 1080 × 1350 adjunta automáticamente'},
+ de:{quit:'Spiel verlassen',shareLabel:'Ticket teilen',note:'Das Ticketbild wird angehängt',boardLink:'Rangliste ansehen',native:'Jetzt teilen',close:'Schließen',img:'Bild 1080 × 1350 wird automatisch angehängt'},
+ it:{quit:'Esci dalla partita',shareLabel:'Condividi lo scontrino',note:"L'immagine dello scontrino è allegata",boardLink:'Vedi la classifica',native:'Condividi ora',close:'Chiudi',img:'Immagine 1080 × 1350 allegata automaticamente'}
 };
 
 function applyLang(next, opts){
@@ -768,7 +768,7 @@ function applyLang(next, opts){
   set('#rankTitle', L.boardTitle); set('#rankSub', diffLabel(state.difficulty));
   const U = UI[lang] || UI.fr;
   set('#quitBtn', U.quit); set('#shareLabelText', U.shareLabel); set('#shareNote', U.note);
-  set('#boardFromEnd', U.boardLink); set('#shareNative', U.native); set('#shareClose', U.close); set('#sheetTitle', U.shareLabel);
+  set('#boardFromEnd', U.boardLink); set('#shareImageNote', U.img); set('#shareNative', U.native); set('#shareClose', U.close); set('#sheetTitle', U.shareLabel);
   set('#boardPlay', L.boardPlay); set('#boardBack', L.boardBack);
   set('#rcDiffL', L.rcDiff);
   const bnote = document.querySelector('#boardNote'); if(bnote) bnote.textContent = L.boardNote;
