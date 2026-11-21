@@ -34,13 +34,13 @@ Aucun serveur applicatif : GitHub Pages sert un fichier statique, Supabase et Po
 ```js
 { n: "BILLY", t: { fr: "Bibliothèque", en: "Bookcase", es: "Librería", de: "Bücherregal", it: "Libreria" },
   p: 59.99,
-  i: "https://www.ikea.com/fr/fr/images/products/....jpg" }
+  i: "img/billy.webp" }
 ```
 
 - `n` : nom IKEA, unique. Sert d'identifiant et de réponse.
 - `t` : type de meuble par langue. Le code tolère une chaîne simple (`typeOf`).
 - `p` : prix indicatif en euros, catalogue français.
-- `i` : URL de la photo, non copiée localement.
+- `i` : chemin local de la photo WebP 640 × 640, dans `img/`. Les URL d'origine restent dans `produits.json`.
 
 ## Déroulement d'une partie
 
@@ -61,6 +61,8 @@ Aucun serveur applicatif : GitHub Pages sert un fichier statique, Supabase et Po
 - Points : Duo 1, Carré 3, Cash 5. Le mode est choisi **par question**, pas pour la partie entière.
 - Un score de 0 n'est pas envoyé (`submitScore` sort tôt).
 - `state.submitted` empêche un double envoi ; `state.rank` vient du comptage des scores supérieurs.
+- `state.results` garde un marqueur par question (`ok`, `ko`, `to` pour temps écoulé) : il alimente la grille du partage texte.
+- Si le pseudo est vide, la partie se lance quand même ; le score n'est pas envoyé et un champ apparaît à la fin pour l'ajouter (`submitEndName`).
 
 ## Persistance locale (`localStorage`)
 
@@ -114,8 +116,10 @@ Le français est la langue de référence : une clé manquante dans une autre la
 | `clikea_question_answered` | `product`, `mode`, `correct`, `gain`, `question`, `difficulty` |
 | `clikea_game_finished` | `score`, `correct`, `total`, `difficulty`, `duration_s`, `best_streak`, `lang` |
 | `clikea_score_submitted` | `ok`, `score`, `difficulty` |
+| `clikea_name_added` | `score`, `difficulty` |
+| `clikea_defi_view` | `score`, `has_name` |
 | `clikea_share_sheet` | `lang` |
-| `clikea_share` | `mode` (`native`, `download`, `copy`, `x`, `whatsapp`, `linkedin`) |
+| `clikea_share` | `mode` (`native`, `download`, `copy`, `copy_text`, `x`, `whatsapp`, `linkedin`) |
 | `clikea_lang_changed` | `lang` |
 | `clikea_difficulty_selected` | `difficulty` |
 
@@ -125,8 +129,16 @@ Le français est la langue de référence : une clé manquante dans une autre la
 
 - L'écran de fin est du HTML/CSS : bandeau bleu avec logo monochrome, tampon incliné, score, pourcentage de joueurs battus, bande jaune de statistiques, code-barres.
 - L'image partagée est dessinée à part sur un `<canvas>` de **1080 × 1350** (`drawTrophy`), dans le même langage visuel, avec le logo dessiné en tracés (`drawLogo`).
+- **Résultat texte** (`shareGrid`, `resultText`) : une ligne `CLIKEA 52/100 · 13/20 noms · série 6`, puis quatre lignes de cinq cases (🟩 juste, 🟥 raté, 🟨 temps écoulé), puis le lien. Aucun nom de produit : le partage ne spoile pas.
+- **Défi** : `shareUrl(source)` construit un lien avec `utm_source`, et si le score est supérieur à 0, `defi` et `par`. L'accueil lit ces paramètres (`readChallenge`) et affiche un bandeau jaune ; le pseudo est échappé.
 - Partage : `navigator.share` avec fichier si disponible (iOS/Android), sinon téléchargement du PNG, sinon copie du texte. Boutons X, WhatsApp, LinkedIn ouvrent des intentions web ; Instagram ouvre la feuille de partage native.
-- Le texte de partage est localisé et contient le score, le nombre de noms trouvés et l'URL courante.
+- Le texte de partage est localisé et contient le score, le nombre de noms trouvés, la grille et le lien.
+
+## Aperçu de lien
+
+Balises statiques dans `<head>` : `og:title`, `og:description`, `og:image` (`https://clikeagame.com/og.png`, 1200 × 630), `og:url`, `og:locale` et ses variantes, `twitter:card` en `summary_large_image`. L'aperçu ne dépend pas du score : c'est une image unique, générique.
+
+`robots.txt` et `sitemap.xml` déclarent le domaine.
 
 ## Hébergement
 
@@ -139,7 +151,7 @@ Le français est la langue de référence : une clé manquante dans une autre la
 
 ## Contrôles (`?selftest=1`)
 
-La suite s'exécute dans la page publiée, sans outil externe. Elle vérifie notamment : intégrité de la base (≥ 100 produits, noms et images uniques, champs complets, types localisés), barème (100 points), taille de partie (20), présence des écrans, déroulement d'une partie simulée, ticket à 0 point, partage, contraintes Supabase. Elle affiche `SELFTEST PASS n/n`. Relevé du 21 novembre 2026 : **402/402** sur `clikeagame.com` et sur le miroir.
+La suite s'exécute dans la page publiée, sans outil externe. Elle vérifie notamment : intégrité de la base (≥ 100 produits, noms et images uniques, champs complets, types localisés), présence des balises Open Graph, photos locales, bouton de copie, déroulement d'une partie simulée, grille de partage, lien de défi avec `utm_source`, ticket à 0 point, partage, contraintes Supabase. Elle affiche `SELFTEST PASS n/n`. Relevé du 21 novembre 2026 : **416/416** sur `clikeagame.com` et sur le miroir.
 
 `?demo=1` affiche directement l'écran de fin avec un score fixe (52/100) pour régler le ticket.
 

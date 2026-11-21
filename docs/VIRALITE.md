@@ -35,7 +35,7 @@ Le cas français le plus proche de CLIKEA.
 4. **Zéro friction** : pas de compte, pas d'application, chargement rapide.
 5. **Un canal unique au départ** : X pour Wordle et Métrodoku, Reddit pour GeoGuessr.
 
-CLIKEA a les briques 2, 3 (en image) et 4. **Il n'a pas la brique 1, et sa brique 3 n'est pas copiable en texte.**
+CLIKEA a les briques 2, 3 et 4. **Il n'a pas la brique 1** (le rendez-vous quotidien), désormais le seul écart structurant avec les jeux qui installent une habitude.
 
 ## 2. Les cinq leviers, appliqués à CLIKEA
 
@@ -82,28 +82,25 @@ Déjà bon : pas de compte, pas d'installation, cinq langues, mobile d'abord. De
 
 Un jeu circule parce qu'un premier groupe en parle au même moment, pas parce qu'il est en ligne.
 
-## 3. Audit produit : ce qui freine, vérifié dans le code
+## 3. État du produit après les correctifs
 
-| Frein | Constat | Effet | Effort |
-|---|---|---|---|
-| **Pas de balises Open Graph ni Twitter Card** | Aucune balise `og:*` / `twitter:*` ; `og:image` est requise par le protocole ([ogp.me](https://ogp.me/)) | Un lien collé sur X, WhatsApp, Discord ou LinkedIn s'affiche en texte nu | Faible |
-| **Pas d'image d'aperçu** | Le ticket est généré côté client, jamais attaché à l'URL | Un post avec le lien seul n'a aucun visuel | Faible |
-| **Résultat non copiable en texte** | Seul le ticket image existe | Pas de version collable, qui est le format qui a fait Wordle | Faible |
-| **Aucun défi nominatif** | Le partage renvoie vers l'accueil | La boucle « je bats ton score » ne se ferme pas | Moyen |
-| **Pas de mode quotidien** | Parties illimitées | Pas de rendez-vous quotidien | Moyen à élevé |
-| **Photos distantes non optimisées** | 47 à 72 Ko par photo, sans `srcset` ; ~1,2 Mo par partie + 138 Ko de HTML | Premier écran lent sur mobile | Moyen |
-| **Pseudo obligatoire** | Blocage si le champ est vide | Une étape de plus avant de jouer | Faible |
-| **Pas de page par produit** | Une seule page ; `robots.txt` et `sitemap.xml` absents | Aucune prise sur la longue traîne SEO | Moyen |
-| **Classement forgeable** | Clé Supabase publiable, insertion libre | Crédibilité du classement | Moyen |
-| **Aucun suivi de canal** | PostHog ne voit que `referrer` | Impossible de savoir quel canal amène des joueurs | Faible |
+Les cinq correctifs identifiés par la recherche ont été appliqués le 21 novembre 2026.
 
-### Les cinq correctifs avant tout lancement
+| Correctif | État |
+|---|---|
+| **Résultat texte copiable** | Fait. `CLIKEA 52/100 · 13/20 noms · série 6` + grille de 20 cases vert/rouge/jaune, sans nom de produit. Bouton « Copier mon résultat » sur l'écran de fin et dans la feuille de partage. |
+| **Balises Open Graph + image d'aperçu** | Fait. `og:image` pointe sur `og.png`, 1200 × 630, avec titre, description, `twitter:card`. |
+| **Défi nominatif** | Fait. Le lien partagé porte `?defi=52&par=Cesar` ; l'accueil affiche un bandeau « Cesar a marqué 52/100. Tu fais mieux ? ». |
+| **Suivi des canaux** | Fait. Chaque lien partagé porte `utm_source` (`x`, `whatsapp`, `linkedin`, `copy`, `native`). Événement `clikea_defi_view` à l'arrivée. |
+| **Pseudo facultatif** | Fait. On joue sans nom ; à la fin, un champ permet de l'ajouter pour envoyer le score. |
+| **Photos locales** | Fait. 109 WebP de 640 × 640, 1,5 Mo au total, 4 à 37 Ko par photo : environ 160 Ko par partie au lieu de 1,2 Mo. |
 
-1. **Résultat texte copiable** (`CLIKEA 52/100` + grille de cases) à côté du ticket image.
-2. **Balises Open Graph + image 1200 × 630**.
-3. **Défi nominatif** : `?defi=52&par=Cesar`, bandeau d'accueil, partage retour.
-4. **`?utm_source=` ajouté automatiquement** aux liens partagés.
-5. **Pseudo facultatif** et **photos locales en WebP**.
+### Ce qui reste
+
+1. **Mode quotidien** : le levier le plus puissant, non fait. C'est l'investissement qui transforme un jeu essayé une fois en rendez-vous.
+2. **Pages SEO** : « Tous les noms de produits IKEA », une page par thème. Le domaine est déjà déclaré dans `robots.txt` et `sitemap.xml`.
+3. **Anti-triche du classement** : la clé publiable permet d'insérer n'importe quel score.
+4. **Test réel du partage natif** : l'API Web Share n'est pas vérifiable dans le navigateur headless ; à contrôler sur un iPhone et un Android.
 
 ## 4. Canaux de diffusion
 
@@ -166,10 +163,10 @@ Un jeu circule parce qu'un premier groupe en parle au même moment, pas parce qu
 
 ## 5. Plan de lancement sur 30 jours
 
-**Semaine 0 — préparer**
-- Les cinq correctifs du §3.
-- Image d'aperçu 1200 × 630, bannière X, trois captures (accueil, question, ticket).
-- Trois scripts de 45-75 s pour TikTok/Reels.
+**Semaine 0 — fait (21 novembre 2026)**
+- Les cinq correctifs du §3 sont en ligne.
+- Image d'aperçu 1200 × 630, balises sociales, `robots.txt` et `sitemap.xml`.
+- Reste à préparer : bannière X, trois captures (accueil, question, ticket), trois scripts de 45-75 s.
 
 **Semaine 1 — amorcer**
 - 5 posts X : un meuble par jour, réponse en reply.

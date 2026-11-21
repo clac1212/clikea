@@ -16,6 +16,7 @@ L'objectif n'est pas de vendre quelque chose : c'est de faire revenir les joueur
 
 - **20 produits** tirés au sort dans le vivier du niveau choisi.
 - **Deux niveaux** : *facile* (49 produits cultes) et *difficile* (les 60 autres). Mêmes trois modes dans les deux.
+- **Pseudo facultatif** : on peut jouer sans nom. Sans nom, le score n'est pas envoyé au classement et un champ apparaît à la fin pour l'ajouter.
 - **Trois modes**, choisis à chaque question :
   - **Duo** — 2 noms proposés, **1 pt** ;
   - **Carré** — 4 noms proposés, **3 pts** ;
@@ -24,16 +25,23 @@ L'objectif n'est pas de vendre quelque chose : c'est de faire revenir les joueur
 - **Score maximum : 100**. Le score n'est envoyé au classement que s'il est supérieur à 0.
 - **Classement public** : les 20 meilleurs scores par niveau, une ligne par partie.
 - **Ticket de fin** : tampon (Top 10 %, Top 50 %, À rejouer, Sans faute), pourcentage de joueurs battus, produits reconnus, meilleure série, points, code-barres.
-- **Partage** : image PNG du ticket en 1080 × 1350, via le partage natif du téléphone, sinon téléchargement. Boutons X, WhatsApp, LinkedIn, Instagram, copie du texte.
+- **Deux façons de partager** :
+  - **résultat texte copiable** — `CLIKEA 52/100 · 13/20 noms · série 6` suivi d'une grille de cases vert/rouge, sans aucun nom de produit, donc sans spoiler ;
+  - **image PNG du ticket** en 1080 × 1350, via le partage natif du téléphone, sinon téléchargement.
+- **Défi nominatif** : un lien partagé contient le score (`?defi=52&par=Cesar`) ; l'accueil affiche « Cesar a marqué 52/100. Tu fais mieux ? ».
+- **Traçabilité** : chaque lien partagé porte un `utm_source` (x, whatsapp, linkedin, copy, native).
 
 ## Ce que contient le dépôt
 
 | Fichier | Rôle |
 |---|---|
 | `index.html` | Tout le jeu : HTML, CSS, JavaScript, données produits, logo SVG, génération du ticket, traductions. Aucun build, aucune dépendance. |
-| `produits.json` | Source de la base produits (109 entrées : nom, type localisé, prix, URL photo). **Non chargée au runtime** — les données sont embarquées dans `index.html`. Sert d'archive éditable. |
+| `img/` | Les 109 photos produit en WebP, 640 × 640, servies localement (~1,5 Mo au total, 4 à 37 Ko par photo). |
+| `og.png` | Image d'aperçu 1200 × 630 pour les partages de lien (Open Graph, Twitter Card). |
+| `produits.json` | Source de la base produits (109 entrées : nom, type localisé, prix, URL photo d'origine). **Non chargée au runtime** — les données sont embarquées dans `index.html`. Sert d'archive éditable. |
 | `types.json` | Archive des libellés de types par langue. Non chargée au runtime. |
 | `CNAME` | Domaine personnalisé GitHub Pages : `clikeagame.com`. |
+| `robots.txt`, `sitemap.xml` | Indexation du domaine. |
 | `docs/` | Pourquoi, architecture, viralité. |
 
 ## Développement
@@ -68,16 +76,17 @@ curl -s -o /dev/null -w '%{http_code}\n' https://clever-bloom-q2pw.here.now/
 ## Données et mesure
 
 - **Classement** : Supabase, projet `vubopkycvzzqufpqxpbg`, table `public.clikea_scores`. La clé publiable est dans `index.html` — c'est normal, elle ne permet que lecture et insertion ; la suppression est refusée.
-- **Analytics** : PostHog EU (`https://eu.i.posthog.com`), projet « CLIKEA ». Événements : `clikea_view`, `clikea_game_started`, `clikea_question_answered`, `clikea_game_finished`, `clikea_score_submitted`, `clikea_share_sheet`, `clikea_share`, `clikea_lang_changed`, `clikea_difficulty_selected`.
+- **Analytics** : PostHog EU (`https://eu.i.posthog.com`), projet « CLIKEA ». Événements : `clikea_view`, `clikea_defi_view`, `clikea_game_started`, `clikea_question_answered`, `clikea_game_finished`, `clikea_score_submitted`, `clikea_name_added`, `clikea_share_sheet`, `clikea_share`, `clikea_lang_changed`, `clikea_difficulty_selected`.
 - Détail des schémas, permissions et flux : [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md).
 
 ## Notes et limites
 
 - **Pastiche non officiel**, sans lien avec IKEA. Le logo reprend la logique du logo IKEA (cartouche bleu, ellipse jaune, mot en tracés) sans fichier de police ni asset IKEA.
-- **Photos** pointées sur le CDN `ikea.com` : si IKEA change une URL, l'image du produit casse. Il n'y a pas de copie locale.
+- **Photos** : copies locales en WebP dans `img/`, redimensionnées à 640 × 640, à partir du CDN `ikea.com`. Le fichier `produits.json` garde les URL d'origine.
 - **Prix** : catalogue français au moment de la constitution de la base, indicatifs.
-- **Pas de compte, pas de modération du pseudo** : le classement accepte tout nom de 20 caractères, et un score peut être forgé (la clé publique autorise l'insertion).
-- **Pas de balises Open Graph / Twitter Card** : un lien partagé n'affiche ni image ni description enrichie. C'est le premier chantier viral identifié dans [`docs/VIRALITE.md`](docs/VIRALITE.md).
+- **Pas de compte, pas de modération du pseudo** : le classement accepte tout nom de 24 caractères, et un score peut être forgé (la clé publique autorise l'insertion).
+- **Aperçu de lien** : balises Open Graph et Twitter Card avec `og.png` ; l'aperçu ne montre pas le score du joueur, seulement l'image générique du jeu.
+- **Défi** : le score et le pseudo passent par l'URL ; le pseudo est échappé avant affichage.
 - Les données embarquées dans `index.html` et les fichiers `produits.json` / `types.json` peuvent diverger : la source de vérité à l'exécution est `index.html`.
 
 ## Documentation
