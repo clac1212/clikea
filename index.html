@@ -1690,6 +1690,46 @@ $('#metaScore').textContent = '0 pt';
   });
 })();
 
+// --- démo de l'impression, ?demo=1 ---
+if(location.search.includes('demo') && !SELFTEST){
+  window.addEventListener('load', () => {
+    state.player = 'César';
+    state.difficulty = 'easy';
+    state.good = 13;
+    state.pts = 52;
+    state.bestStreak = 6;
+    state.queue = new Array(20).fill(0);
+    state.timeLabel = '4:07';
+    state.rank = 3;
+    state.submitOk = true;
+    state.msgKey = 'v55';
+    $('#rcName').textContent = state.player;
+    $('#rcDiff').textContent = diffLabel('easy');
+    $('#rcGood').textContent = state.good;
+    $('#rcTotal').textContent = 20;
+    $('#rcPts').textContent = state.pts + ' / 100';
+    $('#rcStreak').textContent = state.bestStreak;
+    $('#rcTime').textContent = state.timeLabel;
+    $('#rcScore').textContent = state.pts + '/100';
+    $('#rcBest').textContent = '61/100';
+    $('#rcDate').textContent = new Date().toLocaleDateString(LOCALES[lang]);
+    $('#rankLine').textContent = t('rankLine', {rank: state.rank, diff: diffLabel('easy')});
+    $('#rankLine').hidden = false;
+    renderVerdict();
+    show('end');
+
+    const replay = () => {
+      const out = $('#printerOut');
+      $('#end').classList.remove('ready');
+      out.style.transition = 'none';
+      out.style.height = '0px';
+      setTimeout(() => printTicket(), 60);
+    };
+    setTimeout(replay, 350);
+    setInterval(replay, 5200);
+  });
+}
+
 // --- smoke test, invisible unless ?selftest=1 ---
 if(location.search.includes('selftest')){
   const fails=[]; let n=0, passed=0;
