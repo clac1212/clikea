@@ -78,7 +78,7 @@ Toutes les entrées datent du 21 novembre 2026, jour de construction du jeu.
 
 ## Risques identifiés
 
-- **Marque** : pastiche d'une marque déposée. Le jeu est gratuit, non officiel, sans utilisation du logo officiel ; le risque de demande de retrait reste non nul.
+- **Marque** : pastiche d'une marque déposée. Le jeu est gratuit, non officiel, sans utilisation du logo officiel ; le risque de demande de retrait reste non nul. Précédent documenté : IKEA a fait envoyer une mise en demeure à un jeu vidéo nommé « STYR », sans le mot IKEA, en invoquant l'enseigne bleu-jaune, le nom scandinave et les sols gris, avec 10 jours pour retirer les signes (2022). Détail dans [`VIRALITE.md`](VIRALITE.md#marque--le-risque-est-documenté-pas-théorique).
 - **Dépendance aux images IKEA** : les photos sont liées au CDN d'ikea.com, sans copie locale.
 - **Classement non modéré** : pseudo libre, score forgeable avec la clé publique.
 - **Documentation de déploiement incomplète** : la commande de republication du miroir here.now n'est pas consignée.
