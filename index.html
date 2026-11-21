@@ -206,6 +206,8 @@ main{flex:1;display:flex;flex-direction:column}
   margin:0 0 0;
 }
 .out{overflow:hidden;margin-top:-9px;border-radius:0 0 4px 4px}
+.printer.printing .out{animation:printout 1.9s cubic-bezier(.25,.8,.3,1) both}
+@keyframes printout{from{clip-path:inset(0 0 100% 0)}to{clip-path:inset(0 0 0 0)}}
 .out .receipt{margin:0 auto;box-shadow:0 12px 24px -14px rgba(0,0,0,.6)}
 .printer.printing .out .receipt{animation:paperwobble .9s ease-in-out infinite}
 @keyframes paperwobble{50%{transform:translateY(1px) rotate(.05deg)}}
@@ -1173,8 +1175,6 @@ function startGame(){
   state.mode = null; state.locked = false; state.answered = 0; state.skipped = 0; state.last = null;
   state.submitted = false; state.submitOk = null; state.rank = null;
   const rl = $('#rankLine'); if(rl) rl.hidden = true;
-  const out = $('#printerOut');
-  if(out){ out.style.transition = 'none'; out.style.height = ''; }
   $('#end').classList.remove('ready');
   const pr = $('#printer'); if(pr) pr.classList.remove('printing');
   const sl = $('#submitLine'); if(sl) sl.textContent = '';
@@ -1186,7 +1186,7 @@ function startGame(){
 
 function show(id){
   ['intro','game','end','board'].forEach(s=>$('#'+s).classList.toggle('on', s===id));
-  window.scrollTo({top:0,behavior:'instant'});
+  window.scrollTo(0, 0);
 }
 
 function current(){ return PRODUCTS[state.queue[state.i]]; }
@@ -1354,35 +1354,23 @@ function next(){
 }
 
 function printTicket(immediate){
-  const out = $('#printerOut'), rec = $('#receipt'), printer = $('#printer');
-  if(!out || !rec) return;
-  const h = rec.offsetHeight || rec.scrollHeight;
-  if(!h){
-    out.style.height = '';
-    printer.classList.remove('printing');
-    $('#end').classList.add('ready');
-    return;
-  }
+  const out = $('#printerOut'), printer = $('#printer');
+  if(!out || !printer) return;
   const reduce = immediate || (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
+  printer.classList.remove('printing');
   if(reduce){
-    out.style.height = h + 'px';
-    printer.classList.remove('printing');
     $('#end').classList.add('ready');
     return;
   }
-  out.style.transition = 'none';
-  out.style.height = '0px';
+  void out.offsetWidth;
   printer.classList.add('printing');
-  requestAnimationFrame(() => {
-    out.style.transition = 'height 1.9s cubic-bezier(.25,.8,.3,1)';
-    out.style.height = h + 'px';
-  });
   const done = () => {
     printer.classList.remove('printing');
     $('#end').classList.add('ready');
   };
-  out.addEventListener('transitionend', done, {once:true});
-  setTimeout(done, 2400);
+  out.addEventListener('animationend', done, {once: true});
+  setTimeout(done, 2600);
+  try{ window.scrollTo(0, 0); }catch(e){}  // l'en-tête collant masquerait la machine
 }
 
 function renderVerdict(){
@@ -1409,8 +1397,9 @@ function finish(){
 
   $('#rcName').textContent = state.player || '—';
   const bestKey = 'clikea-best:' + norm(state.player);
-  let best = Number(localStorage.getItem(bestKey) || 0);
-  if(state.pts > best){ best = state.pts; localStorage.setItem(bestKey, String(best)); }
+  let best = 0;
+  try{ best = Number(localStorage.getItem(bestKey) || 0); }catch(e){}
+  if(state.pts > best){ best = state.pts; try{ localStorage.setItem(bestKey, String(best)); }catch(e){} }
   $('#rcBest').textContent = best + '/' + MAX_PTS;
 
   state.msgKey = pct === 100 ? 'v100' : pct >= 80 ? 'v80' : pct >= 55 ? 'v55' : pct >= 30 ? 'v30' : 'v0';
@@ -1726,10 +1715,9 @@ if(location.search.includes('demo') && !SELFTEST){
     show('end');
 
     const replay = () => {
-      const out = $('#printerOut');
       $('#end').classList.remove('ready');
-      out.style.transition = 'none';
-      out.style.height = '0px';
+      const pr = $('#printer');
+      if(pr) pr.classList.remove('printing');
       setTimeout(() => printTicket(), 60);
     };
     setTimeout(replay, 350);
@@ -1807,10 +1795,11 @@ if(location.search.includes('selftest')){
     ok(document.getElementById('rcTotal').textContent==='20','ticket : 20 produits');
     ok(document.getElementById('rcTime').textContent.length>0,'temps affiché');
     ok(document.querySelector('#printerOut') !== null,'imprimante présente');
-    const recEl = document.querySelector('#receipt');
+    printTicket();
+    ok(document.querySelector('#printer').classList.contains('printing'),'impression lancée');
     printTicket(true);
-    ok(document.querySelector('#printerOut').style.height === recEl.offsetHeight + 'px','ticket sorti à sa hauteur');
     ok(document.getElementById('end').classList.contains('ready'),'boutons affichés après impression');
+    ok(document.querySelector('#receipt').offsetHeight > 200,'ticket visible par défaut (' + document.querySelector('#receipt').offsetHeight + 'px)');
     ok(Object.keys(DIFFS).length===2,'deux niveaux');
     ok(poolIndexes('easy').length>=40 && poolIndexes('easy').length<PRODUCTS.length,'pool facile restreint ('+poolIndexes('easy').length+')');
     ok(poolIndexes('hard').length>=20,'pool difficile >= 20 ('+poolIndexes('hard').length+')');
