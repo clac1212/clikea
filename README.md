@@ -63,7 +63,13 @@ Il n'y a ni `npm install`, ni bundler, ni test runner : la page est le produit.
 
 1. **GitHub Pages** : `git push origin main`. Le déploiement est automatique (Pages, branche `main`, racine). Le domaine `clikeagame.com` est déclaré dans `CNAME`, HTTPS forcé activé, certificat émis par GitHub.
 2. **DNS (OVH)** : quatre enregistrements `A` sur la racine vers `185.199.108.153`, `.109.153`, `.110.153`, `.111.153`, et un `CNAME` `www` vers `clac1212.github.io`.
-3. **Miroir here.now** : republié depuis le même dossier `clikea/` (hébergement OpenBot). La commande exacte n'est pas consignée dans le dépôt — à noter ici à la prochaine republication.
+3. **Miroir here.now** : republié depuis le même dossier `clikea/` avec l'API here.now :
+
+```bash
+python3 scripts/publish-mirror.py            # slug clever-bloom-q2pw
+```
+
+Le script lit la clé dans `~/.herenow/credentials`, envoie `index.html`, `og.png`, `robots.txt`, `sitemap.xml` et `img/`, puis finalise la version. Sans clé, here.now créerait un site anonyme qui expire en 24 h : le script refuse ce cas.
 
 Contrôle après publication :
 
