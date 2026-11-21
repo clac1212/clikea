@@ -1025,6 +1025,7 @@ function apiHeaders(extra){
 async function submitScore(){
   if(SELFTEST) return;
   if(state.submitted) return;
+  if(state.pts <= 0){ state.submitted = true; state.submitOk = false; return; }
   state.submitted = true;
   try{
     const r = await fetch(API_URL, {
@@ -1355,7 +1356,13 @@ function next(){
 function printTicket(immediate){
   const out = $('#printerOut'), rec = $('#receipt'), printer = $('#printer');
   if(!out || !rec) return;
-  const h = rec.offsetHeight;
+  const h = rec.offsetHeight || rec.scrollHeight;
+  if(!h){
+    out.style.height = '';
+    printer.classList.remove('printing');
+    $('#end').classList.add('ready');
+    return;
+  }
   const reduce = immediate || (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
   if(reduce){
     out.style.height = h + 'px';
@@ -1414,9 +1421,9 @@ function finish(){
     duration_s: secs, best_streak: state.bestStreak, lang: lang
   });
   submitScore();
-  printTicket();
   state.share = t('shareText', {pts: state.pts, max: MAX_PTS, good: state.good, total: total});
   show('end');
+  requestAnimationFrame(() => printTicket());
 }
 
 /* --- écouteurs --- */
@@ -1792,6 +1799,7 @@ if(location.search.includes('selftest')){
       document.querySelector('#nextBtn').click();
     }
     ok(document.getElementById('end').classList.contains('on'),'écran final');
+    ok(document.getElementById('end').classList.contains('on'),'écran affiché avant impression');
     ok(state.good===10,'10 bonnes réponses ('+state.good+')');
     ok(document.getElementById('rcScore').textContent===expected+'/100','score final '+expected+'/100');
     ok(document.getElementById('rcPts').textContent===expected+' / 100','ligne points');
