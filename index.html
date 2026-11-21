@@ -169,8 +169,8 @@ h1 mark{background:none;color:var(--yellow);padding:0;box-decoration-break:clone
 .spec b{font-weight:800}
 .feedback .fact{margin-top:9px;padding:8px 10px;background:rgba(255,255,255,.10);font-size:12px;line-height:1.45;color:#e8f1f8}
 .feedback .fact b{color:var(--yellow);font-weight:800}
-.feedback .actions{display:grid;grid-template-columns:1.35fr 1fr;gap:8px;margin-top:12px}
-.feedback .actions .btn{font-size:14px;padding:15px 10px}
+.feedback .actions{display:grid;grid-template-columns:1fr;gap:8px;margin-top:12px}
+.feedback .actions .btn{font-size:15px;padding:16px 12px}
 .game.revealed .photo{width:132px;height:132px}
 .game.revealed .ask,.game.revealed .modes,.game.revealed .choices,.game.revealed .cashbox,.game.revealed .clock{display:none}
 .game.revealed .quitline{display:none}
@@ -502,7 +502,7 @@ fr:{
  cashPh:'Votre réponse…', cashOk:'Valider',
  q:'Question {i} / {n}', streak:'série {n}', metaScore:'{n} pt', metaScoreMany:'{n} pts',
  ok:'Exact', ko:'Raté', gain:'+{n} pt', gainMany:'+{n} pts', gainNone:'0 pt',
- next:'Produit suivant', seeReceipt:'Voir le ticket',
+ next:'Produit suivant', seeReceipt:'Voir mon score',
  rcTitle:'Ticket de caisse', rcCaisse:'Caisse 7', rcClient:'Client',
  rcGood:'Produits reconnus', rcTotal:'Produits présentés', rcPts:'Points',
  rcStreak:'Meilleure série', rcTime:'Temps', rcBest:'Record personnel', rcScore:'Score',
@@ -546,7 +546,7 @@ en:{
  cashPh:'Your answer…', cashOk:'Check',
  q:'Question {i} / {n}', streak:'streak {n}', metaScore:'{n} pt', metaScoreMany:'{n} pts',
  ok:'Correct', ko:'Missed', gain:'+{n} pt', gainMany:'+{n} pts', gainNone:'0 pt',
- next:'Next product', seeReceipt:'See the receipt',
+ next:'Next product', seeReceipt:'See my score',
  rcTitle:'Receipt', rcCaisse:'Checkout 7', rcClient:'Customer',
  rcGood:'Products named', rcTotal:'Products shown', rcPts:'Points',
  rcStreak:'Best streak', rcTime:'Time', rcBest:'Personal best', rcScore:'Score',
@@ -590,7 +590,7 @@ es:{
  cashPh:'Tu respuesta…', cashOk:'Validar',
  q:'Pregunta {i} / {n}', streak:'racha {n}', metaScore:'{n} pt', metaScoreMany:'{n} pts',
  ok:'Correcto', ko:'Fallado', gain:'+{n} pt', gainMany:'+{n} pts', gainNone:'0 pt',
- next:'Siguiente producto', seeReceipt:'Ver el ticket',
+ next:'Siguiente producto', seeReceipt:'Ver mi puntuación',
  rcTitle:'Ticket de compra', rcCaisse:'Caja 7', rcClient:'Cliente',
  rcGood:'Productos acertados', rcTotal:'Productos mostrados', rcPts:'Puntos',
  rcStreak:'Mejor racha', rcTime:'Tiempo', rcBest:'Récord personal', rcScore:'Puntuación',
@@ -634,7 +634,7 @@ de:{
  cashPh:'Ihre Antwort…', cashOk:'Prüfen',
  q:'Frage {i} / {n}', streak:'Serie {n}', metaScore:'{n} Pkt.', metaScoreMany:'{n} Pkt.',
  ok:'Richtig', ko:'Daneben', gain:'+{n} Pkt.', gainMany:'+{n} Pkt.', gainNone:'0 Pkt.',
- next:'Nächstes Produkt', seeReceipt:'Zum Kassenbon',
+ next:'Nächstes Produkt', seeReceipt:'Mein Ergebnis',
  rcTitle:'Kassenbon', rcCaisse:'Kasse 7', rcClient:'Kunde',
  rcGood:'Erkannte Produkte', rcTotal:'Gezeigte Produkte', rcPts:'Punkte',
  rcStreak:'Beste Serie', rcTime:'Zeit', rcBest:'Persönlicher Rekord', rcScore:'Punkte',
@@ -678,7 +678,7 @@ it:{
  cashPh:'La tua risposta…', cashOk:'Conferma',
  q:'Domanda {i} / {n}', streak:'serie {n}', metaScore:'{n} pt', metaScoreMany:'{n} pt',
  ok:'Giusto', ko:'Sbagliato', gain:'+{n} pt', gainMany:'+{n} pt', gainNone:'0 pt',
- next:'Prodotto successivo', seeReceipt:'Vedi lo scontrino',
+ next:'Prodotto successivo', seeReceipt:'Vedi il punteggio',
  rcTitle:'Scontrino', rcCaisse:'Cassa 7', rcClient:'Cliente',
  rcGood:'Prodotti indovinati', rcTotal:'Prodotti mostrati', rcPts:'Punti',
  rcStreak:'Serie migliore', rcTime:'Tempo', rcBest:'Record personale', rcScore:'Punteggio',
@@ -1272,10 +1272,8 @@ function renderFeedback(){
     (fact ? '<div class="fact"><b>' + (FACT_LABEL[lang]||FACT_LABEL.en) + '</b> ' + fact + '</div>' : '') +
     '<div class="actions">' +
       '<button class="btn" id="nextBtn" type="button">' + (isLast ? t('seeReceipt') : t('next')) + '</button>' +
-      '<button class="btn ghost" id="ticketBtn" type="button">' + t('seeReceipt') + '</button>' +
     '</div>';
   $('#nextBtn').addEventListener('click', next);
-  const tb = $('#ticketBtn'); if(tb) tb.addEventListener('click', ()=>finish());
 }
 
 function submitCash(){
