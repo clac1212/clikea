@@ -124,6 +124,8 @@ h1 mark{background:var(--yellow);color:inherit;padding:.06em .1em;box-decoration
 .qline .streak{color:var(--blue);margin-left:8px}
 .photo{width:250px;height:250px;max-width:100%;margin:0 auto;background:var(--grey);position:relative;transition:width .2s ease,height .2s ease}
 .photo img{width:100%;height:100%;object-fit:contain;padding:10px}
+.photo.is-correct{box-shadow:0 0 0 3px var(--green)}
+.photo.is-wrong{box-shadow:0 0 0 3px var(--red)}
 .photo.loading img{opacity:0}
 .photo .tag{position:absolute;left:0;top:0;background:var(--ink);color:#fff;font-size:10px;font-weight:800;padding:4px 7px;letter-spacing:.08em}
 .photo .tag.num{left:auto;right:0;background:var(--ink)}
@@ -140,13 +142,10 @@ h1 mark{background:var(--yellow);color:inherit;padding:.06em .1em;box-decoration
 .mode.cash i{color:var(--yellow)}
 .mode[aria-pressed="true"]{border-color:var(--ink);box-shadow:inset 0 0 0 1px var(--ink)}
 .choices{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
-.choice{display:flex;align-items:center;gap:9px;border:1px solid var(--line);border-radius:0;background:#fff;padding:13px 12px;text-align:left;font:inherit;font-size:15px;font-weight:800;cursor:pointer}
+.choice{display:flex;align-items:center;justify-content:center;border:1px solid var(--line);border-radius:0;background:#fff;padding:15px 12px;text-align:center;font:inherit;font-size:15px;font-weight:800;cursor:pointer}
 .choice:hover{border-color:var(--ink)}
-.choice .k{display:grid;place-items:center;width:18px;height:18px;background:var(--grey);font-size:10px;font-weight:800;color:var(--ink-3);flex:none}
 .choice.correct{border-color:var(--green);background:#EAF7EF}
-.choice.correct .k{background:var(--green);color:#fff}
 .choice.wrong{border-color:var(--red);background:#FCECEF}
-.choice.wrong .k{background:var(--red);color:#fff}
 .choice.dim{opacity:.45}
 .cashbox{display:grid;grid-template-columns:1fr auto;gap:8px;margin-top:10px}
 .cashbox input{border:1px solid var(--ink);border-radius:0;background:#fff;padding:12px;font:inherit;font-size:15px;font-weight:800;letter-spacing:.06em;text-transform:uppercase}
@@ -459,7 +458,6 @@ footer .wrap{padding:14px var(--pad);display:flex;gap:16px;flex-wrap:wrap;justif
 
 <footer>
   <div class="wrap">
-    <span id="f1">CLIKEA — pastiche non officiel, fait pour s'amuser entre deux montages.</span>
     <span id="f2">Photos produit : ikea.com</span>
   </div>
 </footer>
@@ -527,7 +525,7 @@ fr:{
  shareText:'J’ai marqué {pts}/{max} à CLIKEA ({good}/{total} noms trouvés). Saurez-vous faire mieux ?',
  tName:'Entrez votre nom pour commencer', tPhoto:'Photo indisponible, on passe au suivant',
  tEmpty:'Écrivez un nom', tCopied:'Score copié', tCopyFail:'Partage impossible', tDownload:'Ticket téléchargé en image',
- f1:'CLIKEA — pastiche non officiel, fait pour s’amuser entre deux montages.', f2:'Photos produit : ikea.com'
+ f2:'Photos produit : ikea.com'
 },
 en:{
  title:'CLIKEA — Guess the name',
@@ -570,7 +568,7 @@ en:{
  shareText:'I scored {pts}/{max} at CLIKEA ({good}/{total} names found). Can you do better?',
  tName:'Enter your name to start', tPhoto:'Photo unavailable, skipping',
  tEmpty:'Type a name', tCopied:'Score copied', tCopyFail:'Sharing failed', tDownload:'Ticket saved as an image',
- f1:'CLIKEA — unofficial parody, made for fun between two flat-packs.', f2:'Product photos: ikea.com'
+ f2:'Product photos: ikea.com'
 },
 es:{
  title:'CLIKEA — Adivina el nombre',
@@ -613,7 +611,7 @@ es:{
  shareText:'He hecho {pts}/{max} en CLIKEA ({good}/{total} nombres acertados). ¿Puedes hacerlo mejor?',
  tName:'Escribe tu nombre para empezar', tPhoto:'Foto no disponible, pasamos a la siguiente',
  tEmpty:'Escribe un nombre', tCopied:'Puntuación copiada', tCopyFail:'No se pudo compartir', tDownload:'Ticket guardado como imagen',
- f1:'CLIKEA — parodia no oficial, hecha para divertirse entre dos montajes.', f2:'Fotos de producto: ikea.com'
+ f2:'Fotos de producto: ikea.com'
 },
 de:{
  title:'CLIKEA — Erraten Sie den Namen',
@@ -656,7 +654,7 @@ de:{
  shareText:'Ich habe {pts}/{max} bei CLIKEA geschafft ({good}/{total} Namen erraten). Schaffen Sie mehr?',
  tName:'Geben Sie Ihren Namen ein', tPhoto:'Foto nicht verfügbar, weiter zum nächsten',
  tEmpty:'Namen eingeben', tCopied:'Punktzahl kopiert', tCopyFail:'Teilen nicht möglich', tDownload:'Ticket als Bild gespeichert',
- f1:'CLIKEA — inoffizielle Parodie, zum Spaß zwischen zwei Aufbauten.', f2:'Produktfotos: ikea.com'
+ f2:'Produktfotos: ikea.com'
 },
 it:{
  title:'CLIKEA — Indovina il nome',
@@ -699,7 +697,7 @@ it:{
  shareText:'Ho fatto {pts}/{max} a CLIKEA ({good}/{total} nomi indovinati). Sapete fare meglio?',
  tName:'Inserisci il tuo nome per iniziare', tPhoto:'Foto non disponibile, passiamo avanti',
  tEmpty:'Scrivi un nome', tCopied:'Punteggio copiato', tCopyFail:'Condivisione non riuscita', tDownload:'Ticket salvato come immagine',
- f1:'CLIKEA — parodia non ufficiale, fatta per ridere tra due montaggi.', f2:'Foto prodotto: ikea.com'
+ f2:'Foto prodotto: ikea.com'
 }
 };
 
@@ -761,7 +759,7 @@ function applyLang(next, opts){
   set('#rcStreakL', L.rcStreak); set('#rcTimeL', L.rcTime); set('#rcBestL', L.rcBest);
   set('#rcScoreL', L.rcScore); set('#rcThanks', L.rcThanks);
   set('#shareBtn', L.share); set('#replayBtn', L.replay);
-  set('#f1', L.f1); set('#f2', L.f2);
+  set('#f2', L.f2);
   set('#d1t', L.dEasy); set('#d1s', L.dEasyS.replace('{n}', poolIndexes('easy').length));
   set('#d3t', L.dHard); set('#d3s', L.dHardS.replace('{n}', poolIndexes('hard').length));
   set('#boardOpen', L.boardOpen); set('#boardTitle', L.boardTitle);
@@ -1123,6 +1121,7 @@ function render(){
   }
 
   const photo = $('#photo');
+  photo.classList.remove('is-correct','is-wrong');
   photo.classList.add('loading');
   const img = $('#img');
   img.alt = 'Produit mystère numéro ' + n;
@@ -1165,11 +1164,11 @@ function chooseMode(mode){
   const box = $('#choices');
   box.innerHTML = '';
   box.hidden = false;
-  opts.forEach((name, k) => {
+  opts.forEach((name) => {
     const b = document.createElement('button');
     b.className = 'choice';
     b.type = 'button';
-    b.innerHTML = '<span class="k">' + (k+1) + '</span><span>' + name + '</span>';
+    b.innerHTML = '<span>' + name + '</span>';
     b.dataset.name = name;
     b.addEventListener('click', () => resolve(name === p.n, b));
     box.appendChild(b);
@@ -1186,6 +1185,7 @@ function resolve(ok, pick){
 
   const _card=document.querySelector('.card'); if(_card) _card.classList.add('answered');
   $('#game').classList.add('revealed');
+  const _photo=$('#photo'); if(_photo) _photo.classList.add(ok?'is-correct':'is-wrong');
 
   document.querySelectorAll('.choice').forEach(b=>{
     b.disabled = true;
@@ -1524,10 +1524,6 @@ function drawTrophy(){
   x.fillStyle = GREY; x.font = font(21, '600');
   x.fillText(location.host + location.pathname, cxMid, cy + ch - 34);
 
-  x.fillStyle = 'rgba(255,255,255,.78)';
-  x.font = font(21, '700');
-  x.fillText(t('f1'), cxMid, H - 36);
-
   return c;
 }
 
@@ -1759,6 +1755,7 @@ if(location.search.includes('selftest')){
         const want = mode==='duo' ? 2 : 4;
         const btns=[...document.querySelectorAll('.choice')];
         ok(btns.length===want,'Q'+step+' '+want+' choix ('+btns.length+')');
+        ok(document.querySelectorAll('.choice .k').length===0,'Q'+step+' choix sans numéro');
         ok(new Set(btns.map(b=>b.dataset.name)).size===want,'Q'+step+' choix uniques');
         ok(btns.filter(b=>b.dataset.name===p.n).length===1,'Q'+step+' une bonne réponse');
         const target = right ? btns.find(b=>b.dataset.name===p.n) : btns.find(b=>b.dataset.name!==p.n);
@@ -1766,6 +1763,7 @@ if(location.search.includes('selftest')){
       }
       if(right) expected += MODES[mode].pts;
       ok(state.locked===true,'Q'+step+' verrouillé');
+      ok(document.querySelector('#photo').classList.contains(right?'is-correct':'is-wrong'),'Q'+step+' photo entourée');
       ok(state.pts===expected,'Q'+step+' points '+state.pts+'/'+expected);
       ok(document.querySelector('#feedback').classList.contains('on'),'Q'+step+' feedback');
       ok(document.querySelector('#metaScore').textContent.indexOf(String(state.pts))===0,'Q'+step+' compteur header');
@@ -1834,7 +1832,7 @@ if(location.search.includes('selftest')){
     });
     applyLang('en');
     ok(document.querySelector('#rcTitle').textContent==='Receipt','ticket EN traduit');
-    ok(document.querySelector('#f1').textContent.indexOf('unofficial')>-1,'footer EN traduit');
+    ok(document.querySelector('#f2').textContent==='Product photos: ikea.com','footer EN traduit');
     const billy = PRODUCTS.find(p=>p.n==='BILLY');
     ok(typeOf(billy)==='Bookcase','type EN BILLY ('+typeOf(billy)+')');
     applyLang('es'); ok(typeOf(billy)==='Librería','type ES BILLY ('+typeOf(billy)+')');
