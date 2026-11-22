@@ -2,6 +2,8 @@
 
 Document de conception. Il répond à une seule question : **quels modes donnent envie de revenir et de défier quelqu'un**, sans casser la promesse « une photo, dix secondes, un nom ».
 
+**Version partageable (pour Ben)** : https://vast-serenity-zg6e.here.now/ — recherche, recommandation et maquette cliquable du 5 du jour.
+
 ## 0. La règle de simplicité
 
 **Un joueur ne doit jamais avoir à choisir un mode avant de jouer.**
