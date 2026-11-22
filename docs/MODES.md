@@ -2,7 +2,7 @@
 
 Document de conception. Il répond à une seule question : **quels modes donnent envie de revenir et de défier quelqu'un**, sans casser la promesse « une photo, dix secondes, un nom ».
 
-**Version partageable (pour Ben)** : https://vast-serenity-zg6e.here.now/ — recherche, recommandation et maquette cliquable du 5 du jour.
+**Version partageable (pour Ben)** : https://vast-serenity-zg6e.here.now/ — recherche, recommandation et maquette cliquable du 10 du jour.
 
 ## 0. La règle de simplicité
 
@@ -31,16 +31,18 @@ Ce que font les jeux qui marchent :
 
 ## 2. Deux modes, deux réserves
 
-**À sortir** : le 5 du jour, puis le duel **comme action de partage** (pas comme entrée de menu).
+**À sortir** : le 10 du jour, puis le duel **comme action de partage** (pas comme entrée de menu).
 **En réserve** : le chrono 60 et la virée. Ils ne sortent que si le quotidien tient ses chiffres.
 
-### A. Le 5 du jour — la récurrence
+### A. Le 10 du jour — la récurrence
 
-**Règle.** Cinq produits, même tirage pour tout le monde, une seule partie par jour et par appareil. Cinq questions en Carré (4 noms), 3 points chacune : **score sur 15**. Pas de choix de mode, pas de chrono, 60 à 90 secondes.
+**Règle.** Dix produits, même tirage pour tout le monde, une seule partie par jour et par appareil. Dix questions en Carré (4 noms), 3 points chacune : **score sur 30**. Difficulté croissante : 3 produits connus, 4 moyens, 3 durs. Pas de choix de mode, environ 2 minutes.
+
+**Pourquoi 10 et pas 5.** À 10 s maximum par produit, 5 questions durent 30 à 50 s : trop court pour un rendez-vous. Les scores se tassent (beaucoup de 15/15), et une réponse au hasard fait basculer le résultat. 20 reste le format de la partie libre, trop long pour un quotidien.
 
 **Pourquoi.** C'est le format Wordle/Métrodoku : tout le monde parle de la même grille le même jour, et le résultat se partage en une ligne. C'est le seul mode qui crée une habitude.
 
-**Partage.** `CLIKEA du jour 12/15` + cinq cases (🟩🟥) + `🔥 6 jours` + lien.
+**Partage.** `CLIKEA du jour 24/30` + dix cases sur deux lignes (🟩🟥) + `🔥 6 jours` + lien.
 
 **Série.** Compter les **jours consécutifs joués**, pas les sans-faute : une série qui casse à la première erreur décourage. Afficher la série sur l'accueil et dans le partage.
 
@@ -54,13 +56,13 @@ Ce que font les jeux qui marchent :
 
 **Ce n'est pas une entrée de menu.** C'est un bouton « Défier un ami » sur l'écran de fin, qui envoie la grille qu'on vient de jouer. Le destinataire n'a aucun mode à choisir : il clique, il joue la même grille.
 
-**Règle.** Un joueur termine le 5 du jour (ou la partie libre), partage un lien. L'ami joue **exactement la même grille**, voit le score à battre, et le résultat final (gagné / perdu / égalité). Revanche en un clic, avec une nouvelle graine.
+**Règle.** Un joueur termine le 10 du jour (ou la partie libre), partage un lien. L'ami joue **exactement la même grille**, voit le score à battre, et le résultat final (gagné / perdu / égalité). Revanche en un clic, avec une nouvelle graine.
 
 **Pourquoi.** C'est la boucle 1 → 1 la plus directe : chaque partie peut amener un joueur nommé, et le perdant a une raison de rejouer. Contrairement au partage de score, le destinataire ne peut pas tricher sur la comparaison.
 
 **Partage.** Lien `?duel=<graine>&par=<pseudo>&score=<n>` et texte « César mène 12–9. Ta revanche ? ».
 
-**Technique.** Même moteur de tirage seedé que le 5 du jour, graine dans l'URL, aucun serveur. Le score du créateur est dans l'URL : il est déclaratif, donc falsifiable. Acceptable pour un jeu gratuit ; limiter l'affichage à « défi amical ».
+**Technique.** Même moteur de tirage seedé que le 10 du jour, graine dans l'URL, aucun serveur. Le score du créateur est dans l'URL : il est déclaratif, donc falsifiable. Acceptable pour un jeu gratuit ; limiter l'affichage à « défi amical ».
 
 **Risques.** Sans compte, pas d'historique de duels ; un lien modifié peut annoncer un faux score.
 
@@ -99,16 +101,16 @@ Ce que font les jeux qui marchent :
 
 | Étape | Quoi | Pourquoi | Effort |
 |---|---|---|---|
-| 1 | **Le 5 du jour + la série** | Récurrence, partage quotidien | Moyen |
+| 1 | **Le 10 du jour + la série** | Récurrence, partage quotidien | Moyen |
 | 2 | **Le bouton « Défier »** (même grille, lien seedé) | Acquisition 1 → 1, réutilise le tirage | Faible à moyen |
 | 3 | **Rien de nouveau** | Lire les chiffres du quotidien avant d'ajouter quoi que ce soit | — |
 | Réserve | Chrono 60, virée, vrai/faux | Contenu et rejouabilité, seulement si le quotidien tient | Moyen |
 
-**Règle d'écran** : la page d'accueil garde **un seul bouton principal**. Le 5 du jour est le bouton jaune ; « Partie libre (20 produits) » devient un lien secondaire. Aucun carrousel de modes.
+**Règle d'écran** : la page d'accueil garde **un seul bouton principal**. Le 10 du jour est le bouton jaune ; « Partie libre (20 produits) » devient un lien secondaire. Aucun carrousel de modes.
 
 **Règle de version** : une seule nouveauté visible par mise en ligne. Si le quotidien et le duel sortent en même temps, ils sortent comme **un seul parcours** : « joue la grille du jour, puis défie quelqu'un ».
 
-Le 5 du jour et le duel partagent le même moteur : une graine, un tirage, un score. Les construire ensemble évite de coder deux fois la même chose.
+Le 10 du jour et le duel partagent le même moteur : une graine, un tirage, un score. Les construire ensemble évite de coder deux fois la même chose.
 
 ## 5. Récurrence : les règles à tenir
 
@@ -128,8 +130,8 @@ Le 5 du jour et le duel partagent le même moteur : une graine, un tirage, un sc
 
 ## 7. Décisions à prendre
 
-- **Le 5 du jour remplace-t-il l'accueil, ou reste-t-il une carte à côté de « Partie libre » ?** Recommandation : le bouton principal, et la partie libre en lien secondaire.
+- **Le 10 du jour remplace-t-il l'accueil, ou reste-t-il une carte à côté de « Partie libre » ?** Recommandation : le bouton principal, et la partie libre en lien secondaire.
 - **Le duel se joue-t-il en 5 ou 10 produits ?** Recommandation : 5, et uniquement comme bouton « Défier » après une partie.
 - **La virée a-t-elle 3 vies ou 1 seule ?** Recommandation : 3 vies, **plus tard**, si le quotidien marche.
 - **Faut-il un classement par mode dès le départ ?** Recommandation : non. Un seul classement pour la partie libre, des scores locaux pour le quotidien tant qu'il n'a pas son public.
-- **Combien de modes visibles au maximum ?** Recommandation : **deux** — « Le 5 du jour » et « Partie libre ». Le duel est un bouton, pas une case.
+- **Combien de modes visibles au maximum ?** Recommandation : **deux** — « Le 10 du jour » et « Partie libre ». Le duel est un bouton, pas une case.

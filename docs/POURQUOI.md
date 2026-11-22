@@ -56,7 +56,7 @@ Ces principes viennent des décisions prises pendant la construction ; ils ne so
 
 - **Pas de monétisation** : ni publicité, ni affiliation, ni vente. Cela protège l'expérience et limite le risque vis-à-vis de la marque.
 - **Pas de compte utilisateur** : pas de profil, pas de mot de passe, pas de série persistante entre appareils.
-- **Pas de partie unique imposée** : la partie libre reste illimitée. Un « 5 du jour » viendra à côté comme rendez-vous, sans supprimer le jeu libre (voir [`MODES.md`](MODES.md)).
+- **Pas de partie unique imposée** : la partie libre reste illimitée. Un « 10 du jour » viendra à côté comme rendez-vous, sans supprimer le jeu libre (voir [`MODES.md`](MODES.md)).
 - **Pas d'application native** : le web mobile suffit.
 - **Pas de logique de jeu côté serveur** : le classement est un simple dépôt de scores, sans anti-triche.
 
