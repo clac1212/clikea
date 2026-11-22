@@ -507,7 +507,7 @@ def step_fetch_ko():
     """Type coréen de l'article montré : ikea.com/kr/ko relié par l'identifiant de photo, sinon un autre article
     de la gamme au même type français, sinon DeepSeek. Les noms coréens s'écrivent « BILLY 빌리 »."""
     fams, parsed = load('catalog.json'), load('parsed.json')
-    with cf.ThreadPoolExecutor(8) as ex:
+    with cf.ThreadPoolExecutor(4) as ex:
         list(ex.map(lambda f: search('kr/ko', f['name']), fams))
     ko = {}
     missing = []
