@@ -131,7 +131,7 @@ Le français est la langue de référence : une clé manquante dans une autre la
 - L'image partagée est dessinée à part sur un `<canvas>` de **1080 × 1350** (`drawTrophy`), dans le même langage visuel, avec le logo dessiné en tracés (`drawLogo`).
 - **Résultat texte** (`shareGrid`, `resultText`) : une ligne `CLIKEA 52/100 · 13/20 noms · série 6`, puis quatre lignes de cinq cases (🟩 juste, 🟥 raté, 🟨 temps écoulé), puis le lien. Aucun nom de produit : le partage ne spoile pas.
 - **Défi** : `shareUrl(source)` construit un lien avec `utm_source`, et si le score est supérieur à 0, `defi` et `par`. L'accueil lit ces paramètres (`readChallenge`) et affiche un bandeau jaune ; le pseudo est échappé.
-- Partage : `navigator.share` avec fichier si disponible (iOS/Android), sinon téléchargement du PNG, sinon copie du texte. Boutons X, WhatsApp, LinkedIn ouvrent des intentions web ; Instagram ouvre la feuille de partage native.
+- Partage : `navigator.share` avec fichier si disponible (iOS/Android), sinon téléchargement du PNG, sinon copie du texte. X, WhatsApp et LinkedIn sont de **vrais liens** (`<a target="_blank" rel="noopener">`, href recalculé après la partie) et non des `window.open`, pour éviter les bloqueurs de fenêtres et laisser le système ouvrir l'application installée. Instagram et Copier restent des boutons : Instagram n'a pas d'API web de publication, il passe par la feuille de partage du téléphone. Une note sous les cibles explique ce fonctionnement, et un message s'affiche après 1,6 s si rien ne s'est ouvert sur mobile.
 - Le texte de partage est localisé et contient le score, le nombre de noms trouvés, la grille et le lien.
 
 ## Aperçu de lien
@@ -151,7 +151,7 @@ Balises statiques dans `<head>` : `og:title`, `og:description`, `og:image` (`htt
 
 ## Contrôles (`?selftest=1`)
 
-La suite s'exécute dans la page publiée, sans outil externe. Elle vérifie notamment : intégrité de la base (≥ 100 produits, noms et images uniques, champs complets, types localisés), présence des balises Open Graph, photos locales, bouton de copie, déroulement d'une partie simulée, grille de partage, lien de défi avec `utm_source`, ticket à 0 point, partage, contraintes Supabase. Elle affiche `SELFTEST PASS n/n`. Relevé du 21 novembre 2026 : **416/416** sur `clikeagame.com` et sur le miroir.
+La suite s'exécute dans la page publiée, sans outil externe. Elle vérifie notamment : intégrité de la base (≥ 100 produits, noms et images uniques, champs complets, types localisés), présence des balises Open Graph, photos locales, bouton de copie, déroulement d'une partie simulée, grille de partage, lien de défi avec `utm_source`, ticket à 0 point, partage, contraintes Supabase. Elle affiche `SELFTEST PASS n/n`. Relevé du 21 novembre 2026 : **416/416** sur `clikeagame.com` et sur le miroir. Depuis le 22 novembre, **420/420** (ajout des contrôles sur les liens de partage).
 
 `?demo=1` affiche directement l'écran de fin avec un score fixe (52/100) pour régler le ticket.
 
