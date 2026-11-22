@@ -333,6 +333,7 @@ def translate_types(types):
 
 def step_build():
     parsed, llm, langs = load('parsed.json'), load('llm.json', {}), load('langs.json', {})
+    ko = load('ko.json', {})  # rempli par fetch-ko (à relancer après build pour les nouvelles gammes)
     # Types manquants : d'abord la traduction déjà vue dans la gamme pour le même type français, sinon DeepSeek.
     need = []
     for n, arts in parsed.items():
@@ -386,7 +387,7 @@ def step_build():
             'llm_reason': L['reason'], 'ratings_total': tot, 'top_seller': top,
             'seed_difficulty': seed_difficulty(tot, top, iconic), 'spellings': fake_spellings(n, real),
             'article': {'item': a['item'], 'type_fr': a['type_fr'], 'type_en': r['type_en'], 'type_de': r['type_de'],
-                        'type_es': r['type_es'], 'type_it': r['type_it'], 'price': a['price'], 'image_url': a['image_url'],
+                        'type_es': r['type_es'], 'type_it': r['type_it'], 'type_ko': ko.get(n), 'price': a['price'], 'image_url': a['image_url'],
                         'image_id': a['image_id'], 'category': a['category'], 'pip': a['pip'], 'is_new': a['is_new'],
                         'image_path': 'img/' + slugify(n) + '.webp'},
         })
@@ -447,11 +448,11 @@ def step_sql():
             ' seed_difficulty = excluded.seed_difficulty, spellings = excluded.spellings, active = true, playable = true, updated_at = now(),'
             ' difficulty = case when clikea_families.n_first = 0 then excluded.seed_difficulty else clikea_families.difficulty end;')
         lines.append(
-            'insert into public.clikea_articles (item_no, family, is_main, type_fr, type_en, type_de, type_es, type_it, price, image_url, image_id, image_path, category, pip_url, is_new) values ('
-            + ','.join(q(x) for x in [a['item'], f['name'], True, a['type_fr'], a['type_en'], a['type_de'], a['type_es'], a['type_it'],
+            'insert into public.clikea_articles (item_no, family, is_main, type_fr, type_en, type_de, type_es, type_it, type_ko, price, image_url, image_id, image_path, category, pip_url, is_new) values ('
+            + ','.join(q(x) for x in [a['item'], f['name'], True, a['type_fr'], a['type_en'], a['type_de'], a['type_es'], a['type_it'], a.get('type_ko'),
                                        a['price'], a['image_url'], a['image_id'], a['image_path'], a['category'], a['pip'], a['is_new']])
             + ') on conflict (item_no) do update set family = excluded.family, is_main = true, type_fr = excluded.type_fr, type_en = excluded.type_en,'
-            ' type_de = excluded.type_de, type_es = excluded.type_es, type_it = excluded.type_it, price = excluded.price, image_url = excluded.image_url,'
+            ' type_de = excluded.type_de, type_es = excluded.type_es, type_it = excluded.type_it, type_ko = excluded.type_ko, price = excluded.price, image_url = excluded.image_url,'
             ' image_id = excluded.image_id, image_path = excluded.image_path, category = excluded.category, pip_url = excluded.pip_url, is_new = excluded.is_new, updated_at = now();')
     names = ','.join(q(f['name']) for f in fams)
     lines.append(f'update public.clikea_articles set is_main = false where family in ({names}) and item_no not in ({",".join(q(f["article"]["item"]) for f in fams)});')
@@ -477,7 +478,10 @@ def step_export():
     rows = json.load(sys.stdin)
     prods = []
     for r in rows:
-        prods.append({'n': r['name'], 't': {'fr': r['type_fr'], 'en': r['type_en'], 'es': r['type_es'], 'de': r['type_de'], 'it': r['type_it']},
+        t = {'fr': r['type_fr'], 'en': r['type_en'], 'es': r['type_es'], 'de': r['type_de'], 'it': r['type_it']}
+        if r.get('type_ko'):
+            t['ko'] = r['type_ko']
+        prods.append({'n': r['name'], 't': t,
                       'p': float(r['price']) if r['price'] is not None else None, 'i': r['image_path'], 'k': 1 if r['iconic'] else 0,
                       'd': round(float(r['difficulty']), 2), 'v': r['visual_family'], 'o': r['spellings'] or []})
     html_p = os.path.join(REPO, 'index.html')
@@ -499,8 +503,55 @@ def step_export():
     print('PRODUCTS exporté :', len(prods), 'gammes')
 
 
+def step_fetch_ko():
+    """Type coréen de l'article montré : ikea.com/kr/ko relié par l'identifiant de photo, sinon un autre article
+    de la gamme au même type français, sinon DeepSeek. Les noms coréens s'écrivent « BILLY 빌리 »."""
+    fams, parsed = load('catalog.json'), load('parsed.json')
+    with cf.ThreadPoolExecutor(8) as ex:
+        list(ex.map(lambda f: search('kr/ko', f['name']), fams))
+    ko = {}
+    missing = []
+    for f in fams:
+        n = f['name']
+        ids = {a['image_id']: a for a in parsed.get(n, [])}
+        by_type = {}
+        hit = None
+        for it in search('kr/ko', n):
+            nm = (it.get('name') or '').strip()
+            if (nm != n and not nm.startswith(n + ' ')) or '/' in nm or not (it.get('typeName') or '').strip():
+                continue
+            m = IMG_ID.search(it.get('mainImageUrl') or '')
+            if m and m.group(1) in ids:
+                by_type.setdefault(ids[m.group(1)]['type_fr'], it['typeName'].strip())
+                if m.group(1) == f['article']['image_id']:
+                    hit = it['typeName'].strip()
+        t = hit or by_type.get(f['article']['type_fr'])
+        if t:
+            ko[n] = t
+        else:
+            missing.append(f)
+    cache = load('translations_ko.json', {})
+    todo = sorted({f['article']['type_fr'] for f in missing} - set(cache))
+    for i in range(0, len(todo), 60):
+        chunk = todo[i:i + 60]
+        prompt = ('Traduis ces types de produits IKEA (libellés courts du site français) en coréen, comme sur ikea.com/kr/ko '
+                  '(ex. Bibliothèque -> 책장, Fauteuil -> 암체어). Réponds UNIQUEMENT par un objet JSON {"<type français>": "<coréen>"}.\nTypes :\n')
+        out = subprocess.run(['opencode', 'run', '-m', LLM_MODEL, '--', prompt + '\n'.join(chunk)],
+                             capture_output=True, text=True, timeout=600, cwd=CACHE).stdout
+        m = re.search(r'\{.*\}', out, re.S)
+        if m:
+            cache.update({k: v.strip() for k, v in json.loads(m.group(0)).items() if k in chunk and v})
+            save('translations_ko.json', cache)
+        print('coréen traduit', min(i + 60, len(todo)), '/', len(todo), flush=True)
+    for f in missing:
+        if f['article']['type_fr'] in cache:
+            ko[f['name']] = cache[f['article']['type_fr']]
+    save('ko.json', ko)
+    print('coréen :', len(ko), '/', len(fams), '(ikea.com/kr :', len(fams) - len(missing), ')')
+
+
 STEPS = {'families': step_families, 'fetch-fr': step_fetch_fr, 'parse': step_parse, 'llm': step_llm,
-         'fetch-langs': step_fetch_langs, 'build': step_build, 'images': step_images, 'sql': step_sql, 'export': step_export}
+         'fetch-langs': step_fetch_langs, 'fetch-ko': step_fetch_ko, 'build': step_build, 'images': step_images, 'sql': step_sql, 'export': step_export}
 
 if __name__ == '__main__':
     if len(sys.argv) < 2 or sys.argv[1] not in STEPS:

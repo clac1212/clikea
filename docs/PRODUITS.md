@@ -11,7 +11,7 @@ Version partageable : https://rapid-reef-8rww.here.now/ — décisions du 22 nov
 ## Base en deux niveaux
 
 - **Gamme** (BILLY) : la réponse. Porte le statut culte, la note de difficulté, les statistiques, le dernier passage et le nombre de passages.
-- **Article** (BILLY bibliothèque blanche, n° d'article) : ce qu'on montre. Porte la photo, le type en 5 langues, le prix, la catégorie, le nombre d'avis et le badge Top seller.
+- **Article** (BILLY bibliothèque blanche, n° d'article) : ce qu'on montre. Porte la photo, le type en 6 langues, le prix, la catégorie, le nombre d'avis et le badge Top seller.
 - Corrige le défaut actuel : un nom recouvrait plusieurs articles, avec des types incohérents d'une langue à l'autre (HEMNES, MALM, SUNDVIK, DUKTIG, NORDVIKEN, KALAS).
 
 ## Catalogue source
@@ -78,7 +78,7 @@ Version partageable : https://rapid-reef-8rww.here.now/ — décisions du 22 nov
 - **Skill d'import** : `scripts/catalog/catalog.py`, étapes relançables avec cache disque (`scripts/catalog/cache/`, ignoré par git) :
   `families` → `fetch-fr` → `parse` → `llm` → `fetch-langs` → `build` → `images` → `sql` → `export`.
   Les traductions d'un article sont reliées par l'identifiant de photo (`pe…`), identique dans tous les pays : un type affiché correspond toujours à la photo.
-- **Tables** : `clikea_families` (gamme, culte, famille visuelle, difficulté, orthographes), `clikea_articles` (article principal, types 5 langues, photo), `clikea_players` et `clikea_exposures` (niveau des appareils, premières rencontres), `clikea_daily_grid.slots` (rôle, difficulté, format de chaque place).
+- **Tables** : `clikea_families` (gamme, culte, famille visuelle, difficulté, orthographes), `clikea_articles` (article principal, types 6 langues, photo), `clikea_players` et `clikea_exposures` (niveau des appareils, premières rencontres), `clikea_daily_grid.slots` (rôle, difficulté, format de chaque place).
 - **Chaque nuit** : `clikea_update_difficulty()` à 22 h 00 UTC (Elo, premières rencontres seulement, orthographe exclue), puis `clikea_plan_days(14)` à 22 h 05 UTC (recette, plafonds, replis).
 - **Jeu** : `PRODUCTS` est généré par `catalog.py export` à partir de la base (difficulté à jour). Partie libre « faciles » = cultes + 40 % des gammes les mieux trouvées.
 

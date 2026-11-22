@@ -1,6 +1,6 @@
 # CLIKEA
 
-**Le jeu des noms IKEA.** Une photo de meuble, vingt produits tirés au sort, un nom à retrouver. Gratuit, sans compte, en cinq langues.
+**Le jeu des noms IKEA.** Une photo de meuble, vingt produits tirés au sort, un nom à retrouver. Gratuit, sans compte, en six langues (fr, en, es, de, it, ko).
 
 - **Jouer** : https://clikeagame.com
 - **Miroir** : https://clever-bloom-q2pw.here.now/

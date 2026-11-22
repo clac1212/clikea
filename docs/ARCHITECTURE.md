@@ -22,7 +22,7 @@ Aucun serveur applicatif : GitHub Pages sert un fichier statique, Supabase et Po
 | `<head>` | Titre, description, favicon SVG en `data:` (logo CLIKEA), variables CSS. |
 | CSS | Thème bleu IKEA / jaune, quatre écrans, ticket, feuille de partage, media queries. |
 | Écrans | `#intro`, `#game`, `#end`, `#board`, plus `#shareSheet` en surcouche. Un seul est visible (`show(id)`). |
-| Données | `PRODUCTS` (~1 740 gammes : `n` nom, `t` types 5 langues, `p` prix, `i` photo, `k` culte, `d` difficulté, `v` famille visuelle, `o` fausses orthographes, `x` hors tirage), `DECOR`, `FACTS`, `I18N` (5 langues). |
+| Données | `PRODUCTS` (~1 740 gammes : `n` nom, `t` types 6 langues, `p` prix, `i` photo, `k` culte, `d` difficulté, `v` famille visuelle, `o` fausses orthographes, `x` hors tirage), `DECOR`, `FACTS`, `I18N` (6 langues). |
 | Moteur | `startGame`, `chooseMode`, `resolve`, `next`, `endGame`. |
 | Classement | `submitScore`, `loadRank`, `loadBoard`, `renderBoard`. |
 | Ticket | `printTicket` (DOM), `drawTrophy` (canvas 1080 × 1350), `shareTrophy`, `shareTo`. |
@@ -77,7 +77,7 @@ Tous les accès sont dans des `try/catch` : la navigation privée iOS peut lever
 
 ## Internationalisation
 
-`I18N` contient cinq paquets (`fr`, `en`, `es`, `de`, `it`) avec les mêmes clés. `t(key, vars)` lit la clé dans la langue courante, retombe sur le français, et remplace les `{placeholders}`. `applyLang` met à jour les textes du DOM, la description meta et le `<select id="lang">`. Le contenu produit (types) est localisé dans `PRODUCTS`.
+`I18N` contient six paquets (`fr`, `en`, `es`, `de`, `it`, `ko`) avec les mêmes clés. `t(key, vars)` lit la clé dans la langue courante, retombe sur le français, et remplace les `{placeholders}`. `applyLang` met à jour les textes du DOM, la description meta et le `<select id="lang">`. Le contenu produit (types) est localisé dans `PRODUCTS`.
 
 Le français est la langue de référence : une clé manquante dans une autre langue s'affiche en français plutôt que de casser l'écran.
 
@@ -197,5 +197,5 @@ La suite s'exécute dans la page publiée, sans outil externe. Elle vérifie not
 
 - Pas de dépendance externe, pas de build : toute modification reste dans `index.html`.
 - Une seule source de vérité pour les produits et les libellés ; ne pas recopier une liste dans le HTML et dans le JS.
-- Toute nouvelle chaîne visible doit exister dans les cinq langues.
+- Toute nouvelle chaîne visible doit exister dans les six langues (fr, en, es, de, it, ko).
 - Le parcours doit rester sans défilement à 390 px de large.
