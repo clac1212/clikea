@@ -28,6 +28,25 @@ Appuis :
 - **Niveau de référence** (`ref_theta`) : le niveau pour lequel la réussite prédite sur les réponses réelles des 30 derniers jours égale la réussite observée. Plus robuste que la moyenne des niveaux Elo au démarrage. Publié chaque nuit dans `clikea_settings`.
 - **Niveau d'un joueur** : gardé sur l'appareil (`localStorage clikea-level`), démarre à `ref_theta`, mis à jour après chaque réponse (même formule, pas K = max(0,15 ; 0,8 / (1 + 0,05 n))). Les questions d'orthographe ne comptent pas.
 
+## Réseau et retours (le mécanisme invisible)
+
+Version partageable : https://dewy-inlet-bfx2.here.now/
+
+L'idée : « je l'ai déjà vu, celui-là ! ». On a envie de le trouver, et à force de le recroiser on le connaît, comme les stations dans Métrodoku. Rien n'est visible pour le joueur : seuls la composition des grilles et le retour des produits changent.
+
+- **Le réseau** (`clikea_families.pool`, recalculé chaque nuit par `clikea_refresh_pool`) :
+  - `core` = cultes + produits connus au calibrage par au moins une personne + produits retrouvés ≥ 60 % (10 réponses minimum) ;
+  - `seen` = les 200 meilleures ventes les plus notées parmi les familles qu'on repère chez soi ou en magasin (meubles, rangement, luminaires, miroirs, jouets) ;
+  - un produit du cœur vu au moins 3 jours dans le 10 du jour et retrouvé moins de 35 % du temps en sort (hors cultes).
+- **10 du jour v4** (`clikea_plan_days`, `clikea_pick4`) : 2 sûrs (cultes) en ouverture, 1 culte en clôture, 3 rappels, 2 revenants, 1 nouveau du réseau, 1 piège hors réseau.
+  - Retours à intervalles croissants : 2 jours après le 1er passage, puis 7, 21 et 45 jours. Rappels et revenants : les plus ratés d'abord.
+  - Un culte au plus une fois par semaine ; jamais deux jours de suite.
+  - « Comment ça s'écrit ? » : 1 par jour (place 5 ou 6), parfois une 2e sur le culte de clôture, seulement sur un culte, un produit du cœur ou un produit déjà passé deux fois.
+  - Au démarrage, sans historique, les places de revenants passent aux rappels puis aux nouveaux : la composition se met en place en 3 semaines.
+- **Partie libre** (`adaptiveQueue`) : 3 sûrs (2 en entrée, 1 en clôture), jusqu'à 6 « à revoir », 4 des 10 du jour des 7 derniers jours, 2 nouveaux du réseau, le reste dans la zone (50–85 %), réseau d'abord. Jamais un produit du 10 du jour tant qu'on ne l'a pas joué.
+- **Mémoire par joueur** (`clikea-level.mem`, boîtes de Leitner) : bonne réponse → boîte suivante ; erreur → 2 boîtes en arrière. Retour après 1, 1, 3, 7, 21 puis 45 jours selon la boîte. Les produits en boîte ≥ 2 sont prioritaires pour « comment ça s'écrit ? ».
+- **Mesure** : vue `clikea_return_stats` — réussite selon le rang de la rencontre (1re, 2e, 3e…) par format. Si l'apprentissage invisible marche, la réussite monte avec le rang.
+
 ## Partie libre : adaptée à chaque joueur
 
 Pour chaque produit, chance de le trouver en Carré pour ce joueur, puis :

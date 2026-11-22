@@ -513,7 +513,8 @@ def step_export():
             t['ko'] = r['type_ko']
         prods.append({'n': r['name'], 't': t,
                       'p': float(r['price']) if r['price'] is not None else None, 'i': r['image_path'], 'k': 1 if r['iconic'] else 0,
-                      'd': round(float(r['difficulty']), 2), 'v': r['visual_family'], 'o': r['spellings'] or []})
+                      'd': round(float(r['difficulty']), 2), 'v': r['visual_family'], 'o': r['spellings'] or [],
+                      'r': {'core': 1, 'seen': 2}.get(r.get('pool'), 0)})
     html_p = os.path.join(REPO, 'index.html')
     html = open(html_p).read()
     # Produits de grilles déjà jouées absents du nouveau catalogue : gardés pour rejouer ces grilles,
