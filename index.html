@@ -120,7 +120,9 @@ h1 mark{background:none;color:var(--yellow);padding:0;box-decoration-break:clone
 .btn.daily b{font-size:22px;font-weight:900;line-height:1;letter-spacing:-.01em}
 .btn.daily span{font-size:12.5px;font-weight:800;text-transform:none;letter-spacing:0;line-height:1.3;opacity:.82}
 .free{margin:14px 0 0;max-width:420px}
-.free-toggle{background:none;border:0;padding:4px 0;font:inherit;font-size:13px;font-weight:800;color:#fff;text-decoration:underline;text-underline-offset:3px;cursor:pointer}
+.free{margin:10px 0 0}
+.free .btn.ghost.free-toggle{font-size:15px;padding:14px}
+.free-toggle[aria-expanded="true"]{background:rgba(255,255,255,.14)}
 .free-panel{margin-top:10px;display:grid;gap:10px}
 .free-panel .btn{font-size:15px;padding:13px}
 
@@ -221,6 +223,10 @@ h1 mark{background:none;color:var(--yellow);padding:0;box-decoration-break:clone
 .board .row.me{background:#FFF7CC}
 .board .empty{padding:22px 16px;color:var(--ink-3);font-size:13px;text-align:center}
 .board-note{margin:10px 0 0;font-size:11px;color:#b9d2e6;max-width:520px}
+.daynav{display:grid;grid-template-columns:44px 1fr 44px;align-items:center;max-width:520px;background:#fff;color:#111;border-bottom:1px solid var(--line)}
+.daynav button{height:44px;border:0;background:none;font:inherit;font-size:22px;font-weight:900;color:var(--blue);cursor:pointer}
+.daynav button:disabled{color:#c9c9c9;cursor:default}
+.daynav span{text-align:center;font-size:13px;font-weight:800}
 .board .actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:18px;max-width:520px}
 
 /* ---------- ticket de fin ---------- */
@@ -363,7 +369,7 @@ footer .wrap{padding:14px var(--pad);display:flex;gap:16px;flex-wrap:wrap;justif
         <div class="cta-row"><button class="btn wide daily" id="dailyBtn" type="button"><b id="dailyT">Le 10 du jour</b><span id="dailySub">10 produits, 2 minutes</span></button></div>
 
         <div class="free">
-          <button class="free-toggle" type="button" id="freeToggle" aria-expanded="false" aria-controls="freePanel">Partie libre · 20 produits</button>
+          <button class="btn ghost wide free-toggle" type="button" id="freeToggle" aria-expanded="false" aria-controls="freePanel">Partie libre · 20 produits</button>
           <div class="free-panel" id="freePanel" hidden>
             <div class="diffs" id="diffs" role="radiogroup" aria-label="Niveau">
               <button class="diff on" type="button" data-diff="easy" role="radio" aria-checked="true">
@@ -373,7 +379,7 @@ footer .wrap{padding:14px var(--pad);display:flex;gap:16px;flex-wrap:wrap;justif
                 <b id="d3t">Produits difficiles</b><span id="d3s">20 sur 60 produits moins connus</span>
               </button>
             </div>
-            <button class="btn ghost wide" id="startBtn" type="button">Jouer</button>
+            <button class="btn wide" id="startBtn" type="button">Jouer</button>
           </div>
         </div>
       </div>
@@ -439,6 +445,7 @@ footer .wrap{padding:14px var(--pad);display:flex;gap:16px;flex-wrap:wrap;justif
         <button class="tab" type="button" data-diff="easy">Produits faciles</button>
         <button class="tab" type="button" data-diff="hard">Produits difficiles</button>
       </div>
+      <div class="daynav" id="dayNav" hidden><button type="button" id="dayPrev" aria-label="Jour précédent">‹</button><span id="dayLabel"></span><button type="button" id="dayNext" aria-label="Jour suivant">›</button></div>
       <div class="board-card" id="boardRows"></div>
       <p class="board-note" id="boardNote">20 meilleurs scores par niveau.</p>
       <div class="actions">
@@ -585,7 +592,7 @@ fr:{
  endNameNote:'Facultatif. Sans nom, le score n’est pas enregistré.',
  tName:'Entrez votre nom pour commencer', tPhoto:'Photo indisponible, on passe au suivant',
  tEmpty:'Écrivez un nom', tCopied:'Score copié', tCopyFail:'Partage impossible', tDownload:'Ticket téléchargé en image',
- dDaily:'Du jour', dailyT:'Le 10 du jour', dailyS:'#{n} · 10 produits, 2 minutes', dailyDone:'#{n} · fait : {pts}/50 · prochaine grille dans {left}', dailyResume:'#{n} · reprendre à la question {i}', daysN:'{n} jours d’affilée', daysN1:'1 jour', freeT:'Partie libre · 20 produits', freeStart:'Lancer la partie libre', dailyLabel:'10 du jour #{n}', dailyResult:'CLIKEA du jour #{n} · {pts}/{max}', dailyShare:'J’ai fait {pts}/{max} au 10 du jour CLIKEA #{n}. À toi.', defiDaily:'<b>{name}</b> a fait <b>{pts}/50</b> au 10 du jour #{n}. Tu fais mieux ?', rankDaily:'Ta place aujourd’hui : {rank} sur {total}', sDays:'Jours d’affilée', tGrid:'Grille du jour indisponible, réessayez dans un instant', boardNoteDaily:'Classement du jour, remis à zéro à minuit (heure de Paris).', freeShort:'Partie libre',
+ dToday:'Aujourd’hui', boardNoteDay:'Classement final de la grille #{n}.', dayPrev:'Jour précédent', dayNext:'Jour suivant', dDaily:'Du jour', dailyT:'Le 10 du jour', dailyS:'#{n} · 10 produits, 2 minutes', dailyDone:'#{n} · fait : {pts}/50 · prochaine grille dans {left}', dailyResume:'#{n} · reprendre à la question {i}', daysN:'{n} jours d’affilée', daysN1:'1 jour', freeT:'Partie libre · 20 produits', freeStart:'Lancer la partie libre', dailyLabel:'10 du jour #{n}', dailyResult:'CLIKEA du jour #{n} · {pts}/{max}', dailyShare:'J’ai fait {pts}/{max} au 10 du jour CLIKEA #{n}. À toi.', defiDaily:'<b>{name}</b> a fait <b>{pts}/50</b> au 10 du jour #{n}. Tu fais mieux ?', rankDaily:'Ta place aujourd’hui : {rank} sur {total}', sDays:'Jours d’affilée', tGrid:'Grille du jour indisponible, réessayez dans un instant', boardNoteDaily:'Classement du jour, remis à zéro à minuit (heure de Paris).', freeShort:'Partie libre',
  f2:'Photos produit : ikea.com'
 },
 en:{
@@ -636,7 +643,7 @@ en:{
  endNameNote:'Optional. Without a name, the score is not saved.',
  tName:'Enter your name to start', tPhoto:'Photo unavailable, skipping',
  tEmpty:'Type a name', tCopied:'Score copied', tCopyFail:'Sharing failed', tDownload:'Ticket saved as an image',
- dDaily:'Daily', dailyT:'Daily 10', dailyS:'#{n} · 10 products, 2 minutes', dailyDone:'#{n} · done: {pts}/50 · next grid in {left}', dailyResume:'#{n} · resume at question {i}', daysN:'{n}-day streak', daysN1:'1-day streak', freeT:'Free play · 20 products', freeStart:'Start free play', dailyLabel:'Daily 10 #{n}', dailyResult:'CLIKEA daily #{n} · {pts}/{max}', dailyShare:'I scored {pts}/{max} on CLIKEA Daily 10 #{n}. Your turn.', defiDaily:'<b>{name}</b> scored <b>{pts}/50</b> on Daily 10 #{n}. Can you beat it?', rankDaily:'Today: #{rank} of {total}', sDays:'Day streak', tGrid:'Daily grid unavailable, try again in a moment', boardNoteDaily:'Today’s leaderboard, reset at midnight (Paris time).', freeShort:'Free play',
+ dToday:'Today', boardNoteDay:'Final leaderboard for grid #{n}.', dayPrev:'Previous day', dayNext:'Next day', dDaily:'Daily', dailyT:'Daily 10', dailyS:'#{n} · 10 products, 2 minutes', dailyDone:'#{n} · done: {pts}/50 · next grid in {left}', dailyResume:'#{n} · resume at question {i}', daysN:'{n}-day streak', daysN1:'1-day streak', freeT:'Free play · 20 products', freeStart:'Start free play', dailyLabel:'Daily 10 #{n}', dailyResult:'CLIKEA daily #{n} · {pts}/{max}', dailyShare:'I scored {pts}/{max} on CLIKEA Daily 10 #{n}. Your turn.', defiDaily:'<b>{name}</b> scored <b>{pts}/50</b> on Daily 10 #{n}. Can you beat it?', rankDaily:'Today: #{rank} of {total}', sDays:'Day streak', tGrid:'Daily grid unavailable, try again in a moment', boardNoteDaily:'Today’s leaderboard, reset at midnight (Paris time).', freeShort:'Free play',
  f2:'Product photos: ikea.com'
 },
 es:{
@@ -687,7 +694,7 @@ es:{
  endNameNote:'Opcional. Sin nombre, la puntuación no se guarda.',
  tName:'Escribe tu nombre para empezar', tPhoto:'Foto no disponible, pasamos a la siguiente',
  tEmpty:'Escribe un nombre', tCopied:'Puntuación copiada', tCopyFail:'No se pudo compartir', tDownload:'Ticket guardado como imagen',
- dDaily:'Del día', dailyT:'Los 10 del día', dailyS:'#{n} · 10 productos, 2 minutos', dailyDone:'#{n} · hecho: {pts}/50 · próxima en {left}', dailyResume:'#{n} · seguir en la pregunta {i}', daysN:'{n} días seguidos', daysN1:'1 día', freeT:'Partida libre · 20 productos', freeStart:'Empezar partida libre', dailyLabel:'10 del día #{n}', dailyResult:'CLIKEA del día #{n} · {pts}/{max}', dailyShare:'He hecho {pts}/{max} en los 10 del día de CLIKEA #{n}. Te toca.', defiDaily:'<b>{name}</b> ha hecho <b>{pts}/50</b> en los 10 del día #{n}. ¿Lo superas?', rankDaily:'Hoy: {rank}.º de {total}', sDays:'Días seguidos', tGrid:'Rejilla del día no disponible, inténtalo en un momento', boardNoteDaily:'Clasificación del día, se reinicia a medianoche (hora de París).', freeShort:'Partida libre',
+ dToday:'Hoy', boardNoteDay:'Clasificación final de la rejilla #{n}.', dayPrev:'Día anterior', dayNext:'Día siguiente', dDaily:'Del día', dailyT:'Los 10 del día', dailyS:'#{n} · 10 productos, 2 minutos', dailyDone:'#{n} · hecho: {pts}/50 · próxima en {left}', dailyResume:'#{n} · seguir en la pregunta {i}', daysN:'{n} días seguidos', daysN1:'1 día', freeT:'Partida libre · 20 productos', freeStart:'Empezar partida libre', dailyLabel:'10 del día #{n}', dailyResult:'CLIKEA del día #{n} · {pts}/{max}', dailyShare:'He hecho {pts}/{max} en los 10 del día de CLIKEA #{n}. Te toca.', defiDaily:'<b>{name}</b> ha hecho <b>{pts}/50</b> en los 10 del día #{n}. ¿Lo superas?', rankDaily:'Hoy: {rank}.º de {total}', sDays:'Días seguidos', tGrid:'Rejilla del día no disponible, inténtalo en un momento', boardNoteDaily:'Clasificación del día, se reinicia a medianoche (hora de París).', freeShort:'Partida libre',
  f2:'Fotos de producto: ikea.com'
 },
 de:{
@@ -738,7 +745,7 @@ de:{
  endNameNote:'Optional. Ohne Namen wird die Punktzahl nicht gespeichert.',
  tName:'Geben Sie Ihren Namen ein', tPhoto:'Foto nicht verfügbar, weiter zum nächsten',
  tEmpty:'Namen eingeben', tCopied:'Punktzahl kopiert', tCopyFail:'Teilen nicht möglich', tDownload:'Ticket als Bild gespeichert',
- dDaily:'Des Tages', dailyT:'Die 10 des Tages', dailyS:'#{n} · 10 Produkte, 2 Minuten', dailyDone:'#{n} · gespielt: {pts}/50 · nächstes Raster in {left}', dailyResume:'#{n} · weiter bei Frage {i}', daysN:'{n} Tage in Folge', daysN1:'1 Tag', freeT:'Freies Spiel · 20 Produkte', freeStart:'Freies Spiel starten', dailyLabel:'10 des Tages #{n}', dailyResult:'CLIKEA des Tages #{n} · {pts}/{max}', dailyShare:'Ich habe {pts}/{max} bei den CLIKEA 10 des Tages #{n}. Du bist dran.', defiDaily:'<b>{name}</b> hat <b>{pts}/50</b> bei den 10 des Tages #{n}. Schaffst du mehr?', rankDaily:'Heute: Platz {rank} von {total}', sDays:'Tage in Folge', tGrid:'Tagesraster nicht verfügbar, gleich noch einmal versuchen', boardNoteDaily:'Rangliste des Tages, um Mitternacht zurückgesetzt (Pariser Zeit).', freeShort:'Freies Spiel',
+ dToday:'Heute', boardNoteDay:'Endstand für Raster #{n}.', dayPrev:'Vorheriger Tag', dayNext:'Nächster Tag', dDaily:'Des Tages', dailyT:'Die 10 des Tages', dailyS:'#{n} · 10 Produkte, 2 Minuten', dailyDone:'#{n} · gespielt: {pts}/50 · nächstes Raster in {left}', dailyResume:'#{n} · weiter bei Frage {i}', daysN:'{n} Tage in Folge', daysN1:'1 Tag', freeT:'Freies Spiel · 20 Produkte', freeStart:'Freies Spiel starten', dailyLabel:'10 des Tages #{n}', dailyResult:'CLIKEA des Tages #{n} · {pts}/{max}', dailyShare:'Ich habe {pts}/{max} bei den CLIKEA 10 des Tages #{n}. Du bist dran.', defiDaily:'<b>{name}</b> hat <b>{pts}/50</b> bei den 10 des Tages #{n}. Schaffst du mehr?', rankDaily:'Heute: Platz {rank} von {total}', sDays:'Tage in Folge', tGrid:'Tagesraster nicht verfügbar, gleich noch einmal versuchen', boardNoteDaily:'Rangliste des Tages, um Mitternacht zurückgesetzt (Pariser Zeit).', freeShort:'Freies Spiel',
  f2:'Produktfotos: ikea.com'
 },
 it:{
@@ -789,7 +796,7 @@ it:{
  endNameNote:'Facoltativo. Senza nome, il punteggio non viene salvato.',
  tName:'Inserisci il tuo nome per iniziare', tPhoto:'Foto non disponibile, passiamo avanti',
  tEmpty:'Scrivi un nome', tCopied:'Punteggio copiato', tCopyFail:'Condivisione non riuscita', tDownload:'Ticket salvato come immagine',
- dDaily:'Del giorno', dailyT:'I 10 del giorno', dailyS:'#{n} · 10 prodotti, 2 minuti', dailyDone:'#{n} · fatto: {pts}/50 · prossima griglia tra {left}', dailyResume:'#{n} · riprendi dalla domanda {i}', daysN:'{n} giorni di fila', daysN1:'1 giorno', freeT:'Partita libera · 20 prodotti', freeStart:'Avvia partita libera', dailyLabel:'10 del giorno #{n}', dailyResult:'CLIKEA del giorno #{n} · {pts}/{max}', dailyShare:'Ho fatto {pts}/{max} ai 10 del giorno CLIKEA #{n}. Tocca a te.', defiDaily:'<b>{name}</b> ha fatto <b>{pts}/50</b> ai 10 del giorno #{n}. Fai meglio?', rankDaily:'Oggi: {rank}° su {total}', sDays:'Giorni di fila', tGrid:'Griglia del giorno non disponibile, riprova tra poco', boardNoteDaily:'Classifica del giorno, azzerata a mezzanotte (ora di Parigi).', freeShort:'Partita libera',
+ dToday:'Oggi', boardNoteDay:'Classifica finale della griglia #{n}.', dayPrev:'Giorno precedente', dayNext:'Giorno successivo', dDaily:'Del giorno', dailyT:'I 10 del giorno', dailyS:'#{n} · 10 prodotti, 2 minuti', dailyDone:'#{n} · fatto: {pts}/50 · prossima griglia tra {left}', dailyResume:'#{n} · riprendi dalla domanda {i}', daysN:'{n} giorni di fila', daysN1:'1 giorno', freeT:'Partita libera · 20 prodotti', freeStart:'Avvia partita libera', dailyLabel:'10 del giorno #{n}', dailyResult:'CLIKEA del giorno #{n} · {pts}/{max}', dailyShare:'Ho fatto {pts}/{max} ai 10 del giorno CLIKEA #{n}. Tocca a te.', defiDaily:'<b>{name}</b> ha fatto <b>{pts}/50</b> ai 10 del giorno #{n}. Fai meglio?', rankDaily:'Oggi: {rank}° su {total}', sDays:'Giorni di fila', tGrid:'Griglia del giorno non disponibile, riprova tra poco', boardNoteDaily:'Classifica del giorno, azzerata a mezzanotte (ora di Parigi).', freeShort:'Partita libera',
  f2:'Foto prodotto: ikea.com'
 }
 };
@@ -922,6 +929,7 @@ const state = {
   rank: null,
   timeLabel: '',
   boardDiff: 'daily',
+  boardDay: null,
   boardBack: 'intro',
   results: [],
   challenge: null,
@@ -1044,10 +1052,24 @@ const API_URL = 'https://vubopkycvzzqufpqxpbg.supabase.co/rest/v1/clikea_scores'
 const API_KEY = 'sb_publishable_WMYqRdE6kUMQNZJu6Jyrkw_WclrsN7Q';
 
 function boardMax(diff){ return diff === 'daily' ? DAILY_MAX : MAX_PTS; }
+function boardDayValue(){ return state.boardDay || parisDay(); }
+function clampDay(day){ const today = parisDay(); return day < DAILY_EPOCH ? DAILY_EPOCH : (day > today ? today : day); }
+function shiftBoardDay(n){
+  state.boardDay = clampDay(addDays(boardDayValue(), n));
+  renderBoardTabs();
+  loadBoard();
+  track('clikea_leaderboard_day', {day: state.boardDay});
+}
+function dayTitle(day){
+  const n = dayNo(day);
+  if(day === parisDay()) return t('dToday') + ' · #' + n;
+  const d = new Date(day + 'T12:00:00Z').toLocaleDateString(LOCALES[lang], {weekday: 'short', day: 'numeric', month: 'short', timeZone: 'UTC'});
+  return '#' + n + ' · ' + d;
+}
 function boardQuery(diff){
   if(diff === 'daily'){
     return SB_REST + '/clikea_daily_scores?select=name,score,correct,created_at'
-      + '&day=eq.' + parisDay() + '&name=not.is.null'
+      + '&day=eq.' + boardDayValue() + '&name=not.is.null'
       + '&order=score.desc,created_at.asc&limit=20';
   }
   return API_URL + '?select=name,score,correct,difficulty,created_at'
@@ -1120,6 +1142,7 @@ function setSubmitLine(){
 }
 async function openBoard(diff, back){
   state.boardBack = back || 'intro';
+  state.boardDay = null;
   state.boardDiff = diff || state.difficulty || 'easy';
   show('board');
   renderBoardTabs();
@@ -1131,6 +1154,14 @@ function renderBoardTabs(){
     b.classList.toggle('on', b.dataset.diff === state.boardDiff);
     b.textContent = diffLabel(b.dataset.diff);
   });
+  const nav = $('#dayNav');
+  nav.hidden = state.boardDiff !== 'daily';
+  const day = boardDayValue();
+  $('#dayLabel').textContent = dayTitle(day);
+  $('#dayPrev').disabled = day <= DAILY_EPOCH;
+  $('#dayNext').disabled = day >= parisDay();
+  $('#dayPrev').setAttribute('aria-label', t('dayPrev'));
+  $('#dayNext').setAttribute('aria-label', t('dayNext'));
 }
 async function loadBoard(){
   const rows = $('#boardRows');
@@ -1159,11 +1190,13 @@ async function loadBoard(){
       + '<span class="sc">' + r.score + '<i>/' + boardMax(state.boardDiff) + '</i></span>'
       + '</div>';
   }).join('');
-  $('#boardNote').textContent = t(state.boardDiff === 'daily' ? 'boardNoteDaily' : 'boardNote');
+  $('#boardNote').textContent = state.boardDiff !== 'daily' ? t('boardNote')
+    : boardDayValue() === parisDay() ? t('boardNoteDaily') : t('boardNoteDay', {n: dayNo(boardDayValue())});
   renderRankPreview(data);
 }
 function renderRankPreview(data){
   const box = $('#rankRows'); if(!box) return;
+  if(state.boardDiff === 'daily' && boardDayValue() !== parisDay()) return;
   if(!data || !data.length){ box.innerHTML = '<div class="empty">' + t('boardEmpty') + '</div>'; return; }
   const me = (state.player || '').trim().toLowerCase();
   box.innerHTML = data.slice(0,5).map((r,i)=>{
@@ -1763,8 +1796,11 @@ document.querySelectorAll('#diffs .diff').forEach(b => {
 });
 $('#boardOpen').addEventListener('click', () => openBoard(state.boardDiff, 'intro'));
 $('#boardFromEnd').addEventListener('click', () => openBoard(state.kind === 'free' ? state.difficulty : 'daily', 'end'));
-$('#boardBack').addEventListener('click', () => show(state.boardBack));
-$('#boardPlay').addEventListener('click', () => { show('intro'); renderDailyEntry(); });
+$('#boardBack').addEventListener('click', () => { leaveBoard(); show(state.boardBack); });
+$('#dayPrev').addEventListener('click', () => shiftBoardDay(-1));
+$('#dayNext').addEventListener('click', () => shiftBoardDay(1));
+function leaveBoard(){ if(state.boardDay && state.boardDay !== parisDay()){ state.boardDay = null; loadBoard(); } }
+$('#boardPlay').addEventListener('click', () => { leaveBoard(); show('intro'); renderDailyEntry(); });
 document.querySelectorAll('#boardTabs .tab').forEach(b => {
   b.addEventListener('click', async () => {
     state.boardDiff = b.dataset.diff;
@@ -2336,6 +2372,18 @@ if(location.search.includes('selftest')){
     ok(document.querySelectorAll('.choice').length===4,'carré proposé en difficile');
     state.difficulty = 'easy';
     ok(document.querySelectorAll('#boardTabs .tab').length===3,'onglets du classement (jour, faciles, difficiles)');
+    ok(clampDay(addDays(parisDay(), 3))===parisDay() && clampDay('2020-01-01')===DAILY_EPOCH,'historique borné entre la grille #1 et aujourd’hui');
+    ok(dayTitle(parisDay()).indexOf('#'+dayNo(parisDay()))>-1 && dayTitle('2026-11-22').indexOf('#1')>-1,'titre du jour dans l’historique');
+    state.boardDay = '2026-11-22';
+    ok(boardQuery('daily').indexOf('day=eq.2026-11-22')>-1,'classement d’un jour passé');
+    state.boardDay = null;
+    ok(boardQuery('daily').indexOf('day=eq.'+parisDay())>-1,'classement du jour par défaut');
+    state.boardDiff = 'daily'; renderBoardTabs();
+    ok(document.getElementById('dayNav').hidden===false && document.getElementById('dayNext').disabled===true,'flèches d’historique, pas de jour futur');
+    state.boardDiff = 'easy'; renderBoardTabs();
+    ok(document.getElementById('dayNav').hidden===true,'pas de flèches hors classement du jour');
+    state.boardDiff = 'daily';
+    ok(document.getElementById('freeToggle').classList.contains('btn'),'partie libre en bouton secondaire');
 
     document.querySelector('#playerName').value = 'Testeur';
     state.player = 'Testeur'; state.difficulty = 'easy'; state.good = 10;

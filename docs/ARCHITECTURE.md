@@ -90,6 +90,8 @@ Le français est la langue de référence : une clé manquante dans une autre la
 - **Série** : jours joués d'affilée (`dayStreak`), calculée sur l'appareil. Elle ne casse pas tant que le jour n'est pas fini.
 - **Score** : envoyé dans `clikea_daily_scores` à la fin, avec ou sans nom. Le nom ajouté après coup passe par la fonction `clikea_daily_set_name` (une seule fois, par l'appareil qui a joué).
 - **Défi** : le lien partagé porte `jour=AAAA-MM-JJ&defi=<score>&par=<nom>`. Le même jour, l'ami joue la même grille et compte pour sa série. Un autre jour, il rejoue la grille passée en mode `replay` : hors classement, hors série.
+- **Historique du classement** : l'onglet « Du jour » a des flèches ‹ › pour remonter jour par jour jusqu'à la grille #1 (`state.boardDay`, `clampDay`). Les scores ne sont jamais effacés ; l'aperçu de l'accueil reste sur aujourd'hui.
+- **Accueil** : « Le 10 du jour » en bouton principal (jaune), « Partie libre · 20 produits » en bouton secondaire (contour blanc) qui déplie le choix du niveau.
 - **Partage texte** : `CLIKEA du jour #N · 34/50`, deux lignes de cinq cases, `🔥 N jours d'affilée`, lien.
 
 ## Base Supabase
