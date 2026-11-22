@@ -2,7 +2,24 @@
 
 Document de conception. Il répond à une seule question : **quels modes donnent envie de revenir et de défier quelqu'un**, sans casser la promesse « une photo, dix secondes, un nom ».
 
+## 0. La règle de simplicité
+
+**Un joueur ne doit jamais avoir à choisir un mode avant de jouer.**
+
+Ce que font les jeux qui marchent :
+
+- **Métrodoku** : une seule grille du jour, un score, des archives. Aucun sélecteur de mode, aucun niveau. C'est le jeu français de référence et il tourne à ~30 000 joueurs quotidiens.
+- **Wordle** : un seul mode, une grille par jour. Le « mode difficile » est une option cachée dans les réglages, pas une porte d'entrée.
+- **SUTOM, Cémantix** : une grille, un mot, pas de menu.
+
+À l'inverse, GeoGuessr propose Duels, Battle Royale, Streaks, Tournois… mais c'est un jeu installé depuis 2013, avec une équipe et une scène compétitive. Ce n'est pas le modèle d'un jeu solo à un fichier.
+
+**La psychologie du choix va dans le même sens, avec une nuance.** Le phénomène de surcharge de choix existe surtout quand les options sont équivalentes et que la personne découvre le produit ; il disparaît quand elle a une préférence claire ou de l'expérience ([Wikipédia, Overchoice](https://en.wikipedia.org/wiki/Overchoice)). La méta-analyse de Scheibehenne et al. (2010) trouve un effet moyen proche de zéro : **ce n'est donc pas une preuve, juste un argument de prudence.** Le vrai argument est produit : chaque mode ajoute une décision, un écran, un barème et une maintenance, et dilue le seul objet qui circule — le score.
+
+**Conséquence pour CLIKEA** : une seule nouveauté visible à la fois. Le reste attend les chiffres.
+
 ## 1. Ce que la recherche dit des modes
+
 
 - **Le rendez-vous quotidien est le moteur de retour documenté.** Wordle : une grille par jour, identique pour tous, 90 joueurs en novembre 2021 puis plus de 2 millions en janvier 2022. Métrodoku : une grille du jour, 1 000 joueurs après une semaine, ~30 000 joueurs quotidiens un mois plus tard.
 - **Le duel est un format éprouvé, pas un canal de décollage prouvé.** GeoGuessr propose des Duels, des Team Duels, un Battle Royale et des séries « jusqu'à l'erreur » ([Wikipédia, GeoGuessr](https://en.wikipedia.org/wiki/GeoGuessr)). Aucune source publique ne mesure la part d'acquisition venue des duels.
@@ -10,7 +27,10 @@ Document de conception. Il répond à une seule question : **quels modes donnent
 - **Le chrono produit du contenu vidéo.** Une partie de 60 s se filme et se commente ; une partie de 20 questions beaucoup moins.
 - **Un mode = un chiffre partageable.** Dès qu'un mode n'a pas de score court à montrer, il n'aide pas la viralité, même s'il est amusant.
 
-## 2. Les quatre modes à retenir
+## 2. Deux modes, deux réserves
+
+**À sortir** : le 5 du jour, puis le duel **comme action de partage** (pas comme entrée de menu).
+**En réserve** : le chrono 60 et la virée. Ils ne sortent que si le quotidien tient ses chiffres.
 
 ### A. Le 5 du jour — la récurrence
 
@@ -28,9 +48,11 @@ Document de conception. Il répond à une seule question : **quels modes donnent
 
 **Risques.** Un jour sans grille se voit ; une grille trop dure fait chuter la série ; le tricheur peut lire le code (comme Wordle), ce n'est pas grave.
 
-### B. Le duel — l'acquisition
+### B. Le duel — l'acquisition, mais pas un mode
 
-**Règle.** Un joueur lance un duel : cinq produits tirés avec une graine aléatoire, il joue, puis partage un lien. L'ami joue **exactement la même grille**, voit le score à battre, et le résultat final (gagné / perdu / égalité). Revanche en un clic, avec une nouvelle graine.
+**Ce n'est pas une entrée de menu.** C'est un bouton « Défier un ami » sur l'écran de fin, qui envoie la grille qu'on vient de jouer. Le destinataire n'a aucun mode à choisir : il clique, il joue la même grille.
+
+**Règle.** Un joueur termine le 5 du jour (ou la partie libre), partage un lien. L'ami joue **exactement la même grille**, voit le score à battre, et le résultat final (gagné / perdu / égalité). Revanche en un clic, avec une nouvelle graine.
 
 **Pourquoi.** C'est la boucle 1 → 1 la plus directe : chaque partie peut amener un joueur nommé, et le perdant a une raison de rejouer. Contrairement au partage de score, le destinataire ne peut pas tricher sur la comparaison.
 
@@ -40,7 +62,7 @@ Document de conception. Il répond à une seule question : **quels modes donnent
 
 **Risques.** Sans compte, pas d'historique de duels ; un lien modifié peut annoncer un faux score.
 
-### C. Le chrono 60 — le contenu
+### C. Le chrono 60 — en réserve
 
 **Règle.** 60 secondes, autant de produits que possible, en Duo (2 noms) pour tenir le rythme. Une erreur ne retire pas de temps : elle coûte la seconde de réflexion. Score = nombre de bonnes réponses.
 
@@ -50,7 +72,7 @@ Document de conception. Il répond à une seule question : **quels modes donnent
 
 **Risques.** La pression favorise les clics au hasard ; à surveiller sur le taux de bonnes réponses.
 
-### D. La virée — le roguelike
+### D. La virée — en réserve
 
 **Règle.** Une seule partie, **trois vies**. Les premiers produits viennent du vivier facile, puis le difficile. Chaque bonne réponse augmente un multiplicateur (×1 à ×5) ; une erreur retire une vie et remet le multiplicateur à ×1. La partie s'arrête à zéro vie. Score = total de points ; « étage » = nombre de produits passés.
 
@@ -73,13 +95,16 @@ Document de conception. Il répond à une seule question : **quels modes donnent
 
 ## 4. Ordre de construction
 
-| Étape | Mode | Pourquoi d'abord | Effort |
+| Étape | Quoi | Pourquoi | Effort |
 |---|---|---|---|
-| 1 | **5 du jour + série** | Récurrence, partage quotidien | Moyen |
-| 2 | **Duel** | Acquisition 1 → 1, réutilise le tirage seedé | Moyen |
-| 3 | **Chrono 60** | Contenu vidéo, moteur déjà là | Faible |
-| 4 | **La virée** | Rejouabilité et bragging | Moyen |
-| 5 | Vrai/faux, photo inverse | Contenu social | Faible |
+| 1 | **Le 5 du jour + la série** | Récurrence, partage quotidien | Moyen |
+| 2 | **Le bouton « Défier »** (même grille, lien seedé) | Acquisition 1 → 1, réutilise le tirage | Faible à moyen |
+| 3 | **Rien de nouveau** | Lire les chiffres du quotidien avant d'ajouter quoi que ce soit | — |
+| Réserve | Chrono 60, virée, vrai/faux | Contenu et rejouabilité, seulement si le quotidien tient | Moyen |
+
+**Règle d'écran** : la page d'accueil garde **un seul bouton principal**. Le 5 du jour est le bouton jaune ; « Partie libre (20 produits) » devient un lien secondaire. Aucun carrousel de modes.
+
+**Règle de version** : une seule nouveauté visible par mise en ligne. Si le quotidien et le duel sortent en même temps, ils sortent comme **un seul parcours** : « joue la grille du jour, puis défie quelqu'un ».
 
 Le 5 du jour et le duel partagent le même moteur : une graine, un tirage, un score. Les construire ensemble évite de coder deux fois la même chose.
 
@@ -101,7 +126,8 @@ Le 5 du jour et le duel partagent le même moteur : une graine, un tirage, un sc
 
 ## 7. Décisions à prendre
 
-- **Le 5 du jour remplace-t-il l'accueil, ou reste-t-il une carte à côté de « Partie libre » ?** Recommandation : le mettre en avant sans supprimer la partie libre.
-- **Le duel se joue-t-il en 5 ou 10 produits ?** Recommandation : 5, pour que l'ami réponde vite.
-- **La virée a-t-elle 3 vies ou 1 seule ?** Recommandation : 3 vies, sinon la partie s'arrête trop vite pour être racontée.
-- **Faut-il un classement par mode dès le départ ?** Recommandation : non, un seul classement pour la partie libre, et des scores locaux pour les nouveaux modes jusqu'à ce qu'ils trouvent leur public.
+- **Le 5 du jour remplace-t-il l'accueil, ou reste-t-il une carte à côté de « Partie libre » ?** Recommandation : le bouton principal, et la partie libre en lien secondaire.
+- **Le duel se joue-t-il en 5 ou 10 produits ?** Recommandation : 5, et uniquement comme bouton « Défier » après une partie.
+- **La virée a-t-elle 3 vies ou 1 seule ?** Recommandation : 3 vies, **plus tard**, si le quotidien marche.
+- **Faut-il un classement par mode dès le départ ?** Recommandation : non. Un seul classement pour la partie libre, des scores locaux pour le quotidien tant qu'il n'a pas son public.
+- **Combien de modes visibles au maximum ?** Recommandation : **deux** — « Le 5 du jour » et « Partie libre ». Le duel est un bouton, pas une case.

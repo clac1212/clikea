@@ -100,9 +100,9 @@ Document opérationnel. Il dit quels comptes ouvrir, dans quel ordre, avec quels
 - Chaque soir : le résultat du jour en capture.
 - Trois vidéos : « la grille du jour », « le pire score », « le meilleur score ».
 
-### Semaine 3 — le duel
+### Semaine 3 — le défi
 
-- Sortir le **duel**.
+- Ajouter le bouton **« Défier un ami »** sur la grille du jour.
 - Posts « je te défie » avec lien personnalisé.
 - Trois créateurs TikTok/Instagram contactés avec un duel nominatif à leur nom.
 

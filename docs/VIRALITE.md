@@ -8,7 +8,7 @@ Ce document rassemble ce qu'on sait de la circulation des petits jeux web, l'aud
 - [`MODES.md`](MODES.md) : les modes de jeu (5 du jour, duel, chrono, virée), la récurrence et l'ordre de construction.
 - [`LANCEMENT.md`](LANCEMENT.md) : les comptes sociaux, les bios, les piliers de contenu et le calendrier sur 30 jours.
 
-**Recommandation d'ordre** : le 5 du jour d'abord (récurrence), le duel juste après (acquisition 1 → 1), puis le chrono et la virée (contenu et rejouabilité). Les comptes se préparent en parallèle, mais ne se lancent pas tous en même temps.
+**Recommandation d'ordre** : le 5 du jour d'abord (récurrence), le bouton « Défier » juste après (acquisition 1 → 1), puis **on s'arrête et on lit les chiffres**. Le chrono et la virée restent en réserve : ils n'entrent que si le quotidien tient. Les comptes se préparent en parallèle, mais ne se lancent pas tous en même temps.
 
 ## 1. Ce que font les jeux qui ont décollé
 
