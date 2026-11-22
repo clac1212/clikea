@@ -234,9 +234,10 @@ h1 mark{background:none;color:var(--yellow);padding:0;box-decoration-break:clone
 .print{padding-top:14px;padding-bottom:104px;max-width:none}
 .print .wrap{display:flex;flex-direction:column;align-items:center}
 .tk{position:relative;width:100%;max-width:340px;margin:10px auto;background:var(--paper);color:#111;cursor:default;-webkit-user-select:none;user-select:none;filter:drop-shadow(0 3px 0 rgba(0,0,0,.12))}
-.tk::before,.tk::after{content:'';position:absolute;left:0;right:0;height:10px;background:linear-gradient(-45deg,var(--paper) 5px,transparent 0),linear-gradient(45deg,var(--paper) 5px,transparent 0);background-size:10px 10px;background-repeat:repeat-x}
-.tk::before{top:-10px;background-position:left bottom;transform:scaleY(-1)}
-.tk::after{bottom:-10px;background-position:left top}
+/* Bords déchirés : des dents de papier qui pointent vers l'extérieur du ticket. */
+.tk::before,.tk::after{content:'';position:absolute;left:0;right:0;height:6px;background-size:12px 100%;background-repeat:repeat-x}
+.tk::before{top:-6px;background-image:conic-gradient(from 135deg at 50% 0,var(--paper) 90deg,transparent 0)}
+.tk::after{bottom:-6px;background-image:conic-gradient(from -45deg at 50% 100%,var(--paper) 90deg,transparent 0)}
 .tk-badge{position:absolute;top:62px;right:10px;z-index:3;background:transparent;color:var(--red);border:3px solid var(--red);border-radius:6px;font-size:10px;font-weight:900;letter-spacing:.08em;padding:3px 7px;transform:rotate(8deg);text-transform:uppercase;opacity:.85;pointer-events:none;mix-blend-mode:multiply}
 .tk-head{display:flex;flex-direction:column;align-items:center;gap:5px;background:none;padding:12px 10px 8px;border-bottom:1px dashed #cfc9b8}
 .tk-head .brandmark{width:124px;height:38px;filter:none}
