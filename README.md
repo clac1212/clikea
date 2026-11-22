@@ -14,6 +14,16 @@ L'objectif n'est pas de vendre quelque chose : c'est de faire revenir les joueur
 
 ## Règles
 
+Deux portes à l'accueil : **le 10 du jour** (bouton principal) et **la partie libre** (repliée).
+
+### Le 10 du jour
+- **10 produits, les mêmes pour tout le monde**, nouvelle grille à minuit (heure de Paris). Ordre : 3 faciles, 4 moyens, 3 durs.
+- **Duo, Carré ou Cash** à chaque produit, même barème qu'en partie libre : **score sur 50**.
+- **Une partie par jour et par appareil**, reprise possible si on quitte en cours. Série = jours joués d'affilée.
+- **Classement du jour** public, remis à zéro à minuit. Nom facultatif, ajoutable après la partie.
+- **Défier un ami** : le lien partagé fait jouer la même grille, avec le score à battre.
+
+### La partie libre
 - **20 produits** tirés au sort dans le vivier du niveau choisi.
 - **Deux niveaux** : *facile* (49 produits cultes) et *difficile* (les 60 autres). Mêmes trois modes dans les deux.
 - **Pseudo facultatif** : on peut jouer sans nom. Sans nom, le score n'est pas envoyé au classement et un champ apparaît à la fin pour l'ajouter.
@@ -81,6 +91,7 @@ curl -s -o /dev/null -w '%{http_code}\n' https://clever-bloom-q2pw.here.now/
 
 ## Données et mesure
 
+- **Le 10 du jour** : grilles, scores du jour et réponses par produit dans Supabase (`clikea_daily_grid`, `clikea_daily_scores`, `clikea_answers`, vue `clikea_product_stats`). Détails dans [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md#le-10-du-jour).
 - **Classement** : Supabase, projet `vubopkycvzzqufpqxpbg`, table `public.clikea_scores`. La clé publiable est dans `index.html` — c'est normal, elle ne permet que lecture et insertion ; la suppression est refusée.
 - **Analytics** : PostHog EU (`https://eu.i.posthog.com`), projet « CLIKEA ». Événements : `clikea_view`, `clikea_defi_view`, `clikea_game_started`, `clikea_question_answered`, `clikea_game_finished`, `clikea_score_submitted`, `clikea_name_added`, `clikea_share_sheet`, `clikea_share`, `clikea_lang_changed`, `clikea_difficulty_selected`.
 - Détail des schémas, permissions et flux : [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md).

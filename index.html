@@ -116,6 +116,13 @@ h1 mark{background:none;color:var(--yellow);padding:0;box-decoration-break:clone
 .btn:focus-visible,.choice:focus-visible,.diff.on:focus-visible{outline:2px solid #111;outline-offset:-2px}
 .cta-row{margin:18px 0 0;max-width:420px}
 .cta-row .btn{font-size:20px;padding:19px}
+.btn.daily{flex-direction:column;align-items:flex-start;gap:4px;text-align:left;padding:16px 18px}
+.btn.daily b{font-size:22px;font-weight:900;line-height:1;letter-spacing:-.01em}
+.btn.daily span{font-size:12.5px;font-weight:800;text-transform:none;letter-spacing:0;line-height:1.3;opacity:.82}
+.free{margin:14px 0 0;max-width:420px}
+.free-toggle{background:none;border:0;padding:4px 0;font:inherit;font-size:13px;font-weight:800;color:#fff;text-decoration:underline;text-underline-offset:3px;cursor:pointer}
+.free-panel{margin-top:10px;display:grid;gap:10px}
+.free-panel .btn{font-size:15px;padding:13px}
 
 /* ---------- classement panneau ---------- */
 .rank{border:0;background:#fff;color:#111;align-self:start}
@@ -200,7 +207,7 @@ h1 mark{background:none;color:var(--yellow);padding:0;box-decoration-break:clone
 /* ---------- tableau ---------- */
 .board{padding-top:22px;padding-bottom:36px;max-width:620px}
 .board h2{font-size:clamp(28px,8.6vw,46px);font-weight:900;letter-spacing:-.02em;text-transform:uppercase;margin:0}
-.tabs{display:grid;grid-template-columns:1fr 1fr;border:1px solid rgba(255,255,255,.4);border-bottom:0;margin-top:16px;max-width:520px}
+.tabs{display:grid;grid-template-columns:1fr 1fr 1fr;border:1px solid rgba(255,255,255,.4);border-bottom:0;margin-top:16px;max-width:520px}
 .tab{background:transparent;border:0;border-bottom:3px solid transparent;padding:11px 8px;font:inherit;font-size:11px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:#b9d2e6;cursor:pointer}
 .tab.on{color:#fff;border-bottom-color:var(--yellow)}
 .board-card{background:#fff;color:#111;max-width:520px;border-top:3px solid var(--yellow)}
@@ -351,17 +358,24 @@ footer .wrap{padding:14px var(--pad);display:flex;gap:16px;flex-wrap:wrap;justif
             <label for="playerName" id="whoLabel">Votre nom</label>
             <input id="playerName" type="text" maxlength="24" autocomplete="name" placeholder="Ex. César" aria-label="Votre nom">
           </div>
-          <div class="diffs" id="diffs" role="radiogroup" aria-label="Niveau">
-            <button class="diff on" type="button" data-diff="easy" role="radio" aria-checked="true">
-              <b id="d1t">Produits faciles</b><span id="d1s">20 sur 49 produits cultes</span>
-            </button>
-            <button class="diff" type="button" data-diff="hard" role="radio" aria-checked="false">
-              <b id="d3t">Produits difficiles</b><span id="d3s">20 sur 60 produits moins connus</span>
-            </button>
-          </div>
         </div>
 
-        <div class="cta-row"><button class="btn wide" id="startBtn" type="button">Jouer</button></div>
+        <div class="cta-row"><button class="btn wide daily" id="dailyBtn" type="button"><b id="dailyT">Le 10 du jour</b><span id="dailySub">10 produits, 2 minutes</span></button></div>
+
+        <div class="free">
+          <button class="free-toggle" type="button" id="freeToggle" aria-expanded="false" aria-controls="freePanel">Partie libre · 20 produits</button>
+          <div class="free-panel" id="freePanel" hidden>
+            <div class="diffs" id="diffs" role="radiogroup" aria-label="Niveau">
+              <button class="diff on" type="button" data-diff="easy" role="radio" aria-checked="true">
+                <b id="d1t">Produits faciles</b><span id="d1s">20 sur 49 produits cultes</span>
+              </button>
+              <button class="diff" type="button" data-diff="hard" role="radio" aria-checked="false">
+                <b id="d3t">Produits difficiles</b><span id="d3s">20 sur 60 produits moins connus</span>
+              </button>
+            </div>
+            <button class="btn ghost wide" id="startBtn" type="button">Jouer</button>
+          </div>
+        </div>
       </div>
 
       <aside class="rank" aria-label="Classement">
@@ -421,6 +435,7 @@ footer .wrap{padding:14px var(--pad);display:flex;gap:16px;flex-wrap:wrap;justif
     <div class="wrap board">
       <h2 id="boardTitle">Classement</h2>
       <div class="tabs" id="boardTabs">
+        <button class="tab" type="button" data-diff="daily">Du jour</button>
         <button class="tab" type="button" data-diff="easy">Produits faciles</button>
         <button class="tab" type="button" data-diff="hard">Produits difficiles</button>
       </div>
@@ -443,7 +458,7 @@ footer .wrap{padding:14px var(--pad);display:flex;gap:16px;flex-wrap:wrap;justif
           <span id="rcTitle">Ticket de caisse</span>
         </div>
         <div class="tk-score">
-          <span class="tk-num" id="rcNum">0</span><span class="tk-den">/100</span>
+          <span class="tk-num" id="rcNum">0</span><span class="tk-den" id="rcDen">/100</span>
           <div class="tk-verdict" id="tkVerdict">Tu bats <b>50 %</b> des joueurs</div>
         </div>
         <div class="tk-stats">
@@ -527,7 +542,7 @@ fr:{
  desc:'CLIKEA : 20 produits IKEA tirés au sort, en duo, carré ou cash. Devinez le nom.',
  sub:'Devinez le nom', kicker:'20 produits tirés au sort · duo, carré, cash',
  h1a:'Le jeu', h1b:'des noms', h1c:'IKEA.',
- lede:'Vous avez déjà monté un BILLY un dimanche soir. Sur les produits de la maison, 20 vont défiler. À vous de les nommer.',
+ lede:'Vous avez déjà monté un BILLY un dimanche soir. Chaque jour, 10 produits de la maison, les mêmes pour tout le monde. À vous de les nommer.',
  r1t:'Duo', r1x:'Deux noms au choix. Le plus sûr, le moins payé : <i class="pt">1 pt</i>.',
  r2t:'Carré', r2x:'Quatre noms, trois pièges. <i class="pt">3 pts</i>.',
  r3t:'Cash', r3x:'Aucune proposition, vous écrivez le nom. <i class="pt">5 pts</i>.',
@@ -539,7 +554,7 @@ fr:{
  boardNote:'20 meilleurs scores par niveau. Une ligne par partie.',
  boardLoading:'Chargement du classement…', boardEmpty:'Personne encore. Soyez le premier.',
  boardError:'Classement indisponible pour le moment.', rcDiff:'Niveau',
- rankLine:'Ta place : {rank}e en {diff}', savedLine:'Score enregistré',
+ rankLine:'Ta place : {rank} en {diff}', savedLine:'Score enregistré',
  fine:'20 produits · 100 points en jeu · pas de notice de montage',
  count:'20 produits', photoTag:'À vous de jouer',
  promptMode:'Choisissez votre mode',
@@ -570,6 +585,7 @@ fr:{
  endNameNote:'Facultatif. Sans nom, le score n’est pas enregistré.',
  tName:'Entrez votre nom pour commencer', tPhoto:'Photo indisponible, on passe au suivant',
  tEmpty:'Écrivez un nom', tCopied:'Score copié', tCopyFail:'Partage impossible', tDownload:'Ticket téléchargé en image',
+ dDaily:'Du jour', dailyT:'Le 10 du jour', dailyS:'#{n} · 10 produits, 2 minutes', dailyDone:'#{n} · fait : {pts}/50 · prochaine grille dans {left}', dailyResume:'#{n} · reprendre à la question {i}', daysN:'{n} jours d’affilée', daysN1:'1 jour', freeT:'Partie libre · 20 produits', freeStart:'Lancer la partie libre', dailyLabel:'10 du jour #{n}', dailyResult:'CLIKEA du jour #{n} · {pts}/{max}', dailyShare:'J’ai fait {pts}/{max} au 10 du jour CLIKEA #{n}. À toi.', defiDaily:'<b>{name}</b> a fait <b>{pts}/50</b> au 10 du jour #{n}. Tu fais mieux ?', rankDaily:'Ta place aujourd’hui : {rank} sur {total}', sDays:'Jours d’affilée', tGrid:'Grille du jour indisponible, réessayez dans un instant', boardNoteDaily:'Classement du jour, remis à zéro à minuit (heure de Paris).', freeShort:'Partie libre',
  f2:'Photos produit : ikea.com'
 },
 en:{
@@ -577,7 +593,7 @@ en:{
  desc:'CLIKEA: 20 random IKEA products, in duo, square or cash. Guess the name.',
  sub:'Guess the name', kicker:'20 random products · duo, square, cash',
  h1a:'The IKEA', h1b:'names', h1c:'game.',
- lede:'You have already assembled a BILLY on a Sunday night. Out of the products in the house, 20 will come up. Name them.',
+ lede:'You have already assembled a BILLY on a Sunday night. Every day, 10 products from the house, the same for everyone. Name them.',
  r1t:'Duo', r1x:'Two names to pick from. Safest, lowest pay: <i class="pt">1 pt</i>.',
  r2t:'Square', r2x:'Four names, three traps. <i class="pt">3 pts</i>.',
  r3t:'Cash', r3x:'No options, you type the name. <i class="pt">5 pts</i>.',
@@ -620,6 +636,7 @@ en:{
  endNameNote:'Optional. Without a name, the score is not saved.',
  tName:'Enter your name to start', tPhoto:'Photo unavailable, skipping',
  tEmpty:'Type a name', tCopied:'Score copied', tCopyFail:'Sharing failed', tDownload:'Ticket saved as an image',
+ dDaily:'Daily', dailyT:'Daily 10', dailyS:'#{n} · 10 products, 2 minutes', dailyDone:'#{n} · done: {pts}/50 · next grid in {left}', dailyResume:'#{n} · resume at question {i}', daysN:'{n}-day streak', daysN1:'1-day streak', freeT:'Free play · 20 products', freeStart:'Start free play', dailyLabel:'Daily 10 #{n}', dailyResult:'CLIKEA daily #{n} · {pts}/{max}', dailyShare:'I scored {pts}/{max} on CLIKEA Daily 10 #{n}. Your turn.', defiDaily:'<b>{name}</b> scored <b>{pts}/50</b> on Daily 10 #{n}. Can you beat it?', rankDaily:'Today: #{rank} of {total}', sDays:'Day streak', tGrid:'Daily grid unavailable, try again in a moment', boardNoteDaily:'Today’s leaderboard, reset at midnight (Paris time).', freeShort:'Free play',
  f2:'Product photos: ikea.com'
 },
 es:{
@@ -627,7 +644,7 @@ es:{
  desc:'CLIKEA: 20 productos IKEA al azar, en dúo, cuadrado o cash. Adivina el nombre.',
  sub:'Adivina el nombre', kicker:'20 productos al azar · dúo, cuadrado, cash',
  h1a:'El juego', h1b:'de los nombres', h1c:'IKEA.',
- lede:'Ya has montado un BILLY un domingo por la noche. De los productos de la casa, 20 van a desfilar. Ponles nombre.',
+ lede:'Ya has montado un BILLY un domingo por la noche. Cada día, 10 productos de la casa, los mismos para todos. Ponles nombre.',
  r1t:'Dúo', r1x:'Dos nombres a elegir. Lo más seguro, lo peor pagado: <i class="pt">1 pt</i>.',
  r2t:'Cuadrado', r2x:'Cuatro nombres, tres trampas. <i class="pt">3 pts</i>.',
  r3t:'Cash', r3x:'Sin opciones, escribes el nombre. <i class="pt">5 pts</i>.',
@@ -670,6 +687,7 @@ es:{
  endNameNote:'Opcional. Sin nombre, la puntuación no se guarda.',
  tName:'Escribe tu nombre para empezar', tPhoto:'Foto no disponible, pasamos a la siguiente',
  tEmpty:'Escribe un nombre', tCopied:'Puntuación copiada', tCopyFail:'No se pudo compartir', tDownload:'Ticket guardado como imagen',
+ dDaily:'Del día', dailyT:'Los 10 del día', dailyS:'#{n} · 10 productos, 2 minutos', dailyDone:'#{n} · hecho: {pts}/50 · próxima en {left}', dailyResume:'#{n} · seguir en la pregunta {i}', daysN:'{n} días seguidos', daysN1:'1 día', freeT:'Partida libre · 20 productos', freeStart:'Empezar partida libre', dailyLabel:'10 del día #{n}', dailyResult:'CLIKEA del día #{n} · {pts}/{max}', dailyShare:'He hecho {pts}/{max} en los 10 del día de CLIKEA #{n}. Te toca.', defiDaily:'<b>{name}</b> ha hecho <b>{pts}/50</b> en los 10 del día #{n}. ¿Lo superas?', rankDaily:'Hoy: {rank}.º de {total}', sDays:'Días seguidos', tGrid:'Rejilla del día no disponible, inténtalo en un momento', boardNoteDaily:'Clasificación del día, se reinicia a medianoche (hora de París).', freeShort:'Partida libre',
  f2:'Fotos de producto: ikea.com'
 },
 de:{
@@ -677,7 +695,7 @@ de:{
  desc:'CLIKEA: 20 zufällige IKEA-Produkte, als Duo, Quadrat oder Cash. Erraten Sie den Namen.',
  sub:'Namen raten', kicker:'20 zufällige Produkte · Duo, Quadrat, Cash',
  h1a:'Das Spiel', h1b:'der IKEA', h1c:'Namen.',
- lede:'Sie haben schon einmal ein BILLY an einem Sonntagabend aufgebaut. Von den Produkten des Hauses kommen 20. Benennen Sie sie.',
+ lede:'Sie haben schon einmal ein BILLY an einem Sonntagabend aufgebaut. Jeden Tag 10 Produkte des Hauses, für alle dieselben. Benennen Sie sie.',
  r1t:'Duo', r1x:'Zwei Namen zur Auswahl. Am sichersten, am schlechtesten bezahlt: <i class="pt">1 Pkt.</i>',
  r2t:'Quadrat', r2x:'Vier Namen, drei Fallen. <i class="pt">3 Pkt.</i>',
  r3t:'Cash', r3x:'Keine Vorschläge, Sie tippen den Namen. <i class="pt">5 Pkt.</i>',
@@ -720,6 +738,7 @@ de:{
  endNameNote:'Optional. Ohne Namen wird die Punktzahl nicht gespeichert.',
  tName:'Geben Sie Ihren Namen ein', tPhoto:'Foto nicht verfügbar, weiter zum nächsten',
  tEmpty:'Namen eingeben', tCopied:'Punktzahl kopiert', tCopyFail:'Teilen nicht möglich', tDownload:'Ticket als Bild gespeichert',
+ dDaily:'Des Tages', dailyT:'Die 10 des Tages', dailyS:'#{n} · 10 Produkte, 2 Minuten', dailyDone:'#{n} · gespielt: {pts}/50 · nächstes Raster in {left}', dailyResume:'#{n} · weiter bei Frage {i}', daysN:'{n} Tage in Folge', daysN1:'1 Tag', freeT:'Freies Spiel · 20 Produkte', freeStart:'Freies Spiel starten', dailyLabel:'10 des Tages #{n}', dailyResult:'CLIKEA des Tages #{n} · {pts}/{max}', dailyShare:'Ich habe {pts}/{max} bei den CLIKEA 10 des Tages #{n}. Du bist dran.', defiDaily:'<b>{name}</b> hat <b>{pts}/50</b> bei den 10 des Tages #{n}. Schaffst du mehr?', rankDaily:'Heute: Platz {rank} von {total}', sDays:'Tage in Folge', tGrid:'Tagesraster nicht verfügbar, gleich noch einmal versuchen', boardNoteDaily:'Rangliste des Tages, um Mitternacht zurückgesetzt (Pariser Zeit).', freeShort:'Freies Spiel',
  f2:'Produktfotos: ikea.com'
 },
 it:{
@@ -727,7 +746,7 @@ it:{
  desc:'CLIKEA: 20 prodotti IKEA estratti a sorte, in duo, quadrato o cash. Indovina il nome.',
  sub:'Indovina il nome', kicker:'20 prodotti estratti · duo, quadrato, cash',
  h1a:'Il gioco', h1b:'dei nomi', h1c:'IKEA.',
- lede:'Hai già montato un BILLY una domenica sera. Dei prodotti della casa, 20 sfileranno. Dai loro un nome.',
+ lede:'Hai già montato un BILLY una domenica sera. Ogni giorno, 10 prodotti della casa, gli stessi per tutti. Dai loro un nome.',
  r1t:'Duo', r1x:'Due nomi tra cui scegliere. Il più sicuro, il meno pagato: <i class="pt">1 pt</i>.',
  r2t:'Quadrato', r2x:'Quattro nomi, tre trappole. <i class="pt">3 pt</i>.',
  r3t:'Cash', r3x:'Nessuna opzione, scrivi il nome. <i class="pt">5 pt</i>.',
@@ -770,6 +789,7 @@ it:{
  endNameNote:'Facoltativo. Senza nome, il punteggio non viene salvato.',
  tName:'Inserisci il tuo nome per iniziare', tPhoto:'Foto non disponibile, passiamo avanti',
  tEmpty:'Scrivi un nome', tCopied:'Punteggio copiato', tCopyFail:'Condivisione non riuscita', tDownload:'Ticket salvato come immagine',
+ dDaily:'Del giorno', dailyT:'I 10 del giorno', dailyS:'#{n} · 10 prodotti, 2 minuti', dailyDone:'#{n} · fatto: {pts}/50 · prossima griglia tra {left}', dailyResume:'#{n} · riprendi dalla domanda {i}', daysN:'{n} giorni di fila', daysN1:'1 giorno', freeT:'Partita libera · 20 prodotti', freeStart:'Avvia partita libera', dailyLabel:'10 del giorno #{n}', dailyResult:'CLIKEA del giorno #{n} · {pts}/{max}', dailyShare:'Ho fatto {pts}/{max} ai 10 del giorno CLIKEA #{n}. Tocca a te.', defiDaily:'<b>{name}</b> ha fatto <b>{pts}/50</b> ai 10 del giorno #{n}. Fai meglio?', rankDaily:'Oggi: {rank}° su {total}', sDays:'Giorni di fila', tGrid:'Griglia del giorno non disponibile, riprova tra poco', boardNoteDaily:'Classifica del giorno, azzerata a mezzanotte (ora di Parigi).', freeShort:'Partita libera',
  f2:'Foto prodotto: ikea.com'
 }
 };
@@ -841,13 +861,16 @@ function applyLang(next, opts){
   set('#d1t', L.dEasy); set('#d1s', L.dEasyS.replace('{n}', poolIndexes('easy').length));
   set('#d3t', L.dHard); set('#d3s', L.dHardS.replace('{n}', poolIndexes('hard').length));
   set('#boardOpen', L.boardOpen); set('#boardTitle', L.boardTitle);
-  set('#rankTitle', L.boardTitle); set('#rankSub', diffLabel(state.difficulty));
+  set('#rankTitle', L.boardTitle); set('#rankSub', diffLabel(state.boardDiff));
   const U = UI[lang] || UI.fr;
   set('#quitBtn', U.quit); set('#shareLabelText', U.shareLabel); set('#shareNote', U.note);
   set('#boardFromEnd', U.boardLink); set('#shareImageNote', U.img); set('#shareNative', U.native); set('#shareClose', U.close); set('#sheetTitle', U.shareLabel);
   set('#boardPlay', L.boardPlay); set('#boardBack', L.boardBack);
   set('#rcDiffL', L.rcDiff);
-  const bnote = document.querySelector('#boardNote'); if(bnote) bnote.textContent = L.boardNote;
+  set('#freeToggle', L.freeT); set('#startBtn', L.freeStart);
+  if(state.kind !== 'free'){ set('#rcStreakL', L.sDays); set('#replayBtn', L.freeShort); }
+  renderDailyEntry();
+  const bnote = document.querySelector('#boardNote'); if(bnote) bnote.textContent = state.boardDiff === 'daily' ? L.boardNoteDaily : L.boardNote;
   if(typeof renderBoardTabs === 'function') renderBoardTabs();
   if(typeof setSubmitLine === 'function') setSubmitLine();
 
@@ -898,10 +921,16 @@ const state = {
   submitOk: null,
   rank: null,
   timeLabel: '',
-  boardDiff: 'easy',
+  boardDiff: 'daily',
   boardBack: 'intro',
   results: [],
-  challenge: null
+  challenge: null,
+  kind: 'free',
+  day: null,
+  qStart: 0,
+  rankTotal: null,
+  submitP: null,
+  secsSaved: null
 };
 
 const SELFTEST = location.search.includes('selftest');
@@ -913,20 +942,43 @@ const MODES = {
 };
 const GAME_SIZE = 20;
 const MAX_PTS = GAME_SIZE * MODES.cash.pts;
+const DAILY_SIZE = 10;
+const DAILY_MAX = DAILY_SIZE * MODES.cash.pts;
+const DAILY_EPOCH = '2026-11-22';
+const DAILY_KEY = SELFTEST ? 'clikea-daily-selftest' : 'clikea-daily';
+const SB_REST = 'https://vubopkycvzzqufpqxpbg.supabase.co/rest/v1';
+
+/* ---------- le 10 du jour : dates à l'heure de Paris ---------- */
+function parisDay(d){
+  return new Intl.DateTimeFormat('en-CA', {timeZone: 'Europe/Paris', year: 'numeric', month: '2-digit', day: '2-digit'}).format(d || new Date());
+}
+function addDays(day, n){ return new Date(Date.parse(day + 'T00:00:00Z') + n * 86400000).toISOString().slice(0, 10); }
+function dayNo(day){ return Math.round((Date.parse(day + 'T00:00:00Z') - Date.parse(DAILY_EPOCH + 'T00:00:00Z')) / 86400000) + 1; }
+function untilMidnight(){
+  const parts = new Intl.DateTimeFormat('en-GB', {timeZone: 'Europe/Paris', hour: '2-digit', minute: '2-digit', hourCycle: 'h23'}).formatToParts(new Date());
+  const h = +parts.find(p => p.type === 'hour').value, m = +parts.find(p => p.type === 'minute').value;
+  const left = 24 * 60 - (h * 60 + m);
+  return Math.floor(left / 60) + ' h ' + String(left % 60).padStart(2, '0');
+}
 
 (function readChallenge(){
   try{
     const q = new URLSearchParams(location.search);
     const s = parseInt(q.get('defi'), 10);
-    if(!isNaN(s) && s >= 0 && s <= MAX_PTS){
+    const jour = q.get('jour') || '';
+    const day = /^\d{4}-\d{2}-\d{2}$/.test(jour) && jour >= DAILY_EPOCH && jour <= parisDay() ? jour : null;
+    if(!isNaN(s) && s >= 0 && s <= (day ? DAILY_MAX : MAX_PTS)){
       const name = (q.get('par') || '').trim().slice(0, 24);
-      state.challenge = {score: s, name: name};
+      state.challenge = {score: s, name: name, day: day};
     }
   }catch(e){}
 })();
 
 function shuffle(a){ for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];} return a; }
 function pad(n){ return String(n).padStart(2,'0'); }
+function rankLabel(n){ return lang === 'fr' ? (n === 1 ? '1er' : n + 'e') : n; }
+function maxPts(){ return state.queue.length * MODES.cash.pts; }
+function gameLabel(){ return state.kind === 'free' ? diffLabel(state.difficulty) : t('dailyLabel', {n: dayNo(state.day)}); }
 function typeOf(p){
   const v = p && p.t;
   if(!v) return '';
@@ -942,7 +994,7 @@ const EASY_NAMES = ["BILLY","KALLAX","POÄNG","LACK","MALM","STRANDMON","BLÅHAJ
 "SUNDVIK","SMÅSTAD","KURA","MULIG","SKUBB","FÖRNUFTIG","TRÅDFRI","STOCKHOLM","GULLIVER","SAMLA",
 "RISATORP","KVISTBRO","FEJKA","LISABO","DAGOTTO","TERTIAL","PÅHL","KALAS"];
 
-const DIFFKEY = { easy:'dEasy', hard:'dHard' };
+const DIFFKEY = { daily:'dDaily', easy:'dEasy', hard:'dHard' };
 function diffLabel(d){ return t(DIFFKEY[d] || 'dEasy'); }
 
 const DIFFS = {
@@ -973,6 +1025,8 @@ function track(event, props){
         $current_url: location.href,
         lang: lang,
         difficulty: state.difficulty,
+        kind: state.kind,
+        day: state.day,
         app: 'clikea'
       }, props || {}),
       timestamp: new Date().toISOString()
@@ -989,7 +1043,13 @@ function track(event, props){
 const API_URL = 'https://vubopkycvzzqufpqxpbg.supabase.co/rest/v1/clikea_scores';
 const API_KEY = 'sb_publishable_WMYqRdE6kUMQNZJu6Jyrkw_WclrsN7Q';
 
+function boardMax(diff){ return diff === 'daily' ? DAILY_MAX : MAX_PTS; }
 function boardQuery(diff){
+  if(diff === 'daily'){
+    return SB_REST + '/clikea_daily_scores?select=name,score,correct,created_at'
+      + '&day=eq.' + parisDay() + '&name=not.is.null'
+      + '&order=score.desc,created_at.asc&limit=20';
+  }
   return API_URL + '?select=name,score,correct,difficulty,created_at'
     + '&difficulty=eq.' + encodeURIComponent(diff)
     + '&order=score.desc,created_at.asc&limit=20';
@@ -1045,8 +1105,11 @@ async function loadRank(){
 function setSubmitLine(){
   const el = $('#rankLine');
   if(!el) return;
-  if(state.rank && state.submitOk){
-    el.textContent = t('rankLine', {rank: state.rank, diff: diffLabel(state.difficulty)});
+  if(state.rank && state.submitOk && state.kind === 'daily'){
+    el.textContent = t('rankDaily', {rank: rankLabel(state.rank), total: state.rankTotal});
+    el.hidden = false;
+  } else if(state.rank && state.submitOk){
+    el.textContent = t('rankLine', {rank: rankLabel(state.rank), diff: diffLabel(state.difficulty)});
     el.hidden = false;
   } else if(state.submitOk){
     el.textContent = t('savedLine');
@@ -1081,8 +1144,10 @@ async function loadBoard(){
     rows.innerHTML = '<div class="empty">' + t('boardError') + '</div>';
     return;
   }
+  const rs = $('#rankSub'); if(rs) rs.textContent = diffLabel(state.boardDiff);
   if(!data.length){
     rows.innerHTML = '<div class="empty">' + t('boardEmpty') + '</div>';
+    renderRankPreview(data);
     return;
   }
   const me = (state.player || '').trim().toLowerCase();
@@ -1091,10 +1156,10 @@ async function loadBoard(){
     return '<div class="row' + (mine ? ' me' : '') + '">'
       + '<span class="pos">' + (i + 1) + '</span>'
       + '<span class="nm">' + escapeHtml(r.name) + '</span>'
-      + '<span class="sc">' + r.score + '<i>/100</i></span>'
+      + '<span class="sc">' + r.score + '<i>/' + boardMax(state.boardDiff) + '</i></span>'
       + '</div>';
   }).join('');
-  $('#boardNote').textContent = t('boardNote');
+  $('#boardNote').textContent = t(state.boardDiff === 'daily' ? 'boardNoteDaily' : 'boardNote');
   renderRankPreview(data);
 }
 function renderRankPreview(data){
@@ -1103,7 +1168,7 @@ function renderRankPreview(data){
   const me = (state.player || '').trim().toLowerCase();
   box.innerHTML = data.slice(0,5).map((r,i)=>{
     const mine = me && r.name.trim().toLowerCase() === me;
-    return '<div class="row'+(mine?' me':'')+'"><span class="pos">'+(i+1)+'</span><span class="nm">'+escapeHtml(r.name)+'</span><span class="sc">'+r.score+'<i>/100</i></span></div>';
+    return '<div class="row'+(mine?' me':'')+'"><span class="pos">'+(i+1)+'</span><span class="nm">'+escapeHtml(r.name)+'</span><span class="sc">'+r.score+'<i>/'+boardMax(state.boardDiff)+'</i></span></div>';
   }).join('');
 }
 function escapeHtml(s){
@@ -1152,24 +1217,171 @@ function poolIndexes(diff){
   return all.filter(idx => cfg.pool.indexOf(PRODUCTS[idx].n) !== -1);
 }
 
-function startGame(){
+function beginGame(queue, kind, day, resume){
   const input = $('#playerName');
-  const name = ((input && input.value) || '').trim();
-  state.player = name;
-  state.queue = shuffle(poolIndexes(state.difficulty)).slice(0, GAME_SIZE);
+  state.player = ((input && input.value) || '').trim();
+  state.kind = kind; state.day = day;
+  state.queue = queue;
   state.i = 0; state.good = 0; state.pts = 0; state.streak = 0; state.bestStreak = 0;
   state.mode = null; state.locked = false; state.answered = 0; state.skipped = 0; state.last = null;
   state.results = [];
-  state.submitted = false; state.submitOk = null; state.rank = null;
+  state.submitted = false; state.submitOk = null; state.rank = null; state.rankTotal = null; state.submitP = null; state.secsSaved = null;
   const nr = $('#nameRow'); if(nr) nr.hidden = true;
   const rl = $('#rankLine'); if(rl) rl.hidden = true;
   $('#end').classList.remove('ready');
   const pr = $('#printer'); if(pr) pr.classList.remove('printing');
   const sl = $('#submitLine'); if(sl) sl.textContent = '';
   state.started = Date.now();
-  track('clikea_game_started', {difficulty: state.difficulty, pool: poolIndexes(state.difficulty).length, lang: lang});
+  if(resume){
+    state.i = resume.i; state.pts = resume.pts; state.good = resume.good;
+    state.results = resume.results.slice(); state.streak = resume.streak; state.bestStreak = resume.bestStreak;
+    state.started = resume.started;
+    if(!state.player && resume.player) state.player = resume.player;
+    // Produit affiché puis page quittée sans répondre : il compte comme temps écoulé.
+    if(resume.pending === state.i && state.i < queue.length){
+      state.results.push('to'); state.streak = 0; state.i++;
+    }
+  }
+  dailyProgress({pending: null});
+  track('clikea_game_started', {kind: kind, day: day, resumed: !!resume, difficulty: state.difficulty,
+    pool: kind === 'free' ? poolIndexes(state.difficulty).length : null, lang: lang});
   show('game');
   render();
+}
+function startGame(){
+  beginGame(shuffle(poolIndexes(state.difficulty)).slice(0, GAME_SIZE), 'free', null, null);
+}
+
+/* ---------- le 10 du jour : grille, progression locale, série ---------- */
+function dailyStore(){
+  try{ return JSON.parse(localStorage.getItem(DAILY_KEY) || '{}') || {}; }catch(e){ return {}; }
+}
+function dailySave(rec){
+  const all = dailyStore();
+  all[rec.day] = Object.assign({}, all[rec.day], rec);
+  try{ localStorage.setItem(DAILY_KEY, JSON.stringify(all)); }catch(e){}
+}
+function dailyProgress(extra){
+  if(state.kind !== 'daily') return;
+  dailySave(Object.assign({
+    day: state.day, i: state.i, pts: state.pts, good: state.good, results: state.results,
+    streak: state.streak, bestStreak: state.bestStreak, started: state.started, player: state.player, done: false
+  }, extra || {}));
+}
+function dayStreak(all, today){
+  let d = all[today] && all[today].done ? today : addDays(today, -1);
+  let n = 0;
+  while(all[d] && all[d].done){ n++; d = addDays(d, -1); }
+  return n;
+}
+async function fetchGrid(day){
+  const r = await fetch(SB_REST + '/clikea_daily_grid?select=products&day=eq.' + day, {headers: apiHeaders()});
+  if(!r.ok) throw new Error('grid ' + r.status);
+  const rows = await r.json();
+  if(!rows.length) throw new Error('grid missing ' + day);
+  const queue = rows[0].products.map(n => PRODUCTS.findIndex(p => p.n === n));
+  // clikea_products recopie PRODUCTS : un nom inconnu veut dire que les deux listes ont divergé.
+  if(queue.length !== DAILY_SIZE || queue.some(i => i < 0)) throw new Error('grid mismatch ' + day);
+  return queue;
+}
+async function startDaily(day){
+  const today = parisDay();
+  const kind = day === today ? 'daily' : 'replay';
+  const rec = kind === 'daily' ? dailyStore()[day] : null;
+  if(rec && rec.done){ showDailyResult(rec); return; }
+  const btn = $('#dailyBtn'); if(btn) btn.disabled = true;
+  let queue;
+  try{ queue = await fetchGrid(day); }
+  catch(e){ toast(t('tGrid')); track('clikea_daily_grid_error', {day: day, error: String(e && e.message)}); return; }
+  finally{ if(btn) btn.disabled = false; }
+  if(state.challenge && state.challenge.day === day){ state.challenge = null; renderDefi(); }
+  beginGame(queue, kind, day, rec && rec.i > 0 ? rec : null);
+}
+function playDaily(){
+  const ch = state.challenge;
+  startDaily(ch && ch.day ? ch.day : parisDay());
+}
+function showDailyResult(rec){
+  state.kind = 'daily'; state.day = rec.day;
+  state.queue = new Array(DAILY_SIZE).fill(-1);
+  state.pts = rec.pts; state.good = rec.good; state.results = rec.results.slice();
+  state.bestStreak = rec.bestStreak; state.started = rec.started; state.secsSaved = rec.secs;
+  state.player = rec.player || ((($('#playerName') || {}).value) || '').trim();
+  state.last = null; state.rank = null; state.rankTotal = null;
+  state.submitted = !!rec.sent; state.submitOk = rec.sent ? true : null; state.submitP = null;
+  finish(true);
+  if(!rec.sent && rec.day === parisDay()) submitDaily();
+  else loadDailyRank();
+}
+function renderDailyEntry(){
+  const b = $('#dailySub'); if(!b) return;
+  const today = parisDay(), all = dailyStore(), rec = all[today], n = dayNo(today);
+  const streak = dayStreak(all, today);
+  const ch = state.challenge && state.challenge.day && state.challenge.day !== today ? state.challenge : null;
+  let sub;
+  if(ch) sub = t('dailyS', {n: dayNo(ch.day)});
+  else if(rec && rec.done) sub = t('dailyDone', {n: n, pts: rec.pts, left: untilMidnight()});
+  else if(rec && rec.i > 0) sub = t('dailyResume', {n: n, i: Math.min(rec.i + 1, DAILY_SIZE)});
+  else sub = t('dailyS', {n: n});
+  $('#dailyT').textContent = t('dailyT');
+  b.textContent = (streak && !ch ? '🔥 ' + streak + ' · ' : '') + sub;
+}
+function dailyCode(){ return state.results.map(r => r === 'ok' ? 'o' : (r === 'to' ? 't' : 'k')).join(''); }
+async function submitDaily(){
+  if(SELFTEST || state.submitted || state.kind !== 'daily') return;
+  state.submitted = true;
+  const body = {
+    day: state.day, device_id: deviceId(),
+    name: state.player ? state.player.slice(0, 20).trim() : null,
+    score: state.pts, correct: state.good, results: dailyCode(), lang: lang,
+    duration_s: Math.min(7200, state.secsSaved != null ? state.secsSaved : Math.round((Date.now() - state.started) / 1000))
+  };
+  state.submitP = fetch(SB_REST + '/clikea_daily_scores', {
+    method: 'POST', headers: apiHeaders({'Prefer': 'return=minimal'}), body: JSON.stringify(body)
+  }).then(r => r.ok || r.status === 409).catch(() => false);
+  state.submitOk = await state.submitP;
+  if(state.submitOk) dailySave({day: state.day, sent: true});
+  track('clikea_daily_submitted', {ok: state.submitOk, score: state.pts});
+  if(state.submitOk) loadDailyRank();
+  setSubmitLine();
+}
+async function loadDailyRank(){
+  const base = SB_REST + '/clikea_daily_scores?select=day&day=eq.' + state.day;
+  const count = async (url) => {
+    const r = await fetch(url + '&limit=1', {headers: apiHeaders({'Prefer': 'count=exact'})});
+    return parseInt(((r.headers.get('content-range') || '').split('/')[1] || ''), 10);
+  };
+  try{
+    const [above, total] = await Promise.all([count(base + '&score=gt.' + state.pts), count(base)]);
+    if(!isNaN(above) && !isNaN(total) && total > 0){
+      state.rank = above + 1; state.rankTotal = total; state.submitOk = true;
+      setSubmitLine();
+    }
+  }catch(e){}
+}
+async function addDailyName(){
+  if(state.submitP) await state.submitP;
+  if(!state.submitOk){ state.submitted = false; await submitDaily(); return; }
+  try{
+    await fetch(SB_REST + '/rpc/clikea_daily_set_name', {
+      method: 'POST', headers: apiHeaders(),
+      body: JSON.stringify({p_day: state.day, p_device: deviceId(), p_name: state.player.slice(0, 20).trim()})
+    });
+  }catch(e){}
+  if(state.boardDiff === 'daily') loadBoard();
+}
+function logAnswer(p, ok){
+  if(SELFTEST) return;
+  const body = {
+    device_id: deviceId(), source: state.kind,
+    day: state.kind === 'free' ? null : state.day,
+    difficulty: state.kind === 'free' ? state.difficulty : null,
+    position: state.i + 1, product: p.n, mode: state.mode, correct: ok, timed_out: !!state.timedOut,
+    ms: Math.min(600000, Date.now() - state.qStart), lang: lang
+  };
+  fetch(SB_REST + '/clikea_answers', {
+    method: 'POST', headers: apiHeaders({'Prefer': 'return=minimal'}), body: JSON.stringify(body), keepalive: true
+  }).catch(() => {});
 }
 
 function show(id){
@@ -1185,6 +1397,8 @@ function render(){
   const n = state.i + 1;
   state.locked = false;
   state.mode = null;
+  state.qStart = Date.now();
+  dailyProgress({pending: state.i});
 
   $('#qLabel').textContent = t('q', {i: n, n: state.queue.length});
   const _mc=$('#metaCount'); if(_mc) _mc.textContent = n + ' / ' + state.queue.length;
@@ -1226,6 +1440,7 @@ function render(){
   img.onerror = () => {
     photo.classList.remove('loading');
     state.skipped++;
+    state.results.push('ko');
     toast(t('tPhoto'));
     state.i++;
     render();
@@ -1335,6 +1550,8 @@ function resolve(ok, pick){
     question: state.i + 1, difficulty: state.difficulty
   });
   state.results.push(state.timedOut ? 'to' : (ok ? 'ok' : 'ko'));
+  logAnswer(p, ok);
+  dailyProgress({i: state.i + 1, pending: null});
   state.last = { ok, gain, p, isLast: state.i + 1 >= state.queue.length };
   renderFeedback();
   const fb = $('#feedback');
@@ -1401,18 +1618,23 @@ function esc(s){
 function updateBest(){
   const setTxt = (sel, val) => { const el = $(sel); if(el) el.textContent = val; };
   let best = 0;
-  if(state.player){
+  if(state.kind !== 'free'){
+    const all = dailyStore();
+    best = Math.max(state.pts, ...Object.keys(all).map(d => all[d].done ? all[d].pts : 0));
+  } else if(state.player){
     const bestKey = 'clikea-best:' + norm(state.player);
     try{ best = Number(localStorage.getItem(bestKey) || 0); }catch(e){}
     if(state.pts > best){ best = state.pts; try{ localStorage.setItem(bestKey, String(best)); }catch(e){} }
   }
-  setTxt('#rcBest', best + '/' + MAX_PTS);
+  setTxt('#rcBest', best + '/' + maxPts());
 }
 function renderDefi(){
   const el = $('#defiBanner'); if(!el) return;
   if(!state.challenge){ el.hidden = true; el.innerHTML = ''; return; }
   const name = state.challenge.name || t('defiAnon');
-  el.innerHTML = t('defiBanner', {name: esc(name), pts: state.challenge.score, max: MAX_PTS});
+  el.innerHTML = state.challenge.day
+    ? t('defiDaily', {name: esc(name), pts: state.challenge.score, n: dayNo(state.challenge.day)})
+    : t('defiBanner', {name: esc(name), pts: state.challenge.score, max: MAX_PTS});
   el.hidden = false;
 }
 function submitEndName(){
@@ -1424,7 +1646,8 @@ function submitEndName(){
   const rc = $('#rcName'); if(rc) rc.textContent = state.player;
   const nr = $('#nameRow'); if(nr) nr.hidden = true;
   updateBest();
-  submitScore();
+  if(state.kind === 'daily'){ dailySave({day: state.day, player: state.player}); addDailyName(); }
+  else submitScore();
   track('clikea_name_added', {score: state.pts, difficulty: state.difficulty});
 }
 function renderVerdict(){
@@ -1432,24 +1655,31 @@ function renderVerdict(){
   if(el && state.msgKey) el.textContent = t(state.msgKey);
 }
 
-function finish(){
+function finish(reopen){
   stopClock();
   const total = state.queue.length;
-  const secs = Math.round((Date.now() - state.started)/1000);
+  const secs = state.secsSaved != null ? state.secsSaved : Math.round((Date.now() - state.started)/1000);
+  state.secsSaved = secs;
   const mm = Math.floor(secs/60), ss = secs%60;
-  const pct = Math.round(state.pts / MAX_PTS * 100);
-  const perfect = state.pts >= MAX_PTS;
+  const max = maxPts();
+  const pct = Math.round(state.pts / max * 100);
+  const perfect = state.pts >= max;
   const crowd = Math.min(96, Math.max(8, Math.round(pct*0.85 + 12)));
   const dateStr = new Date().toLocaleDateString(LOCALES[lang],{day:'2-digit',month:'2-digit',year:'numeric'});
 
   state.timeLabel = mm + ':' + pad(ss);
   const setTxt = (sel, val) => { const el = $(sel); if(el) el.textContent = val; };
 
+  if(state.kind === 'daily' && !reopen) dailyProgress({i: total, pending: null, done: true, secs: secs});
+  const daily = state.kind !== 'free';
   setTxt('#rcNum', state.pts);
+  setTxt('#rcDen', '/' + max);
   setTxt('#rcGood', state.good);
-  setTxt('#rcStreak', state.bestStreak);
+  setTxt('#rcStreak', state.kind === 'daily' ? dayStreak(dailyStore(), state.day) : state.bestStreak);
+  setTxt('#rcStreakL', daily ? t('sDays') : t('sStreak'));
+  setTxt('#replayBtn', daily ? t('freeShort') : t('replay'));
   setTxt('#rcPts', state.pts);
-  setTxt('#rcDiff', diffLabel(state.difficulty));
+  setTxt('#rcDiff', gameLabel());
   setTxt('#rcTime', state.timeLabel);
   setTxt('#rcName', state.player || '—');
   $('#tkVerdict').innerHTML = t('tkPlays', {x: '<b>' + crowd + ' %</b>'});
@@ -1464,19 +1694,29 @@ function finish(){
   state.msgKey = pct === 100 ? 'v100' : pct >= 80 ? 'v80' : pct >= 55 ? 'v55' : pct >= 30 ? 'v30' : 'v0';
   renderVerdict();
 
-  track('clikea_game_finished', {
-    score: state.pts, correct: state.good, total: total, difficulty: state.difficulty,
-    duration_s: secs, best_streak: state.bestStreak, lang: lang
-  });
-  if(state.player){
-    submitScore();
+  if(!reopen){
+    track('clikea_game_finished', {
+      score: state.pts, correct: state.good, total: total, difficulty: state.difficulty,
+      duration_s: secs, best_streak: state.bestStreak, lang: lang
+    });
+  }
+  const nr0 = $('#nameRow'); if(nr0) nr0.hidden = true;
+  if(state.kind === 'replay'){
+    // Grille d'un jour passé, rejouée via un défi : hors classement et hors série.
+  } else if(state.player){
+    if(state.kind === 'daily'){ if(!reopen) submitDaily(); }
+    else submitScore();
   } else {
+    if(state.kind === 'daily' && !reopen) submitDaily();
     const nr = $('#nameRow'); const ni = $('#endName');
     if(nr) nr.hidden = false;
     if(ni){ ni.value = ''; ni.placeholder = t('endNamePh'); }
     setTimeout(() => { try{ nr.scrollIntoView({block: 'center', behavior: 'smooth'}); }catch(e){} }, 60);
   }
-  state.share = t('shareText', {pts: state.pts, max: MAX_PTS, good: state.good, total: total});
+  state.share = daily
+    ? t('dailyShare', {pts: state.pts, max: max, n: dayNo(state.day)})
+    : t('shareText', {pts: state.pts, max: max, good: state.good, total: total});
+  const sp = $('#sharePreview'); if(sp) sp.removeAttribute('src');
   show('end');
   refreshShareLinks();
   requestAnimationFrame(() => printTicket());
@@ -1487,7 +1727,18 @@ document.querySelectorAll('.mode').forEach(b => {
   b.addEventListener('click', () => chooseMode(b.dataset.mode));
 });
 $('#startBtn').addEventListener('click', startGame);
-$('#replayBtn').addEventListener('click', startGame);
+$('#replayBtn').addEventListener('click', () => {
+  if(state.kind === 'free'){ startGame(); return; }
+  show('intro'); renderDailyEntry();
+  const fp = $('#freePanel'); if(fp){ fp.hidden = false; $('#freeToggle').setAttribute('aria-expanded', 'true'); }
+});
+$('#dailyBtn').addEventListener('click', playDaily);
+$('#freeToggle').addEventListener('click', () => {
+  const fp = $('#freePanel'); fp.hidden = !fp.hidden;
+  $('#freeToggle').setAttribute('aria-expanded', fp.hidden ? 'false' : 'true');
+  if(!fp.hidden) track('clikea_free_opened', {});
+});
+setInterval(() => { if($('#intro').classList.contains('on')) renderDailyEntry(); }, 30000);
 $('#copyBtn').addEventListener('click', copyResult);
 $('#copySheet').addEventListener('click', copyResult);
 $('#endNameBtn').addEventListener('click', submitEndName);
@@ -1510,10 +1761,10 @@ document.querySelectorAll('#diffs .diff').forEach(b => {
     loadBoard();
   });
 });
-$('#boardOpen').addEventListener('click', () => openBoard(state.difficulty, 'intro'));
-$('#boardFromEnd').addEventListener('click', () => openBoard(state.difficulty, 'end'));
+$('#boardOpen').addEventListener('click', () => openBoard(state.boardDiff, 'intro'));
+$('#boardFromEnd').addEventListener('click', () => openBoard(state.kind === 'free' ? state.difficulty : 'daily', 'end'));
 $('#boardBack').addEventListener('click', () => show(state.boardBack));
-$('#boardPlay').addEventListener('click', () => show('intro'));
+$('#boardPlay').addEventListener('click', () => { show('intro'); renderDailyEntry(); });
 document.querySelectorAll('#boardTabs .tab').forEach(b => {
   b.addEventListener('click', async () => {
     state.boardDiff = b.dataset.diff;
@@ -1530,7 +1781,7 @@ $('#shareClose').addEventListener('click', closeShare);
 $('#shareSheet').addEventListener('click', (e)=>{ if(e.target.id==='shareSheet') closeShare(); });
 $('#shareNative').addEventListener('click', ()=>shareTrophy());
 document.addEventListener('keydown', (e)=>{ if(e.key==='Escape') closeShare(); });
-$('#quitBtn').addEventListener('click', ()=>{ stopClock(); show('intro'); });
+$('#quitBtn').addEventListener('click', ()=>{ stopClock(); show('intro'); renderDailyEntry(); });
 
 /* ---------- logo CLIKEA (tracés Archivo Expanded Black, proportions IKEA) ---------- */
 const LOGO={W:132,H:40,s:0.0210858,stretch:1.08,baseline:27.2324,glyphs:{C:"M487 12Q338 12 240 -28.5Q142 -69 93.5 -148Q45 -227 45 -344Q45 -515 158 -607.5Q271 -700 489 -700Q609 -700 700 -662.5Q791 -625 842.5 -558.5Q894 -492 894 -405H654Q654 -441 633 -469Q612 -497 574 -513Q536 -529 485 -529Q421 -529 379.5 -506Q338 -483 318.5 -444Q299 -405 299 -357V-332Q299 -286 318.5 -246.5Q338 -207 378 -183Q418 -159 480 -159Q537 -159 577.5 -174Q618 -189 639.5 -216Q661 -243 661 -279H894Q894 -195 845.5 -129Q797 -63 706 -25.5Q615 12 487 12Z",L:"M74 0V-688H321V-189H767V0Z",I:"M74 0V-688H321V0Z",K:"M74 0V-688H321V-384L654 -688H960L656 -407L968 0H667L474 -259L321 -135V0Z",E:"M74 0V-688H809V-517H322V-428H742V-266H322V-171H817V0Z",A:"M8 0 341 -688H613L946 0H681L640 -91H303L263 0ZM378 -262H565L517 -378Q514 -386 509 -399.5Q504 -413 498 -430Q492 -447 486.5 -464Q481 -481 476 -495H469Q463 -478 455 -456Q447 -434 439.5 -413Q432 -392 426 -378Z"},place:[["C", 9.535], ["L", 30.919], ["I", 48.818], ["K", 57.813], ["E", 80.313], ["A", 99.897]]};
@@ -1594,9 +1845,9 @@ function drawTrophy(){
   // logo badge
   drawLogo(x, cxMid - 170, cy + 58, 340);
 
-  const pct = Math.round(state.pts / MAX_PTS * 100);
+  const pct = Math.round(state.pts / maxPts() * 100);
   const crowd = Math.min(96, Math.max(8, Math.round(pct*0.85 + 12)));
-  const perfect = state.pts >= MAX_PTS;
+  const perfect = state.pts >= maxPts();
   const badge = perfect ? t('bgPerfect') : pct >= 80 ? t('bgTop') : pct >= 50 ? t('bgMid') : t('bgLow');
 
   x.textAlign = 'center';
@@ -1621,7 +1872,7 @@ function drawTrophy(){
   x.restore();
 
   // score géant
-  const den = '/' + MAX_PTS;
+  const den = '/' + maxPts();
   x.font = font(52, '800');
   const denW = x.measureText(den).width;
   x.font = font(196, '900');
@@ -1682,7 +1933,7 @@ function drawTrophy(){
   // lignes
   const rows = [
     [t('rcClient'), (state.player || '—').toUpperCase()],
-    [t('rcDiff'), diffLabel(state.difficulty).toUpperCase()],
+    [t('rcDiff'), gameLabel().toUpperCase()],
     [t('sTime'), state.timeLabel || '—']
   ];
   let ry = by0 + 140;
@@ -1787,6 +2038,7 @@ function shareUrl(source){
   try{
     const u = new URL(base);
     if(source) u.searchParams.set('utm_source', source);
+    if(state.kind !== 'free' && state.day) u.searchParams.set('jour', state.day);
     if(state.pts > 0){
       u.searchParams.set('defi', String(state.pts));
       if(state.player) u.searchParams.set('par', state.player);
@@ -1795,12 +2047,17 @@ function shareUrl(source){
   }catch(e){ return base; }
 }
 function resultText(source){
-  const head = t('resultText', {pts: state.pts, max: MAX_PTS, good: state.good, total: state.queue.length, streak: state.bestStreak});
   const grid = shareGrid();
+  if(state.kind !== 'free'){
+    const days = state.kind === 'daily' ? dayStreak(dailyStore(), state.day) : 0;
+    const head = t('dailyResult', {n: dayNo(state.day), pts: state.pts, max: maxPts()});
+    return head + '\n' + grid + (days ? '\n🔥 ' + t(days === 1 ? 'daysN1' : 'daysN', {n: days}) : '') + '\n' + shareUrl(source || 'copy');
+  }
+  const head = t('resultText', {pts: state.pts, max: maxPts(), good: state.good, total: state.queue.length, streak: state.bestStreak});
   return head + (grid ? '\n' + grid : '') + '\n' + shareUrl(source || 'copy');
 }
 function shareTextValue(source){
-  const base = state.share || t('shareText', {pts: state.pts, max: MAX_PTS, good: state.good, total: state.queue.length});
+  const base = state.share || t('shareText', {pts: state.pts, max: maxPts(), good: state.good, total: state.queue.length});
   const grid = shareGrid();
   return base + (grid ? '\n' + grid : '') + '\n' + shareUrl(source || 'share');
 }
@@ -1879,7 +2136,7 @@ async function shareTrophy(){
 
 document.addEventListener('keydown', (e) => {
   if(!$('#game').classList.contains('on')){
-    if(e.key === 'Enter' && $('#intro').classList.contains('on')) startGame();
+    if(e.key === 'Enter' && $('#intro').classList.contains('on') && document.activeElement !== $('#startBtn')) playDaily();
     return;
   }
   if($('#cashBox').hidden === false && state.mode === 'cash') return;
@@ -1934,6 +2191,7 @@ $('#metaScore').textContent = '0 pt';
 })();
 
 setTimeout(()=>{ try{ loadBoard(); }catch(e){} }, 0);
+renderDailyEntry();
 
 // --- démo de l'impression, ?demo=1 ---
 if(location.search.includes('demo') && !SELFTEST){
@@ -1959,7 +2217,7 @@ if(location.search.includes('demo') && !SELFTEST){
     setTxt('#rcTime', state.timeLabel);
     setTxt('#rcBest', '61/100');
     document.querySelector('#tkVerdict').innerHTML = t('tkPlays', {x: '<b>63 %</b>'});
-    setTxt('#rankLine', t('rankLine', {rank: state.rank, diff: diffLabel('easy')}));
+    setTxt('#rankLine', t('rankLine', {rank: rankLabel(state.rank), diff: diffLabel('easy')}));
     document.querySelector('#rankLine').hidden = false;
     renderVerdict();
     show('end');
@@ -2077,7 +2335,7 @@ if(location.search.includes('selftest')){
     document.querySelector('.mode[data-mode="carre"]').click();
     ok(document.querySelectorAll('.choice').length===4,'carré proposé en difficile');
     state.difficulty = 'easy';
-    ok(document.querySelectorAll('#boardTabs .tab').length===2,'onglets du classement');
+    ok(document.querySelectorAll('#boardTabs .tab').length===3,'onglets du classement (jour, faciles, difficiles)');
 
     document.querySelector('#playerName').value = 'Testeur';
     state.player = 'Testeur'; state.difficulty = 'easy'; state.good = 10;
@@ -2097,7 +2355,8 @@ if(location.search.includes('selftest')){
     Object.keys(probes).forEach(code => {
       applyLang(code);
       ok(document.documentElement.lang===code, 'lang '+code+' : html');
-      ok(document.querySelector('#startBtn').textContent===probes[code].btn, 'lang '+code+' : bouton');
+      ok(document.querySelector('#dailyT').textContent===I18N[code].dailyT, 'lang '+code+' : bouton du jour');
+      ok(document.querySelector('#startBtn').textContent===I18N[code].freeStart, 'lang '+code+' : bouton partie libre');
       ok(document.querySelector('#i18nSub').textContent===probes[code].name, 'lang '+code+' : sous-titre');
       ok(document.title.indexOf('CLIKEA')===0, 'lang '+code+' : titre');
       ok(document.querySelector('#lang').value===code, 'lang '+code+' : selecteur');
@@ -2114,7 +2373,7 @@ if(location.search.includes('selftest')){
     applyLang('it'); ok(typeOf(billy)==='Libreria','type IT BILLY ('+typeOf(billy)+')');
     applyLang('fr');
     ok(typeOf(billy)==='Bibliothèque','type FR BILLY ('+typeOf(billy)+')');
-    ok(document.querySelector('#startBtn').textContent==='Jouer','retour FR');
+    ok(document.querySelector('#dailyT').textContent==='Le 10 du jour','retour FR');
     ok(localStorage.getItem('clikea-lang')==='fr','langue mémorisée');
     ok(document.getElementById('verdict').textContent===I18N.fr.v0,'verdict retraduit ('+document.getElementById('verdict').textContent.slice(0,20)+')');
 
@@ -2143,6 +2402,72 @@ if(location.search.includes('selftest')){
     }
     ok(lpYellow>12000,'image : ellipse du logo ('+lpYellow+' px)');
     ok(lpInk>2500,'image : lettres du logo ('+lpInk+' px)');
+
+    // --- le 10 du jour ---
+    localStorage.removeItem(DAILY_KEY);
+    ok(DAILY_KEY==='clikea-daily-selftest','tests isolés des vraies séries');
+    ok(/^\d{4}-\d{2}-\d{2}$/.test(parisDay()),'date de Paris au format AAAA-MM-JJ');
+    ok(dayNo('2026-11-22')===1 && dayNo('2026-12-01')===10,'numéro de grille');
+    ok(addDays('2026-11-30',1)==='2026-12-01' && addDays('2026-01-01',-1)==='2025-12-31','calcul des jours');
+    ok(dayStreak({'2026-11-20':{done:true},'2026-11-21':{done:true},'2026-11-22':{done:true}},'2026-11-22')===3,'série de 3 jours');
+    ok(dayStreak({'2026-11-20':{done:true},'2026-11-21':{done:true}},'2026-11-22')===2,'série conservée tant que le jour n’est pas joué');
+    ok(dayStreak({'2026-11-19':{done:true},'2026-11-21':{done:true},'2026-11-22':{done:false}},'2026-11-22')===1,'série cassée par un jour manqué');
+    ok(DAILY_SIZE===10 && DAILY_MAX===50,'10 produits, 50 points');
+    ok(!!document.querySelector('#dailyBtn') && document.querySelector('#freePanel').hidden===true,'accueil : 10 du jour en avant, partie libre repliée');
+    const today = parisDay();
+    const dq = poolIndexes('easy').slice(0, 10);
+    document.querySelector('#playerName').value = '';
+    beginGame(dq, 'daily', today, null);
+    ok(state.kind==='daily' && state.queue.length===10 && maxPts()===50,'partie du jour sur 50');
+    ok(document.querySelector('#modes').hidden===false,'Duo/Carré/Cash proposés au quotidien');
+    ok(dailyStore()[today].pending===0,'produit affiché noté comme en cours');
+    let dexp = 0;
+    for(let step=0; step<10; step++){
+      const p = PRODUCTS[state.queue[state.i]];
+      const mode = ['cash','carre','duo'][step%3];
+      const right = step!==4 && step!==7;
+      document.querySelector('.mode[data-mode="'+mode+'"]').click();
+      if(mode==='cash'){ document.querySelector('#cashInput').value = right ? p.n : 'xyzzy'; document.querySelector('#cashBtn').click(); }
+      else { const bs=[...document.querySelectorAll('.choice')]; (right ? bs.find(b=>b.dataset.name===p.n) : bs.find(b=>b.dataset.name!==p.n)).click(); }
+      if(right) dexp += MODES[mode].pts;
+      ok(dailyStore()[today].i===step+1,'progression sauvegardée Q'+(step+1));
+      if(step===3){
+        // reprise après fermeture de la page au milieu de la Q5
+        document.querySelector('#nextBtn').click();
+        const rec = dailyStore()[today];
+        ok(rec.pending===4,'Q5 affichée puis quittée');
+        beginGame(dq, 'daily', today, rec);
+        ok(state.i===5 && state.results.length===5 && state.results[4]==='to','reprise : Q5 comptée en temps écoulé');
+        ok(state.pts===dexp,'reprise : points conservés ('+state.pts+'/'+dexp+')');
+        step = 4;
+        continue;
+      }
+      document.querySelector('#nextBtn').click();
+    }
+    ok(document.getElementById('end').classList.contains('on'),'fin du 10 du jour');
+    ok(state.pts===dexp,'score du jour '+state.pts+'/'+dexp);
+    ok(document.getElementById('rcDen').textContent==='/50','ticket sur 50');
+    ok(document.getElementById('rcDiff').textContent==='10 du jour #'+dayNo(today),'ticket : numéro de grille');
+    ok(/^[okt]{10}$/.test(dailyCode()) && dailyCode()[4]==='t','code résultat pour la base ('+dailyCode()+')');
+    ok(dailyStore()[today].done===true && dailyStore()[today].pts===dexp,'partie du jour enregistrée');
+    ok(document.getElementById('rcStreak').textContent==='1','série du jour sur le ticket');
+    ok(document.querySelector('#nameRow').hidden===false,'nom proposé après la partie du jour');
+    ok(resultText('copy').indexOf('CLIKEA du jour #'+dayNo(today)+' · '+dexp+'/50')===0,'résultat copié : en-tête du jour');
+    ok(resultText('copy').split('\n')[1].length>0 && shareGrid().split('\n').length===2,'résultat : deux lignes de cases');
+    ok(resultText('copy').indexOf('\n🔥 1 jour\n')>-1,'résultat : série au singulier');
+    ok(rankLabel(1)==='1er' && rankLabel(3)==='3e','rang en français');
+    ok(shareUrl('x').indexOf('jour='+today)>-1 && shareUrl('x').indexOf('defi='+dexp)>-1,'lien de défi sur la même grille');
+    ok(document.getElementById('replayBtn').textContent==='Partie libre','bouton secondaire vers la partie libre');
+    show('intro'); renderDailyEntry();
+    ok(document.getElementById('dailySub').textContent.indexOf(dexp+'/50')>-1,'accueil : partie du jour déjà faite ('+document.getElementById('dailySub').textContent+')');
+    ok(document.getElementById('dailySub').textContent.indexOf('🔥 1')===0,'accueil : série affichée');
+    showDailyResult(dailyStore()[today]);
+    ok(document.getElementById('end').classList.contains('on') && document.getElementById('rcNum').textContent===String(dexp),'revoir son résultat du jour');
+    state.challenge = {score: 30, name: 'Ben', day: today}; renderDefi();
+    ok(document.getElementById('defiBanner').textContent.indexOf('Ben a fait 30/50 au 10 du jour #'+dayNo(today))===0,'bandeau de défi du jour');
+    state.challenge = null; renderDefi();
+    localStorage.removeItem(DAILY_KEY);
+    state.kind = 'free'; state.day = null;
 
     const pre=document.createElement('pre');
     pre.id='selftest';

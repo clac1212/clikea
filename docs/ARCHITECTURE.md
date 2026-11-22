@@ -70,7 +70,8 @@ Aucun serveur applicatif : GitHub Pages sert un fichier statique, Supabase et Po
 |---|---|
 | `clikea-lang` | Langue choisie (sinon langue du navigateur, sinon `fr`). |
 | `clikea-did` | Identifiant d'appareil aléatoire pour PostHog (`distinct_id`), pas d'identification personnelle. |
-| `clikea-best:<pseudo normalisé>` | Record personnel affiché sur le ticket. |
+| `clikea-best:<pseudo normalisé>` | Record personnel affiché sur le ticket (partie libre). |
+| `clikea-daily` | 10 du jour, par date de Paris : progression (`i`, `pts`, `results`, `pending`), `done`, `secs`, `player`, `sent`. Sert à reprendre une partie, bloquer le rejeu, calculer la série. Sous `?selftest`, la clé devient `clikea-daily-selftest`. |
 
 Tous les accès sont dans des `try/catch` : la navigation privée iOS peut lever une exception.
 
@@ -80,7 +81,36 @@ Tous les accès sont dans des `try/catch` : la navigation privée iOS peut lever
 
 Le français est la langue de référence : une clé manquante dans une autre langue s'affiche en français plutôt que de casser l'écran.
 
-## Classement Supabase
+## Le 10 du jour
+
+- **Porte principale** de l'accueil (`#dailyBtn`). La partie libre est repliée sous `#freeToggle`.
+- **Jour** : date de Paris (`parisDay()`), changement à minuit heure de Paris. Numéro de grille `#N` = jours depuis `DAILY_EPOCH` (`2026-11-22` = #1).
+- **Grille** : lue dans `clikea_daily_grid` pour le jour (`fetchGrid`). 10 produits, toujours dans l'ordre 3 faciles, 4 moyens, 3 durs. Chaque produit se joue en Duo, Carré ou Cash, barème identique à la partie libre : **score sur 50** (`DAILY_MAX`).
+- **Une partie par appareil et par jour.** La progression est sauvegardée après chaque réponse. Un produit affiché puis abandonné (page fermée) compte en temps écoulé à la reprise : recharger la page ne permet pas de revoir un produit.
+- **Série** : jours joués d'affilée (`dayStreak`), calculée sur l'appareil. Elle ne casse pas tant que le jour n'est pas fini.
+- **Score** : envoyé dans `clikea_daily_scores` à la fin, avec ou sans nom. Le nom ajouté après coup passe par la fonction `clikea_daily_set_name` (une seule fois, par l'appareil qui a joué).
+- **Défi** : le lien partagé porte `jour=AAAA-MM-JJ&defi=<score>&par=<nom>`. Le même jour, l'ami joue la même grille et compte pour sa série. Un autre jour, il rejoue la grille passée en mode `replay` : hors classement, hors série.
+- **Partage texte** : `CLIKEA du jour #N · 34/50`, deux lignes de cinq cases, `🔥 N jours d'affilée`, lien.
+
+## Base Supabase
+
+Projet `vubopkycvzzqufpqxpbg`. Schéma versionné dans `supabase/migrations/`, annulation dans `supabase/rollback_20261122_daily.sql`.
+
+| Objet | Public (clé publiable) | Rôle |
+|---|---|---|
+| `clikea_scores` | lecture, insertion | classement de la partie libre |
+| `clikea_products` | aucun accès | catalogue miroir de `PRODUCTS`, avec le palier du tirage (`easy` = 20 premiers noms cultes, `medium` = 29 autres cultes, `hard` = 60 autres) et `active` |
+| `clikea_daily_grid` | lecture jusqu'à aujourd'hui | une ligne par jour, 10 noms ; `source = 'manual'` pour une grille choisie à la main |
+| `clikea_daily_scores` | lecture sans `device_id`, insertion le jour même | une ligne par appareil et par jour (`unique(day, device_id)`), `results` = une lettre par produit (`o`, `k`, `t`) |
+| `clikea_answers` | insertion seule | chaque réponse (partie libre, du jour, rejouée) : produit, mode, juste, temps écoulé, durée |
+| `clikea_product_stats` | aucun accès | vue : réponses, % de bonnes réponses, % en Cash, temps écoulés, jours tirés, par produit |
+
+- **Tirage automatique** : `clikea_plan_days(14)` remplit les jours manquants jusqu'à J+14. Tâche `pg_cron` `clikea-plan-days` chaque soir à 22 h 05 UTC. Un produit ne revient pas avant que son palier ait tourné (taille du palier ÷ tirages par jour).
+- **Choisir une grille à la main** : `update clikea_daily_grid set products = array[...10 noms...], source = 'manual' where day = '2026-12-24';` (3 faciles, 4 moyens, 3 durs, noms exacts de `PRODUCTS`).
+- **Ajouter un produit au jeu** : l'ajouter à `PRODUCTS` **et** à `clikea_products`, sinon le tirage ne le connaît pas ; un nom présent en base mais absent de `PRODUCTS` fait échouer `fetchGrid` (message « grille indisponible »).
+- **Statistiques** : `select * from clikea_product_stats order by pct_correct;` dans l'éditeur SQL Supabase.
+
+## Classement Supabase (partie libre)
 
 - Projet : `vubopkycvzzqufpqxpbg` (Supabase).
 - Table : `public.clikea_scores`.
@@ -100,6 +130,7 @@ Le français est la langue de référence : une clé manquante dans une autre la
 - **Clé utilisée** : clé publiable (`sb_publishable_...`) présente dans `index.html`. Elle ne permet que lecture et insertion ; les tests ont montré qu'une suppression renvoie 401.
 - **Lecture du classement** : `select=name,score,correct,difficulty,created_at&difficulty=eq.<niveau>&order=score.desc,created_at.asc&limit=20`.
 - **Position du joueur** : requête `count=exact` sur `score=gt.<score>` pour le niveau, lue dans l'en-tête `Content-Range`.
+- **Droits** : `TRUNCATE`, `TRIGGER` et `REFERENCES` ont été retirés au public le 22/11/2026 (ils contournent la RLS).
 - **Limites connues** : pas de modération du pseudo, pas d'anti-triche — n'importe qui peut insérer un score avec cette clé. Acceptable pour un jeu gratuit, à traiter si le classement devient un argument public.
 
 ## Analytics PostHog
@@ -122,6 +153,11 @@ Le français est la langue de référence : une clé manquante dans une autre la
 | `clikea_share` | `mode` (`native`, `download`, `copy`, `copy_text`, `x`, `whatsapp`, `linkedin`) |
 | `clikea_lang_changed` | `lang` |
 | `clikea_difficulty_selected` | `difficulty` |
+| `clikea_daily_submitted` | `ok`, `score` |
+| `clikea_daily_grid_error` | `day`, `error` |
+| `clikea_free_opened` | — |
+
+Tous les événements portent aussi `kind` (`daily`, `replay`, `free`) et `day`.
 
 `track()` est neutralisé quand `?selftest=1` est présent, pour ne pas polluer les données de production.
 

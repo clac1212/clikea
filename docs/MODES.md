@@ -36,6 +36,8 @@ Ce que font les jeux qui marchent :
 
 ### A. Le 10 du jour — la récurrence
 
+**Statut : en ligne depuis le 22 novembre 2026** (grille #1). Implémentation : [`ARCHITECTURE.md`](ARCHITECTURE.md#le-10-du-jour). Identité du joueur = l'appareil (stockage local), pas le pseudo : deux joueurs peuvent porter le même prénom.
+
 **Règle.** Dix produits, même tirage pour tout le monde, une seule partie par jour et par appareil. Chaque produit se joue en Duo (1 pt), Carré (3 pts) ou Cash (5 pts), exactement comme la partie libre : **score sur 50**. Difficulté croissante : 3 produits connus, 4 moyens, 3 durs. Environ 2 minutes.
 
 **Deux portes, un seul jeu.** L'accueil propose les produits du jour ou la partie libre, rien d'autre. Duo, Carré et Cash ne sont pas des modes de jeu mais la façon de répondre à chaque produit : ils restent dans les deux portes. La simplicité se joue sur le nombre d'entrées, pas sur la mécanique de la question.
