@@ -28,6 +28,18 @@ Appuis :
 - **Niveau de référence** (`ref_theta`) : le niveau pour lequel la réussite prédite sur les réponses réelles des 30 derniers jours égale la réussite observée. Plus robuste que la moyenne des niveaux Elo au démarrage. Publié chaque nuit dans `clikea_settings`.
 - **Niveau d'un joueur** : gardé sur l'appareil (`localStorage clikea-level`), démarre à `ref_theta`, mis à jour après chaque réponse (même formule, pas K = max(0,15 ; 0,8 / (1 + 0,05 n))). Les questions d'orthographe ne comptent pas.
 
+## Classements et record d'arcade
+
+Version partageable : https://wander-thistle-sp2a.here.now/
+
+- **Plus de choix facile / difficile** : la partie libre est adaptative, ce choix faisait doublon. Un seul bouton « Partie libre · 20 produits ».
+- **Deux classements** : « Du jour » (même grille pour tous, sur 50, avec l'historique jour par jour) et « Record » (meilleur score de tous les temps en partie libre, sans plafond, `clikea_scores.difficulty = 'arcade'`). Les anciens scores `easy` / `hard` restent en base mais ne sont plus affichés : ils ne sont pas comparables.
+- **Pourquoi des multiplicateurs** : sans eux, un record de partie libre récompenserait les débutants (l'adaptation donne des produits durs aux bons joueurs) et pousserait à effacer ses données ; il plafonnerait aussi à 100. Références : Scrabble (valeur selon la rareté, 1 à 10), Jeopardy! (valeur connue avant de choisir), Tetris et Pac-Man (le coup risqué paie beaucoup plus).
+- **Rareté** (`rarityOf`) : chance qu'un joueur de niveau `ref_theta` trouve le produit en Cash. Commun ≥ 0,6 ; rare 0,3 – 0,6 ; très rare < 0,3 (réglages `rare_common`, `rare_rare`). Recalculée chaque nuit avec les difficultés.
+- **Barème partie libre** : Cash 5 / 10 / 15 ; Carré 3 / 4 / 6 ; Duo 1 (jamais de multiplicateur : on y devine une fois sur deux). Réglages `pts_cash_rare`, `pts_cash_very`, `pts_carre_rare`, `pts_carre_very`. Pas de multiplicateur sur les questions d'orthographe ni dans le 10 du jour.
+- **Affichage** : l'étiquette « Rare ×2 » ou « Très rare ×3 » apparaît sur la photo avant le choix du mode, et chaque bouton de mode montre ce qu'il rapporte ; la réponse affiche « +10 pts · Cash · ×2 ». Les produits rares ont des faux noms de la même famille visuelle.
+- **Ticket de partie libre** : score en points (sans « /100 »), record personnel de l'appareil, place au classement record ; le message de fin se base sur les produits trouvés.
+
 ## Réseau et retours (le mécanisme invisible)
 
 Version partageable : https://dewy-inlet-bfx2.here.now/

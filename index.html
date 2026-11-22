@@ -172,6 +172,8 @@ h1 mark{background:none;color:var(--yellow);padding:0;box-decoration-break:clone
 .photo .tag{position:absolute;left:0;top:0;background:#111;color:#fff;font-size:9px;font-weight:800;padding:3px 6px;letter-spacing:.08em}
 .photo .tag.num{left:auto;right:0;background:#111}
 .photo .tag:not(.num){display:none}
+/* Étiquettes utiles (rareté, orthographe, piège) : visibles avant le choix du mode. */
+.photo .tag.hot{display:block;background:var(--yellow);color:#111;font-size:11px;font-weight:900;padding:4px 8px;z-index:2}
 .clock{font-size:58px;font-weight:900;line-height:1;letter-spacing:-.05em;color:#fff;opacity:.26;text-align:center;margin:6px 0 0}
 .ask{margin:8px 0 0;font-size:11px;font-weight:800;letter-spacing:.16em;text-transform:uppercase;color:#cfe0ee;text-align:center}
 .modes{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:10px}
@@ -220,7 +222,7 @@ h1 mark{background:none;color:var(--yellow);padding:0;box-decoration-break:clone
 /* ---------- tableau ---------- */
 .board{padding-top:22px;padding-bottom:36px;max-width:620px}
 .board h2{font-size:clamp(28px,8.6vw,46px);font-weight:900;letter-spacing:-.02em;text-transform:uppercase;margin:0}
-.tabs{display:grid;grid-template-columns:1fr 1fr 1fr;border:1px solid rgba(255,255,255,.4);border-bottom:0;margin-top:16px;max-width:520px}
+.tabs{display:grid;grid-template-columns:1fr 1fr;border:1px solid rgba(255,255,255,.4);border-bottom:0;margin-top:16px;max-width:520px}
 .tab{background:transparent;border:0;border-bottom:3px solid transparent;padding:11px 8px;font:inherit;font-size:11px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:#b9d2e6;cursor:pointer}
 .tab.on{color:#fff;border-bottom-color:var(--yellow)}
 .board-card{background:#fff;color:#111;max-width:520px;border-top:3px solid var(--yellow)}
@@ -388,18 +390,7 @@ footer .wrap{padding:14px var(--pad);display:flex;gap:16px;flex-wrap:wrap;justif
         <div class="cta-row"><button class="btn wide daily" id="dailyBtn" type="button"><b id="dailyT">Le 10 du jour</b><span id="dailySub">10 produits, 2 minutes</span></button></div>
 
         <div class="free">
-          <button class="btn ghost wide free-toggle" type="button" id="freeToggle" aria-expanded="false" aria-controls="freePanel">Partie libre · 20 produits</button>
-          <div class="free-panel" id="freePanel" hidden>
-            <div class="diffs" id="diffs" role="radiogroup" aria-label="Niveau">
-              <button class="diff on" type="button" data-diff="easy" role="radio" aria-checked="true">
-                <b id="d1t">Produits faciles</b><span id="d1s">20 sur 49 produits cultes</span>
-              </button>
-              <button class="diff" type="button" data-diff="hard" role="radio" aria-checked="false">
-                <b id="d3t">Produits difficiles</b><span id="d3s">20 sur 60 produits moins connus</span>
-              </button>
-            </div>
-            <button class="btn wide" id="startBtn" type="button">Jouer</button>
-          </div>
+          <button class="btn ghost wide free-toggle" type="button" id="startBtn">Partie libre · 20 produits</button>
         </div>
       </div>
 
@@ -481,8 +472,7 @@ footer .wrap{padding:14px var(--pad);display:flex;gap:16px;flex-wrap:wrap;justif
       <h2 id="boardTitle">Classement</h2>
       <div class="tabs" id="boardTabs">
         <button class="tab" type="button" data-diff="daily">Du jour</button>
-        <button class="tab" type="button" data-diff="easy">Produits faciles</button>
-        <button class="tab" type="button" data-diff="hard">Produits difficiles</button>
+        <button class="tab" type="button" data-diff="arcade">Record</button>
       </div>
       <div class="daynav" id="dayNav" hidden><button type="button" id="dayPrev" aria-label="Jour précédent">‹</button><span id="dayLabel"></span><button type="button" id="dayNext" aria-label="Jour suivant">›</button></div>
       <div class="board-card" id="boardRows"></div>
@@ -632,7 +622,7 @@ fr:{
  endNameNote:'Facultatif. Sans nom, le score n’est pas enregistré.',
  tName:'Entrez votre nom pour commencer', tPhoto:'Photo indisponible, on passe au suivant',
  tEmpty:'Écrivez un nom', tCopied:'Score copié', tCopyFail:'Partage impossible', tDownload:'Ticket téléchargé en image',
- dToday:'Aujourd’hui', boardNoteDay:'Classement final de la grille #{n}.', dayPrev:'Jour précédent', dayNext:'Jour suivant', promptOrtho:'Question d’orthographe : choisissez votre mode', askOrtho:'Quelle est la bonne orthographe ?', promptCashOrtho:'Cash : écrivez le nom exact, lettre par lettre', tagOrtho:'Orthographe', tagTrap:'Piège du jour', playedN:'{n} jours joués', sPlayed:'Jours joués', playedLine:'{n} · record {best}', trainBtn:'Entraîne-toi en partie libre', trainNext:'Prochaine grille dans {left}. En attendant, 20 produits au hasard, sans effet sur ta série.', copyShort:'Copier', share:'Partager', shareOther:'Ou partager ailleurs', shareTip2:'WhatsApp et X ouvrent l’app ou le site. « Image » : pour ta story Instagram ou TikTok.', imgShort:'Image', imgTitle:'Image pour ta story', imgNoteTouch:'Appuie longuement sur l’image pour l’enregistrer, puis ajoute-la à ta story Instagram ou TikTok.', imgNoteDesk:'Télécharge l’image, puis publie-la depuis ton téléphone.', imgShare:'Partager l’image', imgDownload:'Télécharger l’image', endNameNoteDaily:'Facultatif. Ton score est déjà enregistré ; ton nom l’affiche dans le classement du jour.', dDaily:'Du jour', dailyT:'Le 10 du jour', dailyS:'#{n} · 10 produits, 2 minutes', dailyDone:'#{n} · fait : {pts}/50 · prochaine grille dans {left}', dailyResume:'#{n} · reprendre à la question {i}', daysN:'{n} jours d’affilée', daysN1:'1 jour', freeT:'Partie libre · 20 produits', freeStart:'Lancer la partie libre', dailyLabel:'10 du jour #{n}', dailyResult:'CLIKEA du jour #{n} · {pts}/{max}', dailyShare:'J’ai fait {pts}/{max} au 10 du jour CLIKEA #{n}. À toi.', defiDaily:'<b>{name}</b> a fait <b>{pts}/50</b> au 10 du jour #{n}. Tu fais mieux ?', rankDaily:'Ta place aujourd’hui : {rank} sur {total}', sDays:'Jours d’affilée', tGrid:'Grille du jour indisponible, réessayez dans un instant', boardNoteDaily:'Classement du jour, remis à zéro à minuit (heure de Paris).', freeShort:'Partie libre',
+ dToday:'Aujourd’hui', boardNoteDay:'Classement final de la grille #{n}.', dayPrev:'Jour précédent', dayNext:'Jour suivant', promptOrtho:'Question d’orthographe : choisissez votre mode', askOrtho:'Quelle est la bonne orthographe ?', promptCashOrtho:'Cash : écrivez le nom exact, lettre par lettre', tagOrtho:'Orthographe', tagTrap:'Piège du jour', playedN:'{n} jours joués', sPlayed:'Jours joués', playedLine:'{n} · record {best}', trainBtn:'Entraîne-toi en partie libre', trainNext:'Prochaine grille dans {left}. En attendant, 20 produits au hasard, sans effet sur ta série.', copyShort:'Copier', share:'Partager', shareOther:'Ou partager ailleurs', shareTip2:'WhatsApp et X ouvrent l’app ou le site. « Image » : pour ta story Instagram ou TikTok.', imgShort:'Image', imgTitle:'Image pour ta story', imgNoteTouch:'Appuie longuement sur l’image pour l’enregistrer, puis ajoute-la à ta story Instagram ou TikTok.', imgNoteDesk:'Télécharge l’image, puis publie-la depuis ton téléphone.', imgShare:'Partager l’image', imgDownload:'Télécharger l’image', endNameNoteDaily:'Facultatif. Ton score est déjà enregistré ; ton nom l’affiche dans le classement du jour.', dArcade:'Record', rareTag:'Rare ×2', veryRareTag:'Très rare ×3', rankArcade:'Ta place au record : {rank} sur {total}', defiArcade:'<b>{name}</b> a fait <b>{pts} pts</b> en partie libre. Tu fais mieux ?', resultArcade:'CLIKEA partie libre · {pts} pts · {good}/{total} noms', shareArcade:'J’ai fait {pts} pts en partie libre CLIKEA ({good}/{total} noms). Tu bats ça ?', boardNoteArcade:'Meilleurs scores de tous les temps en partie libre. Les produits rares valent ×2, les très rares ×3 en Cash.', dDaily:'Du jour', dailyT:'Le 10 du jour', dailyS:'#{n} · 10 produits, 2 minutes', dailyDone:'#{n} · fait : {pts}/50 · prochaine grille dans {left}', dailyResume:'#{n} · reprendre à la question {i}', daysN:'{n} jours d’affilée', daysN1:'1 jour', freeT:'Partie libre · 20 produits', freeStart:'Lancer la partie libre', dailyLabel:'10 du jour #{n}', dailyResult:'CLIKEA du jour #{n} · {pts}/{max}', dailyShare:'J’ai fait {pts}/{max} au 10 du jour CLIKEA #{n}. À toi.', defiDaily:'<b>{name}</b> a fait <b>{pts}/50</b> au 10 du jour #{n}. Tu fais mieux ?', rankDaily:'Ta place aujourd’hui : {rank} sur {total}', sDays:'Jours d’affilée', tGrid:'Grille du jour indisponible, réessayez dans un instant', boardNoteDaily:'Classement du jour, remis à zéro à minuit (heure de Paris).', freeShort:'Partie libre',
  f2:'Photos produit : ikea.com'
 },
 en:{
@@ -683,7 +673,7 @@ en:{
  endNameNote:'Optional. Without a name, the score is not saved.',
  tName:'Enter your name to start', tPhoto:'Photo unavailable, skipping',
  tEmpty:'Type a name', tCopied:'Score copied', tCopyFail:'Sharing failed', tDownload:'Ticket saved as an image',
- dToday:'Today', boardNoteDay:'Final leaderboard for grid #{n}.', dayPrev:'Previous day', dayNext:'Next day', promptOrtho:'Spelling question: choose your mode', askOrtho:'Which spelling is right?', promptCashOrtho:'Cash: type the exact name, letter by letter', tagOrtho:'Spelling', tagTrap:'Today’s trap', playedN:'{n} days played', sPlayed:'Days played', playedLine:'{n} · best {best}', trainBtn:'Practise in free play', trainNext:'Next grid in {left}. Meanwhile, 20 random products, no effect on your streak.', copyShort:'Copy', share:'Share', shareOther:'Or share elsewhere', shareTip2:'WhatsApp and X open the app or site. “Image”: for your Instagram or TikTok story.', imgShort:'Image', imgTitle:'Image for your story', imgNoteTouch:'Press and hold the image to save it, then add it to your Instagram or TikTok story.', imgNoteDesk:'Download the image, then post it from your phone.', imgShare:'Share the image', imgDownload:'Download the image', endNameNoteDaily:'Optional. Your score is already saved; your name shows it on today’s leaderboard.', dDaily:'Daily', dailyT:'Daily 10', dailyS:'#{n} · 10 products, 2 minutes', dailyDone:'#{n} · done: {pts}/50 · next grid in {left}', dailyResume:'#{n} · resume at question {i}', daysN:'{n}-day streak', daysN1:'1-day streak', freeT:'Free play · 20 products', freeStart:'Start free play', dailyLabel:'Daily 10 #{n}', dailyResult:'CLIKEA daily #{n} · {pts}/{max}', dailyShare:'I scored {pts}/{max} on CLIKEA Daily 10 #{n}. Your turn.', defiDaily:'<b>{name}</b> scored <b>{pts}/50</b> on Daily 10 #{n}. Can you beat it?', rankDaily:'Today: #{rank} of {total}', sDays:'Day streak', tGrid:'Daily grid unavailable, try again in a moment', boardNoteDaily:'Today’s leaderboard, reset at midnight (Paris time).', freeShort:'Free play',
+ dToday:'Today', boardNoteDay:'Final leaderboard for grid #{n}.', dayPrev:'Previous day', dayNext:'Next day', promptOrtho:'Spelling question: choose your mode', askOrtho:'Which spelling is right?', promptCashOrtho:'Cash: type the exact name, letter by letter', tagOrtho:'Spelling', tagTrap:'Today’s trap', playedN:'{n} days played', sPlayed:'Days played', playedLine:'{n} · best {best}', trainBtn:'Practise in free play', trainNext:'Next grid in {left}. Meanwhile, 20 random products, no effect on your streak.', copyShort:'Copy', share:'Share', shareOther:'Or share elsewhere', shareTip2:'WhatsApp and X open the app or site. “Image”: for your Instagram or TikTok story.', imgShort:'Image', imgTitle:'Image for your story', imgNoteTouch:'Press and hold the image to save it, then add it to your Instagram or TikTok story.', imgNoteDesk:'Download the image, then post it from your phone.', imgShare:'Share the image', imgDownload:'Download the image', endNameNoteDaily:'Optional. Your score is already saved; your name shows it on today’s leaderboard.', dArcade:'High score', rareTag:'Rare ×2', veryRareTag:'Very rare ×3', rankArcade:'Your all-time rank: {rank} of {total}', defiArcade:'<b>{name}</b> scored <b>{pts} pts</b> in free play. Can you beat it?', resultArcade:'CLIKEA free play · {pts} pts · {good}/{total} names', shareArcade:'I scored {pts} pts in CLIKEA free play ({good}/{total} names). Beat that?', boardNoteArcade:'All-time best free-play scores. Rare products are worth ×2, very rare ×3 in Cash.', dDaily:'Daily', dailyT:'Daily 10', dailyS:'#{n} · 10 products, 2 minutes', dailyDone:'#{n} · done: {pts}/50 · next grid in {left}', dailyResume:'#{n} · resume at question {i}', daysN:'{n}-day streak', daysN1:'1-day streak', freeT:'Free play · 20 products', freeStart:'Start free play', dailyLabel:'Daily 10 #{n}', dailyResult:'CLIKEA daily #{n} · {pts}/{max}', dailyShare:'I scored {pts}/{max} on CLIKEA Daily 10 #{n}. Your turn.', defiDaily:'<b>{name}</b> scored <b>{pts}/50</b> on Daily 10 #{n}. Can you beat it?', rankDaily:'Today: #{rank} of {total}', sDays:'Day streak', tGrid:'Daily grid unavailable, try again in a moment', boardNoteDaily:'Today’s leaderboard, reset at midnight (Paris time).', freeShort:'Free play',
  f2:'Product photos: ikea.com'
 },
 es:{
@@ -734,7 +724,7 @@ es:{
  endNameNote:'Opcional. Sin nombre, la puntuación no se guarda.',
  tName:'Escribe tu nombre para empezar', tPhoto:'Foto no disponible, pasamos a la siguiente',
  tEmpty:'Escribe un nombre', tCopied:'Puntuación copiada', tCopyFail:'No se pudo compartir', tDownload:'Ticket guardado como imagen',
- dToday:'Hoy', boardNoteDay:'Clasificación final de la rejilla #{n}.', dayPrev:'Día anterior', dayNext:'Día siguiente', promptOrtho:'Pregunta de ortografía: elige tu modo', askOrtho:'¿Cuál es la ortografía correcta?', promptCashOrtho:'Cash: escribe el nombre exacto, letra por letra', tagOrtho:'Ortografía', tagTrap:'Trampa del día', playedN:'{n} días jugados', sPlayed:'Días jugados', playedLine:'{n} · récord {best}', trainBtn:'Entrénate en partida libre', trainNext:'Próxima rejilla en {left}. Mientras tanto, 20 productos al azar, sin efecto en tu racha.', copyShort:'Copiar', share:'Compartir', shareOther:'O compartir en otro sitio', shareTip2:'WhatsApp y X abren la app o la web. «Imagen»: para tu historia de Instagram o TikTok.', imgShort:'Imagen', imgTitle:'Imagen para tu historia', imgNoteTouch:'Mantén pulsada la imagen para guardarla y añádela a tu historia de Instagram o TikTok.', imgNoteDesk:'Descarga la imagen y publícala desde tu móvil.', imgShare:'Compartir la imagen', imgDownload:'Descargar la imagen', endNameNoteDaily:'Opcional. Tu puntuación ya está guardada; tu nombre la muestra en la clasificación del día.', dDaily:'Del día', dailyT:'Los 10 del día', dailyS:'#{n} · 10 productos, 2 minutos', dailyDone:'#{n} · hecho: {pts}/50 · próxima en {left}', dailyResume:'#{n} · seguir en la pregunta {i}', daysN:'{n} días seguidos', daysN1:'1 día', freeT:'Partida libre · 20 productos', freeStart:'Empezar partida libre', dailyLabel:'10 del día #{n}', dailyResult:'CLIKEA del día #{n} · {pts}/{max}', dailyShare:'He hecho {pts}/{max} en los 10 del día de CLIKEA #{n}. Te toca.', defiDaily:'<b>{name}</b> ha hecho <b>{pts}/50</b> en los 10 del día #{n}. ¿Lo superas?', rankDaily:'Hoy: {rank}.º de {total}', sDays:'Días seguidos', tGrid:'Rejilla del día no disponible, inténtalo en un momento', boardNoteDaily:'Clasificación del día, se reinicia a medianoche (hora de París).', freeShort:'Partida libre',
+ dToday:'Hoy', boardNoteDay:'Clasificación final de la rejilla #{n}.', dayPrev:'Día anterior', dayNext:'Día siguiente', promptOrtho:'Pregunta de ortografía: elige tu modo', askOrtho:'¿Cuál es la ortografía correcta?', promptCashOrtho:'Cash: escribe el nombre exacto, letra por letra', tagOrtho:'Ortografía', tagTrap:'Trampa del día', playedN:'{n} días jugados', sPlayed:'Días jugados', playedLine:'{n} · récord {best}', trainBtn:'Entrénate en partida libre', trainNext:'Próxima rejilla en {left}. Mientras tanto, 20 productos al azar, sin efecto en tu racha.', copyShort:'Copiar', share:'Compartir', shareOther:'O compartir en otro sitio', shareTip2:'WhatsApp y X abren la app o la web. «Imagen»: para tu historia de Instagram o TikTok.', imgShort:'Imagen', imgTitle:'Imagen para tu historia', imgNoteTouch:'Mantén pulsada la imagen para guardarla y añádela a tu historia de Instagram o TikTok.', imgNoteDesk:'Descarga la imagen y publícala desde tu móvil.', imgShare:'Compartir la imagen', imgDownload:'Descargar la imagen', endNameNoteDaily:'Opcional. Tu puntuación ya está guardada; tu nombre la muestra en la clasificación del día.', dArcade:'Récord', rareTag:'Raro ×2', veryRareTag:'Muy raro ×3', rankArcade:'Tu puesto histórico: {rank} de {total}', defiArcade:'<b>{name}</b> ha hecho <b>{pts} pts</b> en partida libre. ¿Lo superas?', resultArcade:'CLIKEA partida libre · {pts} pts · {good}/{total} nombres', shareArcade:'He hecho {pts} pts en partida libre de CLIKEA ({good}/{total} nombres). ¿Lo superas?', boardNoteArcade:'Mejores puntuaciones de siempre en partida libre. Los productos raros valen ×2, los muy raros ×3 en Cash.', dDaily:'Del día', dailyT:'Los 10 del día', dailyS:'#{n} · 10 productos, 2 minutos', dailyDone:'#{n} · hecho: {pts}/50 · próxima en {left}', dailyResume:'#{n} · seguir en la pregunta {i}', daysN:'{n} días seguidos', daysN1:'1 día', freeT:'Partida libre · 20 productos', freeStart:'Empezar partida libre', dailyLabel:'10 del día #{n}', dailyResult:'CLIKEA del día #{n} · {pts}/{max}', dailyShare:'He hecho {pts}/{max} en los 10 del día de CLIKEA #{n}. Te toca.', defiDaily:'<b>{name}</b> ha hecho <b>{pts}/50</b> en los 10 del día #{n}. ¿Lo superas?', rankDaily:'Hoy: {rank}.º de {total}', sDays:'Días seguidos', tGrid:'Rejilla del día no disponible, inténtalo en un momento', boardNoteDaily:'Clasificación del día, se reinicia a medianoche (hora de París).', freeShort:'Partida libre',
  f2:'Fotos de producto: ikea.com'
 },
 de:{
@@ -785,7 +775,7 @@ de:{
  endNameNote:'Optional. Ohne Namen wird die Punktzahl nicht gespeichert.',
  tName:'Geben Sie Ihren Namen ein', tPhoto:'Foto nicht verfügbar, weiter zum nächsten',
  tEmpty:'Namen eingeben', tCopied:'Punktzahl kopiert', tCopyFail:'Teilen nicht möglich', tDownload:'Ticket als Bild gespeichert',
- dToday:'Heute', boardNoteDay:'Endstand für Raster #{n}.', dayPrev:'Vorheriger Tag', dayNext:'Nächster Tag', promptOrtho:'Rechtschreibfrage: Modus wählen', askOrtho:'Welche Schreibweise stimmt?', promptCashOrtho:'Cash: genauen Namen tippen, Buchstabe für Buchstabe', tagOrtho:'Schreibweise', tagTrap:'Falle des Tages', playedN:'{n} Tage gespielt', sPlayed:'Tage gespielt', playedLine:'{n} · Rekord {best}', trainBtn:'Im freien Spiel üben', trainNext:'Nächstes Raster in {left}. Bis dahin 20 zufällige Produkte, ohne Einfluss auf deine Serie.', copyShort:'Kopieren', share:'Teilen', shareOther:'Oder woanders teilen', shareTip2:'WhatsApp und X öffnen die App oder Website. „Bild“: für deine Instagram- oder TikTok-Story.', imgShort:'Bild', imgTitle:'Bild für deine Story', imgNoteTouch:'Bild lange drücken, um es zu speichern, dann zur Instagram- oder TikTok-Story hinzufügen.', imgNoteDesk:'Bild herunterladen und vom Handy aus posten.', imgShare:'Bild teilen', imgDownload:'Bild herunterladen', endNameNoteDaily:'Optional. Deine Punktzahl ist gespeichert; mit Namen erscheint sie in der Tagesrangliste.', dDaily:'Des Tages', dailyT:'Die 10 des Tages', dailyS:'#{n} · 10 Produkte, 2 Minuten', dailyDone:'#{n} · gespielt: {pts}/50 · nächstes Raster in {left}', dailyResume:'#{n} · weiter bei Frage {i}', daysN:'{n} Tage in Folge', daysN1:'1 Tag', freeT:'Freies Spiel · 20 Produkte', freeStart:'Freies Spiel starten', dailyLabel:'10 des Tages #{n}', dailyResult:'CLIKEA des Tages #{n} · {pts}/{max}', dailyShare:'Ich habe {pts}/{max} bei den CLIKEA 10 des Tages #{n}. Du bist dran.', defiDaily:'<b>{name}</b> hat <b>{pts}/50</b> bei den 10 des Tages #{n}. Schaffst du mehr?', rankDaily:'Heute: Platz {rank} von {total}', sDays:'Tage in Folge', tGrid:'Tagesraster nicht verfügbar, gleich noch einmal versuchen', boardNoteDaily:'Rangliste des Tages, um Mitternacht zurückgesetzt (Pariser Zeit).', freeShort:'Freies Spiel',
+ dToday:'Heute', boardNoteDay:'Endstand für Raster #{n}.', dayPrev:'Vorheriger Tag', dayNext:'Nächster Tag', promptOrtho:'Rechtschreibfrage: Modus wählen', askOrtho:'Welche Schreibweise stimmt?', promptCashOrtho:'Cash: genauen Namen tippen, Buchstabe für Buchstabe', tagOrtho:'Schreibweise', tagTrap:'Falle des Tages', playedN:'{n} Tage gespielt', sPlayed:'Tage gespielt', playedLine:'{n} · Rekord {best}', trainBtn:'Im freien Spiel üben', trainNext:'Nächstes Raster in {left}. Bis dahin 20 zufällige Produkte, ohne Einfluss auf deine Serie.', copyShort:'Kopieren', share:'Teilen', shareOther:'Oder woanders teilen', shareTip2:'WhatsApp und X öffnen die App oder Website. „Bild“: für deine Instagram- oder TikTok-Story.', imgShort:'Bild', imgTitle:'Bild für deine Story', imgNoteTouch:'Bild lange drücken, um es zu speichern, dann zur Instagram- oder TikTok-Story hinzufügen.', imgNoteDesk:'Bild herunterladen und vom Handy aus posten.', imgShare:'Bild teilen', imgDownload:'Bild herunterladen', endNameNoteDaily:'Optional. Deine Punktzahl ist gespeichert; mit Namen erscheint sie in der Tagesrangliste.', dArcade:'Rekord', rareTag:'Selten ×2', veryRareTag:'Sehr selten ×3', rankArcade:'Dein Rekordplatz: {rank} von {total}', defiArcade:'<b>{name}</b> hat <b>{pts} Pkt.</b> im freien Spiel. Schaffst du mehr?', resultArcade:'CLIKEA freies Spiel · {pts} Pkt. · {good}/{total} Namen', shareArcade:'Ich habe {pts} Pkt. im freien Spiel von CLIKEA ({good}/{total} Namen). Schaffst du mehr?', boardNoteArcade:'Beste Ergebnisse aller Zeiten im freien Spiel. Seltene Produkte zählen ×2, sehr seltene ×3 im Cash.', dDaily:'Des Tages', dailyT:'Die 10 des Tages', dailyS:'#{n} · 10 Produkte, 2 Minuten', dailyDone:'#{n} · gespielt: {pts}/50 · nächstes Raster in {left}', dailyResume:'#{n} · weiter bei Frage {i}', daysN:'{n} Tage in Folge', daysN1:'1 Tag', freeT:'Freies Spiel · 20 Produkte', freeStart:'Freies Spiel starten', dailyLabel:'10 des Tages #{n}', dailyResult:'CLIKEA des Tages #{n} · {pts}/{max}', dailyShare:'Ich habe {pts}/{max} bei den CLIKEA 10 des Tages #{n}. Du bist dran.', defiDaily:'<b>{name}</b> hat <b>{pts}/50</b> bei den 10 des Tages #{n}. Schaffst du mehr?', rankDaily:'Heute: Platz {rank} von {total}', sDays:'Tage in Folge', tGrid:'Tagesraster nicht verfügbar, gleich noch einmal versuchen', boardNoteDaily:'Rangliste des Tages, um Mitternacht zurückgesetzt (Pariser Zeit).', freeShort:'Freies Spiel',
  f2:'Produktfotos: ikea.com'
 },
 it:{
@@ -836,7 +826,7 @@ it:{
  endNameNote:'Facoltativo. Senza nome, il punteggio non viene salvato.',
  tName:'Inserisci il tuo nome per iniziare', tPhoto:'Foto non disponibile, passiamo avanti',
  tEmpty:'Scrivi un nome', tCopied:'Punteggio copiato', tCopyFail:'Condivisione non riuscita', tDownload:'Ticket salvato come immagine',
- dToday:'Oggi', boardNoteDay:'Classifica finale della griglia #{n}.', dayPrev:'Giorno precedente', dayNext:'Giorno successivo', promptOrtho:'Domanda di ortografia: scegli la modalità', askOrtho:'Qual è la grafia giusta?', promptCashOrtho:'Cash: scrivi il nome esatto, lettera per lettera', tagOrtho:'Ortografia', tagTrap:'Trappola del giorno', playedN:'{n} giorni giocati', sPlayed:'Giorni giocati', playedLine:'{n} · record {best}', trainBtn:'Allenati in partita libera', trainNext:'Prossima griglia tra {left}. Nel frattempo, 20 prodotti a caso, senza effetto sulla serie.', copyShort:'Copia', share:'Condividi', shareOther:'O condividi altrove', shareTip2:'WhatsApp e X aprono l’app o il sito. «Immagine»: per la tua storia Instagram o TikTok.', imgShort:'Immagine', imgTitle:'Immagine per la tua storia', imgNoteTouch:'Tieni premuta l’immagine per salvarla, poi aggiungila alla storia Instagram o TikTok.', imgNoteDesk:'Scarica l’immagine e pubblicala dal telefono.', imgShare:'Condividi l’immagine', imgDownload:'Scarica l’immagine', endNameNoteDaily:'Facoltativo. Il punteggio è già salvato; il nome lo mostra nella classifica del giorno.', dDaily:'Del giorno', dailyT:'I 10 del giorno', dailyS:'#{n} · 10 prodotti, 2 minuti', dailyDone:'#{n} · fatto: {pts}/50 · prossima griglia tra {left}', dailyResume:'#{n} · riprendi dalla domanda {i}', daysN:'{n} giorni di fila', daysN1:'1 giorno', freeT:'Partita libera · 20 prodotti', freeStart:'Avvia partita libera', dailyLabel:'10 del giorno #{n}', dailyResult:'CLIKEA del giorno #{n} · {pts}/{max}', dailyShare:'Ho fatto {pts}/{max} ai 10 del giorno CLIKEA #{n}. Tocca a te.', defiDaily:'<b>{name}</b> ha fatto <b>{pts}/50</b> ai 10 del giorno #{n}. Fai meglio?', rankDaily:'Oggi: {rank}° su {total}', sDays:'Giorni di fila', tGrid:'Griglia del giorno non disponibile, riprova tra poco', boardNoteDaily:'Classifica del giorno, azzerata a mezzanotte (ora di Parigi).', freeShort:'Partita libera',
+ dToday:'Oggi', boardNoteDay:'Classifica finale della griglia #{n}.', dayPrev:'Giorno precedente', dayNext:'Giorno successivo', promptOrtho:'Domanda di ortografia: scegli la modalità', askOrtho:'Qual è la grafia giusta?', promptCashOrtho:'Cash: scrivi il nome esatto, lettera per lettera', tagOrtho:'Ortografia', tagTrap:'Trappola del giorno', playedN:'{n} giorni giocati', sPlayed:'Giorni giocati', playedLine:'{n} · record {best}', trainBtn:'Allenati in partita libera', trainNext:'Prossima griglia tra {left}. Nel frattempo, 20 prodotti a caso, senza effetto sulla serie.', copyShort:'Copia', share:'Condividi', shareOther:'O condividi altrove', shareTip2:'WhatsApp e X aprono l’app o il sito. «Immagine»: per la tua storia Instagram o TikTok.', imgShort:'Immagine', imgTitle:'Immagine per la tua storia', imgNoteTouch:'Tieni premuta l’immagine per salvarla, poi aggiungila alla storia Instagram o TikTok.', imgNoteDesk:'Scarica l’immagine e pubblicala dal telefono.', imgShare:'Condividi l’immagine', imgDownload:'Scarica l’immagine', endNameNoteDaily:'Facoltativo. Il punteggio è già salvato; il nome lo mostra nella classifica del giorno.', dArcade:'Record', rareTag:'Raro ×2', veryRareTag:'Rarissimo ×3', rankArcade:'Il tuo posto nel record: {rank} su {total}', defiArcade:'<b>{name}</b> ha fatto <b>{pts} pt</b> in partita libera. Fai meglio?', resultArcade:'CLIKEA partita libera · {pts} pt · {good}/{total} nomi', shareArcade:'Ho fatto {pts} pt in partita libera CLIKEA ({good}/{total} nomi). Mi batti?', boardNoteArcade:'Migliori punteggi di sempre in partita libera. I prodotti rari valgono ×2, i rarissimi ×3 in Cash.', dDaily:'Del giorno', dailyT:'I 10 del giorno', dailyS:'#{n} · 10 prodotti, 2 minuti', dailyDone:'#{n} · fatto: {pts}/50 · prossima griglia tra {left}', dailyResume:'#{n} · riprendi dalla domanda {i}', daysN:'{n} giorni di fila', daysN1:'1 giorno', freeT:'Partita libera · 20 prodotti', freeStart:'Avvia partita libera', dailyLabel:'10 del giorno #{n}', dailyResult:'CLIKEA del giorno #{n} · {pts}/{max}', dailyShare:'Ho fatto {pts}/{max} ai 10 del giorno CLIKEA #{n}. Tocca a te.', defiDaily:'<b>{name}</b> ha fatto <b>{pts}/50</b> ai 10 del giorno #{n}. Fai meglio?', rankDaily:'Oggi: {rank}° su {total}', sDays:'Giorni di fila', tGrid:'Griglia del giorno non disponibile, riprova tra poco', boardNoteDaily:'Classifica del giorno, azzerata a mezzanotte (ora di Parigi).', freeShort:'Partita libera',
  f2:'Foto prodotto: ikea.com'
 },
 ko:{
@@ -887,7 +877,7 @@ ko:{
  endNameNote:'선택 사항. 이름이 없으면 점수가 저장되지 않아요.',
  tName:'시작하려면 이름을 입력하세요', tPhoto:'사진을 불러올 수 없어 다음으로 넘어가요',
  tEmpty:'이름을 입력하세요', tCopied:'점수를 복사했어요', tCopyFail:'공유할 수 없어요', tDownload:'영수증 이미지를 저장했어요',
- dToday:'오늘', boardNoteDay:'#{n} 그리드 최종 순위.', dayPrev:'이전 날', dayNext:'다음 날', promptOrtho:'철자 문제: 모드를 고르세요', askOrtho:'올바른 철자는?', promptCashOrtho:'캐시: 정확한 이름을 한 글자씩 입력하세요', tagOrtho:'철자', tagTrap:'오늘의 함정', playedN:'{n}일 플레이', sPlayed:'플레이한 날', playedLine:'{n} · 최고 {best}', trainBtn:'자유 게임으로 연습하기', trainNext:'다음 그리드까지 {left}. 그동안 무작위 제품 20개로 연습하세요. 연속 기록에는 영향이 없어요.', copyShort:'복사', share:'공유하기', shareOther:'다른 곳에 공유', shareTip2:'WhatsApp과 X는 앱이나 웹사이트를 열어요. « 이미지 »: 인스타그램·틱톡 스토리용.', imgShort:'이미지', imgTitle:'스토리용 이미지', imgNoteTouch:'이미지를 길게 눌러 저장한 다음 인스타그램이나 틱톡 스토리에 올리세요.', imgNoteDesk:'이미지를 다운로드한 뒤 휴대폰에서 올리세요.', imgShare:'이미지 공유', imgDownload:'이미지 다운로드', endNameNoteDaily:'선택 사항. 점수는 이미 저장됐어요. 이름을 넣으면 오늘의 순위에 표시돼요.', dDaily:'오늘의', dailyT:'오늘의 10', dailyS:'#{n} · 제품 10개, 2분', dailyDone:'#{n} · 완료: {pts}/50 · 다음 그리드까지 {left}', dailyResume:'#{n} · {i}번 문제부터 이어서', daysN:'{n}일 연속', daysN1:'1일', freeT:'자유 게임 · 제품 20개', freeStart:'자유 게임 시작', dailyLabel:'오늘의 10 #{n}', dailyResult:'CLIKEA 오늘의 10 #{n} · {pts}/{max}', dailyShare:'CLIKEA 오늘의 10 #{n}에서 {pts}/{max}점. 네 차례야.', defiDaily:'<b>{name}</b>님이 오늘의 10 #{n}에서 <b>{pts}/50</b>점을 받았어요. 더 잘할 수 있어요?', rankDaily:'오늘 순위: {total}명 중 {rank}위', sDays:'연속 일수', tGrid:'오늘의 그리드를 불러올 수 없어요. 잠시 후 다시 시도하세요', boardNoteDaily:'오늘의 순위, 파리 시간 자정에 초기화돼요.', freeShort:'자유 게임',
+ dToday:'오늘', boardNoteDay:'#{n} 그리드 최종 순위.', dayPrev:'이전 날', dayNext:'다음 날', promptOrtho:'철자 문제: 모드를 고르세요', askOrtho:'올바른 철자는?', promptCashOrtho:'캐시: 정확한 이름을 한 글자씩 입력하세요', tagOrtho:'철자', tagTrap:'오늘의 함정', playedN:'{n}일 플레이', sPlayed:'플레이한 날', playedLine:'{n} · 최고 {best}', trainBtn:'자유 게임으로 연습하기', trainNext:'다음 그리드까지 {left}. 그동안 무작위 제품 20개로 연습하세요. 연속 기록에는 영향이 없어요.', copyShort:'복사', share:'공유하기', shareOther:'다른 곳에 공유', shareTip2:'WhatsApp과 X는 앱이나 웹사이트를 열어요. « 이미지 »: 인스타그램·틱톡 스토리용.', imgShort:'이미지', imgTitle:'스토리용 이미지', imgNoteTouch:'이미지를 길게 눌러 저장한 다음 인스타그램이나 틱톡 스토리에 올리세요.', imgNoteDesk:'이미지를 다운로드한 뒤 휴대폰에서 올리세요.', imgShare:'이미지 공유', imgDownload:'이미지 다운로드', endNameNoteDaily:'선택 사항. 점수는 이미 저장됐어요. 이름을 넣으면 오늘의 순위에 표시돼요.', dArcade:'최고 기록', rareTag:'희귀 ×2', veryRareTag:'매우 희귀 ×3', rankArcade:'역대 순위: {total}명 중 {rank}위', defiArcade:'<b>{name}</b>님이 자유 게임에서 <b>{pts}점</b>을 받았어요. 더 잘할 수 있어요?', resultArcade:'CLIKEA 자유 게임 · {pts}점 · {good}/{total}개', shareArcade:'CLIKEA 자유 게임에서 {pts}점 ({good}/{total}개). 이길 수 있어?', boardNoteArcade:'자유 게임 역대 최고 점수. 캐시에서 희귀 제품은 ×2, 매우 희귀 제품은 ×3.', dDaily:'오늘의', dailyT:'오늘의 10', dailyS:'#{n} · 제품 10개, 2분', dailyDone:'#{n} · 완료: {pts}/50 · 다음 그리드까지 {left}', dailyResume:'#{n} · {i}번 문제부터 이어서', daysN:'{n}일 연속', daysN1:'1일', freeT:'자유 게임 · 제품 20개', freeStart:'자유 게임 시작', dailyLabel:'오늘의 10 #{n}', dailyResult:'CLIKEA 오늘의 10 #{n} · {pts}/{max}', dailyShare:'CLIKEA 오늘의 10 #{n}에서 {pts}/{max}점. 네 차례야.', defiDaily:'<b>{name}</b>님이 오늘의 10 #{n}에서 <b>{pts}/50</b>점을 받았어요. 더 잘할 수 있어요?', rankDaily:'오늘 순위: {total}명 중 {rank}위', sDays:'연속 일수', tGrid:'오늘의 그리드를 불러올 수 없어요. 잠시 후 다시 시도하세요', boardNoteDaily:'오늘의 순위, 파리 시간 자정에 초기화돼요.', freeShort:'자유 게임',
  f2:'제품 사진: ikea.com'
 }
 };
@@ -943,7 +933,7 @@ function applyLang(next, opts){
   set('#m1t', L.m1); set('#m1s', L.m1s);
   set('#m2t', L.m2); set('#m2s', L.m2s);
   set('#m3t', L.m3); set('#m3s', L.m3s);
-  set('#m1p', L.p1); set('#m2p', L.p3); set('#m3p', L.p5);
+  setModePoints();
   const cashInput = document.querySelector('#cashInput');
   if(cashInput) cashInput.placeholder = L.cashPh;
   set('#cashBtn', L.cashOk);
@@ -956,8 +946,6 @@ function applyLang(next, opts){
   set('#endNameLabel', L.endNameLabel); set('#endNameBtn', L.endNameBtn); set('#endNameNote', L.endNameNote);
   const endNameInput = document.querySelector('#endName'); if(endNameInput) endNameInput.placeholder = L.endNamePh;
   set('#f2', L.f2);
-  set('#d1t', L.dEasy); set('#d1s', L.dEasyS.replace('{n}', poolIndexes('easy').length));
-  set('#d3t', L.dHard); set('#d3s', L.dHardS.replace('{n}', poolIndexes('hard').length));
   set('#boardOpen', L.boardOpen); set('#boardTitle', L.boardTitle);
   set('#rankTitle', L.boardTitle); set('#rankSub', diffLabel(state.boardDiff));
   const U = UI[lang] || UI.fr;
@@ -965,7 +953,7 @@ function applyLang(next, opts){
   set('#boardFromEnd', U.boardLink); set('#shareImageNote', isTouch() ? L.imgNoteTouch : L.imgNoteDesk); set('#shareNative', isTouch() && canShareFiles() ? L.imgShare : L.imgDownload); set('#shareClose', U.close); set('#sheetTitle', L.imgTitle);
   set('#boardPlay', L.boardPlay); set('#boardBack', L.boardBack);
   set('#rcDiffL', L.rcDiff);
-  set('#freeToggle', L.freeT); set('#startBtn', L.freeStart);
+  set('#startBtn', L.freeT);
   if(state.kind !== 'free') set('#rcStreakL', L.sDays);
   set('#trainBtn', L.trainBtn);
   renderTargets();
@@ -1017,7 +1005,7 @@ const state = {
   skipped: 0,
   last: null,
   timedOut: false,
-  difficulty: 'easy',
+  difficulty: 'arcade',
   submitted: false,
   submitOk: null,
   rank: null,
@@ -1073,7 +1061,7 @@ function untilMidnight(){
     const s = parseInt(q.get('defi'), 10);
     const jour = q.get('jour') || '';
     const day = /^\d{4}-\d{2}-\d{2}$/.test(jour) && jour >= DAILY_EPOCH && jour <= parisDay() ? jour : null;
-    if(!isNaN(s) && s >= 0 && s <= (day ? DAILY_MAX : MAX_PTS)){
+    if(!isNaN(s) && s >= 0 && s <= (day ? DAILY_MAX : 2000)){
       const name = (q.get('par') || '').trim().slice(0, 24);
       state.challenge = {score: s, name: name, day: day};
     }
@@ -1106,8 +1094,34 @@ function setBeat(){
   b.textContent = s; b.hidden = !s;
   if($('#end').classList.contains('on')) prepareShareImage();
 }
-function maxPts(){ return state.queue.length * MODES.cash.pts; }
-function gameLabel(){ return state.kind === 'free' ? diffLabel(state.difficulty) : t('dailyLabel', {n: dayNo(state.day)}); }
+// Rareté (partie libre) : chance qu'un joueur moyen trouve le produit en Cash, mesurée chaque nuit.
+// 0 = commun, 1 = rare, 2 = très rare. Les questions d'orthographe et le 10 du jour n'ont pas de multiplicateur.
+function rarityOf(p){
+  const pc = 1 / (1 + Math.exp(-(SETTINGS.ref_theta - p.d)));
+  return pc >= SETTINGS.rare_common ? 0 : pc >= SETTINGS.rare_rare ? 1 : 2;
+}
+function rarityActive(){ return state.kind === 'free' && !isOrtho(); }
+function gainFor(p, mode){
+  const base = MODES[mode].pts;
+  if(state.kind !== 'free' || isOrtho() || mode === 'duo') return base;
+  const r = rarityOf(p);
+  if(r === 0) return base;
+  if(mode === 'cash') return r === 1 ? SETTINGS.pts_cash_rare : SETTINGS.pts_cash_very;
+  return r === 1 ? SETTINGS.pts_carre_rare : SETTINGS.pts_carre_very;
+}
+function ptsChip(n){ return n > 1 ? t('metaScoreMany', {n: n}) : t('metaScore', {n: n}); }
+function setModePoints(){
+  const inGame = state.queue.length && $('#game').classList.contains('on') && state.i < state.queue.length && state.queue[state.i] >= 0;
+  const p = inGame ? current() : null;
+  $('#m1p').textContent = p ? ptsChip(gainFor(p, 'duo')) : t('p1');
+  $('#m2p').textContent = p ? ptsChip(gainFor(p, 'carre')) : t('p3');
+  $('#m3p').textContent = p ? ptsChip(gainFor(p, 'cash')) : t('p5');
+}
+function maxPts(){
+  if(state.kind === 'free') return state.queue.reduce((a, q) => a + (q >= 0 ? gainFor(PRODUCTS[q], 'cash') : 5), 0);
+  return state.queue.length * MODES.cash.pts;
+}
+function gameLabel(){ return state.kind === 'free' ? t('freeShort') : t('dailyLabel', {n: dayNo(state.day)}); }
 function typeOf(p){
   const v = p && p.t;
   if(!v) return '';
@@ -1120,7 +1134,7 @@ const MODEKEY = { duo:'m1', carre:'m2', cash:'m3' };
 // Partie libre : « faciles » = cultes + les 40 % de gammes les mieux trouvées (note d, plus bas = plus facile).
 const EASY_SHARE = 0.4;
 
-const DIFFKEY = { daily:'dDaily', easy:'dEasy', hard:'dHard' };
+const DIFFKEY = { daily:'dDaily', arcade:'dArcade', easy:'dEasy', hard:'dHard' };
 function diffLabel(d){ return t(DIFFKEY[d] || 'dEasy'); }
 
 const DIFFS = {
@@ -1177,7 +1191,8 @@ function track(event, props){
 const API_URL = 'https://vubopkycvzzqufpqxpbg.supabase.co/rest/v1/clikea_scores';
 const API_KEY = 'sb_publishable_WMYqRdE6kUMQNZJu6Jyrkw_WclrsN7Q';
 
-function boardMax(diff){ return diff === 'daily' ? DAILY_MAX : MAX_PTS; }
+function boardMax(diff){ return diff === 'daily' ? DAILY_MAX : null; }
+function boardScore(r, diff){ const m = boardMax(diff); return r.score + (m ? '<i>/' + m + '</i>' : '<i> pts</i>'); }
 function boardDayValue(){ return state.boardDay || parisDay(); }
 function clampDay(day){ const today = parisDay(); return day < DAILY_EPOCH ? DAILY_EPOCH : (day > today ? today : day); }
 function shiftBoardDay(n){
@@ -1261,7 +1276,8 @@ function setSubmitLine(){
     el.textContent = t('rankDaily', {rank: rankLabel(state.rank), total: state.rankTotal});
     el.hidden = false;
   } else if(state.rank && state.submitOk){
-    el.textContent = t('rankLine', {rank: rankLabel(state.rank), diff: diffLabel(state.difficulty)});
+    el.textContent = state.rankTotal ? t('rankArcade', {rank: rankLabel(state.rank), total: state.rankTotal})
+      : t('rankLine', {rank: rankLabel(state.rank), diff: diffLabel(state.difficulty)});
     el.hidden = false;
   } else if(state.submitOk){
     el.textContent = t('savedLine');
@@ -1273,7 +1289,7 @@ function setSubmitLine(){
 async function openBoard(diff, back){
   state.boardBack = back || 'intro';
   state.boardDay = null;
-  state.boardDiff = diff || state.difficulty || 'easy';
+  state.boardDiff = diff || 'daily';
   show('board');
   renderBoardTabs();
   await loadBoard();
@@ -1317,10 +1333,10 @@ async function loadBoard(){
     return '<div class="row' + (mine ? ' me' : '') + '">'
       + '<span class="pos">' + (i + 1) + '</span>'
       + '<span class="nm">' + escapeHtml(r.name) + '</span>'
-      + '<span class="sc">' + r.score + '<i>/' + boardMax(state.boardDiff) + '</i></span>'
+      + '<span class="sc">' + boardScore(r, state.boardDiff) + '</span>'
       + '</div>';
   }).join('');
-  $('#boardNote').textContent = state.boardDiff !== 'daily' ? t('boardNote')
+  $('#boardNote').textContent = state.boardDiff !== 'daily' ? t('boardNoteArcade')
     : boardDayValue() === parisDay() ? t('boardNoteDaily') : t('boardNoteDay', {n: dayNo(boardDayValue())});
   renderRankPreview(data);
 }
@@ -1331,7 +1347,7 @@ function renderRankPreview(data){
   const me = (state.player || '').trim().toLowerCase();
   box.innerHTML = data.slice(0,5).map((r,i)=>{
     const mine = me && r.name.trim().toLowerCase() === me;
-    return '<div class="row'+(mine?' me':'')+'"><span class="pos">'+(i+1)+'</span><span class="nm">'+escapeHtml(r.name)+'</span><span class="sc">'+r.score+'<i>/'+boardMax(state.boardDiff)+'</i></span></div>';
+    return '<div class="row'+(mine?' me':'')+'"><span class="pos">'+(i+1)+'</span><span class="nm">'+escapeHtml(r.name)+'</span><span class="sc">'+boardScore(r, state.boardDiff)+'</span></div>';
   }).join('');
 }
 function escapeHtml(s){
@@ -1444,7 +1460,8 @@ function freeSlots(queue){
   return queue.map((q, i) => ({f: PRODUCTS[q].n, role: null, diff: null, fmt: ortho.has(i) ? 'ortho' : 'photo'}));
 }
 // Valeurs de repli si la base ne répond pas ; les vraies valeurs viennent de clikea_settings.
-const SETTINGS = {free_conf_min: 0.85, free_zone_min: 0.5, free_share_conf: 0.25, free_share_defi: 0.15, free_explore: 0.1,
+const SETTINGS = {rare_common: 0.6, rare_rare: 0.3, pts_carre_rare: 4, pts_carre_very: 6, pts_cash_rare: 10, pts_cash_very: 15,
+  free_conf_min: 0.85, free_zone_min: 0.5, free_share_conf: 0.25, free_share_defi: 0.15, free_explore: 0.1,
   free_session_step: 0.15, free_repeat_days: 3, calibrated_min: 8, ref_theta: 0};
 async function loadCalibration(){
   try{
@@ -1508,7 +1525,7 @@ function levelUpdate(p, ok, mode, ortho){
 function adaptiveQueue(size){
   const S = SETTINGS, lv = levelStore(), mem = lv.mem || {}, seen = lv.seen || {}, now = Date.now();
   const sessions = (lv.sess || []).length - 1;
-  const t = lv.t + Math.max(0, sessions) * S.free_session_step + (state.difficulty === 'hard' ? 0.8 : 0);
+  const t = lv.t + Math.max(0, sessions) * S.free_session_step;
   const recent = now - S.free_repeat_days * 86400000;
   const pc = i => chanceOf(t, PRODUCTS[i].d, 0.25);
   const inPool = i => !!PRODUCTS[i].k || (PRODUCTS[i].r || 0) > 0;
@@ -1689,7 +1706,8 @@ function isOrtho(){ const sl = slot(); return !!(sl && sl.fmt === 'ortho' && (cu
 function hardSlot(){
   const sl = slot();
   if(sl && sl.diff) return sl.diff === 'dur' || sl.diff === 'piege';
-  return state.kind === 'free' && state.difficulty === 'hard';
+  if(state.kind === 'free') return rarityOf(current()) >= 1;
+  return false;
 }
 // Faux noms : même famille visuelle pour les produits durs (piégeux), autres familles pour les faciles.
 function distractors(p, k, hard){
@@ -1739,8 +1757,11 @@ function render(){
     $('#modes').hidden = false;
   }
   const sl = slot();
-  $('#photoTag').textContent = isOrtho() ? t('tagOrtho') : (sl && sl.diff === 'piege' ? t('tagTrap') : t('photoTag'));
-  $('#photoTag').classList.toggle('hot', isOrtho() || !!(sl && sl.diff === 'piege'));
+  const rar = rarityActive() ? rarityOf(current()) : 0;
+  $('#photoTag').textContent = isOrtho() ? t('tagOrtho') : (sl && sl.diff === 'piege' ? t('tagTrap')
+    : rar === 2 ? t('veryRareTag') : rar === 1 ? t('rareTag') : t('photoTag'));
+  $('#photoTag').classList.toggle('hot', isOrtho() || rar > 0 || !!(sl && sl.diff === 'piege'));
+  setModePoints();
 
   const photo = $('#photo');
   photo.classList.remove('is-correct','is-wrong');
@@ -1825,7 +1846,7 @@ function resolve(ok, pick){
   stopClock();
 
   const p = current();
-  const gain = MODES[state.mode].pts;
+  const gain = gainFor(current(), state.mode);
   state.answered++;
 
   const _card=document.querySelector('.card'); if(_card) _card.classList.add('answered');
@@ -1888,7 +1909,8 @@ function renderFeedback(){
   fb.className = 'feedback on';
   fb.innerHTML =
     '<div class="verdict ' + (ok?'ok':'ko') + '">' + label +
-      '<span class="gain">' + (ok ? ptsLabel(gain) : t('gainNone')) + ' · ' + t(MODEKEY[state.mode] || 'm1') + '</span></div>' +
+      '<span class="gain">' + (ok ? ptsLabel(gain) : t('gainNone')) + ' · ' + t(MODEKEY[state.mode] || 'm1')
+        + (gain > MODES[state.mode].pts ? ' · ×' + (Math.round(gain / MODES[state.mode].pts * 10) / 10).toString().replace('.', ',') : '') + '</span></div>' +
     '<div class="name">' + p.n + '</div>' +
     '<div class="spec">' +
       '<div><span>' + t('spType') + '</span><b>' + typeOf(p) + '</b></div>' +
@@ -1932,12 +1954,12 @@ function updateBest(){
   if(state.kind !== 'free'){
     const all = dailyStore();
     best = Math.max(state.pts, ...Object.keys(all).map(d => all[d].done ? all[d].pts : 0));
-  } else if(state.player){
-    const bestKey = 'clikea-best:' + norm(state.player);
+  } else {
+    const bestKey = 'clikea-best-arcade';
     try{ best = Number(localStorage.getItem(bestKey) || 0); }catch(e){}
     if(state.pts > best){ best = state.pts; try{ localStorage.setItem(bestKey, String(best)); }catch(e){} }
   }
-  setTxt('#rcBest', best + '/' + maxPts());
+  setTxt('#rcBest', best + ' pts');
 }
 function renderDefi(){
   const el = $('#defiBanner'); if(!el) return;
@@ -1945,7 +1967,7 @@ function renderDefi(){
   const name = state.challenge.name || t('defiAnon');
   el.innerHTML = state.challenge.day
     ? t('defiDaily', {name: esc(name), pts: state.challenge.score, n: dayNo(state.challenge.day)})
-    : t('defiBanner', {name: esc(name), pts: state.challenge.score, max: MAX_PTS});
+    : t('defiArcade', {name: esc(name), pts: state.challenge.score});
   el.hidden = false;
 }
 function submitEndName(){
@@ -1973,7 +1995,8 @@ function finish(reopen){
   state.secsSaved = secs;
   const mm = Math.floor(secs/60), ss = secs%60;
   const max = maxPts();
-  const pct = Math.round(state.pts / max * 100);
+  // Partie libre : sans plafond, le verdict se lit sur les produits trouvés.
+  const pct = state.kind === 'free' ? Math.round(state.good / Math.max(1, total) * 100) : Math.round(state.pts / max * 100);
   const perfect = state.pts >= max;
   const dateStr = new Date().toLocaleDateString(LOCALES[lang],{day:'2-digit',month:'2-digit',year:'numeric'});
 
@@ -1983,7 +2006,7 @@ function finish(reopen){
   if(state.kind === 'daily' && !reopen) dailyProgress({i: total, pending: null, done: true, secs: secs});
   const daily = state.kind !== 'free';
   setTxt('#rcNum', state.pts);
-  setTxt('#rcDen', '/' + max);
+  setTxt('#rcDen', state.kind === 'free' ? ' pts' : '/' + max);
   setTxt('#rcGood', state.good);
   setTxt('#rcStreak', state.kind === 'daily' ? dayStreak(dailyStore(), state.day) : state.bestStreak);
   setTxt('#rcStreakL', daily ? t('sDays') : t('sStreak'));
@@ -2036,7 +2059,7 @@ function finish(reopen){
   }
   state.share = daily
     ? t('dailyShare', {pts: state.pts, max: max, n: dayNo(state.day)})
-    : t('shareText', {pts: state.pts, max: max, good: state.good, total: total});
+    : t('shareArcade', {pts: state.pts, good: state.good, total: total});
   prepareShareImage();
   show('end');
   refreshShareLinks();
@@ -2048,18 +2071,9 @@ document.querySelectorAll('.mode').forEach(b => {
   b.addEventListener('click', () => chooseMode(b.dataset.mode));
 });
 $('#startBtn').addEventListener('click', startGame);
-$('#replayBtn').addEventListener('click', () => {
-  if(state.kind === 'free'){ startGame(); return; }
-  show('intro'); renderDailyEntry();
-  const fp = $('#freePanel'); if(fp){ fp.hidden = false; $('#freeToggle').setAttribute('aria-expanded', 'true'); }
-});
+$('#replayBtn').addEventListener('click', startGame);
 $('#dailyBtn').addEventListener('click', playDaily);
 $('#trainBtn').addEventListener('click', () => { track('clikea_train_started', {from: state.kind}); startGame(); });
-$('#freeToggle').addEventListener('click', () => {
-  const fp = $('#freePanel'); fp.hidden = !fp.hidden;
-  $('#freeToggle').setAttribute('aria-expanded', fp.hidden ? 'false' : 'true');
-  if(!fp.hidden) track('clikea_free_opened', {});
-});
 setInterval(() => { if($('#intro').classList.contains('on')) renderDailyEntry(); }, 30000);
 $('#endNameBtn').addEventListener('click', submitEndName);
 $('#endName').addEventListener('keydown', (e) => { if(e.key === 'Enter'){ e.preventDefault(); submitEndName(); } });
@@ -2067,22 +2081,9 @@ $('#cashBtn').addEventListener('click', submitCash);
 $('#cashInput').addEventListener('keydown', (e) => {
   if(e.key === 'Enter'){ e.preventDefault(); submitCash(); }
 });
-document.querySelectorAll('#diffs .diff').forEach(b => {
-  b.addEventListener('click', () => {
-    state.difficulty = b.dataset.diff;
-    document.querySelectorAll('#diffs .diff').forEach(x => {
-      const on = x.dataset.diff === state.difficulty;
-      x.classList.toggle('on', on);
-      x.setAttribute('aria-checked', on ? 'true' : 'false');
-    });
-    const rs = $('#rankSub'); if(rs) rs.textContent = diffLabel(state.difficulty);
-    state.boardDiff = state.difficulty;
-    track('clikea_difficulty_selected', {difficulty: state.difficulty});
-    loadBoard();
-  });
-});
+
 $('#boardOpen').addEventListener('click', () => openBoard(state.boardDiff, 'intro'));
-$('#boardFromEnd').addEventListener('click', () => openBoard(state.kind === 'free' ? state.difficulty : 'daily', 'end'));
+$('#boardFromEnd').addEventListener('click', () => openBoard(state.kind === 'free' ? 'arcade' : 'daily', 'end'));
 $('#boardBack').addEventListener('click', () => { leaveBoard(); show(state.boardBack); });
 $('#dayPrev').addEventListener('click', () => shiftBoardDay(-1));
 $('#dayNext').addEventListener('click', () => shiftBoardDay(1));
@@ -2196,7 +2197,7 @@ function drawTrophy(){
   }
 
   // score géant
-  const den = '/' + maxPts();
+  const den = state.kind === 'free' ? ' pts' : '/' + maxPts();
   x.font = font(52, '800');
   const denW = x.measureText(den).width;
   x.font = font(196, '900');
@@ -2396,7 +2397,7 @@ function resultText(source){
     const mile = MILESTONES.indexOf(days) > -1 ? ' 🏅' : '';
     return head + '\n' + grid + (days ? '\n🔥 ' + t(days === 1 ? 'daysN1' : 'daysN', {n: days}) + mile : '') + '\n' + shareUrl(source || 'copy');
   }
-  const head = t('resultText', {pts: state.pts, max: maxPts(), good: state.good, total: state.queue.length, streak: state.bestStreak});
+  const head = t('resultArcade', {pts: state.pts, good: state.good, total: state.queue.length});
   return head + (grid ? '\n' + grid : '') + '\n' + shareUrl(source || 'copy');
 }
 function fallbackCopy(text, done){
@@ -2658,9 +2659,10 @@ if(location.search.includes('selftest')){
       const mode = cycle[step%3];
       const right = step%2===0;
       ok(document.querySelectorAll('.mode').length===3,'Q'+step+' trois modes');
-      ok(document.querySelector('#m1p').textContent==='1 pt','pastille duo 1 pt');
-      ok(document.querySelector('#m2p').textContent=='3 pts','pastille carré 3 pts');
-      ok(document.querySelector('#m3p').textContent=='5 pts','pastille cash 5 pts');
+      ok(document.querySelector('#m1p').textContent===ptsChip(gainFor(p,'duo')),'pastille duo');
+      ok(document.querySelector('#m2p').textContent===ptsChip(gainFor(p,'carre')),'pastille carré');
+      ok(document.querySelector('#m3p').textContent===ptsChip(gainFor(p,'cash')),'pastille cash = gain réel ('+document.querySelector('#m3p').textContent+')');
+      const gainHere = gainFor(p, mode);
       ok(document.querySelector('#modes').hidden===false,'Q'+step+' modes visibles');
       document.querySelector('.mode[data-mode="'+mode+'"]').click();
       ok(state.mode===mode,'Q'+step+' mode choisi');
@@ -2680,7 +2682,7 @@ if(location.search.includes('selftest')){
         const target = right ? btns.find(b=>b.dataset.name===p.n) : btns.find(b=>b.dataset.name!==p.n);
         target.click();
       }
-      if(right) expected += MODES[mode].pts;
+      if(right) expected += gainHere;
       ok(state.locked===true,'Q'+step+' verrouillé');
       ok(document.querySelector('#photo').classList.contains(right?'is-correct':'is-wrong'),'Q'+step+' photo entourée');
       ok(state.pts===expected,'Q'+step+' points '+state.pts+'/'+expected);
@@ -2712,28 +2714,24 @@ if(location.search.includes('selftest')){
     ok(document.querySelector('#receipt').offsetHeight > 200,'ticket visible par défaut (' + document.querySelector('#receipt').offsetHeight + 'px)');
     ok(!!document.querySelector('#feedback .name'),'fiche produit : nom révélé');
     ok((document.querySelector('#feedback .spec')||{textContent:''}).textContent.length>2,'fiche produit : type et prix');
-    ok(Object.keys(DIFFS).length===2,'deux niveaux');
-    ok(poolIndexes('easy').length>=40 && poolIndexes('easy').length<PRODUCTS.length,'pool facile restreint ('+poolIndexes('easy').length+')');
-    ok(poolIndexes('hard').length>=20,'pool difficile >= 20 ('+poolIndexes('hard').length+')');
-    ok(poolIndexes('easy').length + poolIndexes('hard').length === PRODUCTS.filter(p=>!p.x).length,'les deux niveaux couvrent tout le catalogue tirable');
-    ok(PRODUCTS.filter(p=>p.x).every(p=>poolIndexes('easy').concat(poolIndexes('hard')).indexOf(PRODUCTS.indexOf(p))===-1),'produits hors tirage jamais tirés');
-    ok(poolIndexes('easy').every(i => poolIndexes('hard').indexOf(i) === -1),'aucun produit dans les deux tiers');
-    ok(poolIndexes('hard').indexOf(PRODUCTS.findIndex(p=>p.n==='BILLY')) === -1,'BILLY reste en facile');
-    ok(PRODUCTS.filter(p=>p.k).every(p=>poolIndexes('easy').indexOf(PRODUCTS.indexOf(p))>-1),'les cultes sont toujours en facile');
     ok(PRODUCTS.filter(p=>p.k).length>=30,'au moins 30 cultes ('+PRODUCTS.filter(p=>p.k).length+')');
     ok(PRODUCTS.every(p=>typeof p.d==='number'&&p.v&&Array.isArray(p.o)),'difficulté, famille visuelle, orthographes');
-    ok(document.querySelectorAll('#diffs .diff').length===2,'sélecteur de niveau');
-    state.difficulty = 'hard';
-    document.querySelector('#playerName').value = 'Testeur';
-    startGame();
-    ok(document.querySelector('#modes').hidden===false,'modes visibles en difficile');
-    ok(state.mode===null,'aucun mode imposé en difficile');
-    ok(document.querySelector('#cashBox').hidden===true,'champ cash masqué avant le choix');
-    ok(state.queue.length===20,'20 produits en difficile');
-    document.querySelector('.mode[data-mode="carre"]').click();
-    ok(document.querySelectorAll('.choice').length===4,'carré proposé en difficile');
-    state.difficulty = 'easy';
-    ok(document.querySelectorAll('#boardTabs .tab').length===3,'onglets du classement (jour, faciles, difficiles)');
+    // --- record d'arcade : rareté et multiplicateurs (partie libre seulement) ---
+    ok(!document.querySelector('#diffs') && !document.querySelector('#freePanel'),'plus de choix facile / difficile');
+    const savedKind = state.kind, savedSlots = state.slots;
+    state.kind = 'free'; state.slots = null;
+    const pCommon = PRODUCTS.find(p => !p.x && rarityOf(p) === 0), pRare = PRODUCTS.find(p => !p.x && rarityOf(p) === 1), pVery = PRODUCTS.find(p => !p.x && rarityOf(p) === 2);
+    ok(pCommon && pRare && pVery,'trois niveaux de rareté présents');
+    ok(gainFor(pCommon,'cash') === 5 && gainFor(pRare,'cash') === 10 && gainFor(pVery,'cash') === 15,'Cash : ×1, ×2, ×3');
+    ok(gainFor(pCommon,'carre') === 3 && gainFor(pRare,'carre') === 4 && gainFor(pVery,'carre') === 6,'Carré : 3, 4, 6');
+    ok(gainFor(pVery,'duo') === 1,'Duo : jamais de multiplicateur');
+    state.kind = 'daily';
+    ok(gainFor(pVery,'cash') === 5,'10 du jour : pas de multiplicateur');
+    state.kind = savedKind; state.slots = savedSlots;
+    ok(boardQuery('arcade').indexOf('difficulty=eq.arcade') > -1,'classement record : scores arcade uniquement');
+    ok(boardMax('arcade') === null && boardScore({score: 132}, 'arcade').indexOf('132') === 0,'record sans plafond');
+    ok(document.querySelectorAll('#boardTabs .tab').length===2,'deux classements : du jour et record');
+    $('#photoTag').classList.add('hot'); ok(getComputedStyle($('#photoTag')).display !== 'none','étiquette rareté / orthographe visible'); $('#photoTag').classList.remove('hot');
     ok(clampDay(addDays(parisDay(), 3))===parisDay() && clampDay('2020-01-01')===DAILY_EPOCH,'historique borné entre la grille #1 et aujourd’hui');
     ok(dayTitle(parisDay()).indexOf('#'+dayNo(parisDay()))>-1 && dayTitle('2026-11-22').indexOf('#1')>-1,'titre du jour dans l’historique');
     state.boardDay = '2026-11-22';
@@ -2742,10 +2740,10 @@ if(location.search.includes('selftest')){
     ok(boardQuery('daily').indexOf('day=eq.'+parisDay())>-1,'classement du jour par défaut');
     state.boardDiff = 'daily'; renderBoardTabs();
     ok(document.getElementById('dayNav').hidden===false && document.getElementById('dayNext').disabled===true,'flèches d’historique, pas de jour futur');
-    state.boardDiff = 'easy'; renderBoardTabs();
+    state.boardDiff = 'arcade'; renderBoardTabs();
     ok(document.getElementById('dayNav').hidden===true,'pas de flèches hors classement du jour');
     state.boardDiff = 'daily';
-    ok(document.getElementById('freeToggle').classList.contains('btn'),'partie libre en bouton secondaire');
+    ok(document.getElementById('startBtn').classList.contains('btn'),'partie libre en bouton secondaire');
 
     document.querySelector('#playerName').value = 'Testeur';
     state.player = 'Testeur'; state.difficulty = 'easy'; state.good = 10;
@@ -2767,7 +2765,7 @@ if(location.search.includes('selftest')){
       applyLang(code);
       ok(document.documentElement.lang===code, 'lang '+code+' : html');
       ok(document.querySelector('#dailyT').textContent===I18N[code].dailyT, 'lang '+code+' : bouton du jour');
-      ok(document.querySelector('#startBtn').textContent===I18N[code].freeStart, 'lang '+code+' : bouton partie libre');
+      ok(document.querySelector('#startBtn').textContent===I18N[code].freeT, 'lang '+code+' : bouton partie libre');
       ok(document.querySelector('#i18nSub').textContent===probes[code].name, 'lang '+code+' : sous-titre');
       ok(document.title.indexOf('CLIKEA')===0, 'lang '+code+' : titre');
       ok(document.querySelector('#lang').value===code, 'lang '+code+' : selecteur');
@@ -2786,7 +2784,7 @@ if(location.search.includes('selftest')){
     ok(typeOf(billy)==='Bibliothèque','type FR BILLY ('+typeOf(billy)+')');
     ok(document.querySelector('#dailyT').textContent==='Le 10 du jour','retour FR');
     ok(localStorage.getItem('clikea-lang')==='fr','langue mémorisée');
-    ok(document.getElementById('verdict').textContent===I18N.fr.v0,'verdict retraduit ('+document.getElementById('verdict').textContent.slice(0,20)+')');
+    ok(document.getElementById('verdict').textContent===I18N.fr[state.msgKey],'verdict retraduit ('+document.getElementById('verdict').textContent.slice(0,20)+')');
 
     ok(document.querySelectorAll('#shareTargets [data-net]').length===4,'cibles de partage : WhatsApp, X, Copier, Image');
     ok(document.querySelectorAll('#shareTargets svg').length===4,'logos de partage');
@@ -2826,7 +2824,7 @@ if(location.search.includes('selftest')){
     ok(dayStreak({'2026-11-20':{done:true},'2026-11-21':{done:true}},'2026-11-22')===2,'série conservée tant que le jour n’est pas joué');
     ok(dayStreak({'2026-11-19':{done:true},'2026-11-21':{done:true},'2026-11-22':{done:false}},'2026-11-22')===1,'série cassée par un jour manqué');
     ok(DAILY_SIZE===10 && DAILY_MAX===50,'10 produits, 50 points');
-    ok(!!document.querySelector('#dailyBtn') && document.querySelector('#freePanel').hidden===true,'accueil : 10 du jour en avant, partie libre repliée');
+    ok(!!document.querySelector('#dailyBtn') && document.querySelector('#startBtn').classList.contains('ghost'),'accueil : 10 du jour en avant, partie libre en secondaire');
     const today = parisDay();
     const dq = poolIndexes('easy').slice(0, 10);
     document.querySelector('#playerName').value = '';
