@@ -54,7 +54,7 @@ Document opérationnel. Il dit quels comptes ouvrir, dans quel ordre, avec quels
 |---|---|---|---|
 | **Devine le nom** | 40 % | Photo + question, réponse en commentaire ou en vidéo | « Tu as monté ce meuble. Son nom ? » |
 | **Vrai ou faux nom** | 20 % | Deux noms, un vrai, un inventé | « BILLY eller BILLÖN ? » |
-| **Score et défi** | 20 % | Ticket, grille du jour, duel | « 24/30 aujourd'hui. Ton tour. » |
+| **Score et défi** | 20 % | Ticket, grille du jour, duel | « 34/50 aujourd'hui. Ton tour. » |
 | **Coulisses** | 10 % | Développement, chiffres, erreurs | « 109 produits, 5 langues, 0 compte » |
 | **Communauté** | 10 % | Réponses, reposts, corrections | Reposter un score d'abonné |
 
@@ -66,7 +66,7 @@ Document opérationnel. Il dit quels comptes ouvrir, dans quel ordre, avec quels
 2. « Tu l'as monté un dimanche soir. Tu connais son nom ? »
 3. « Ce nom IKEA est faux. Tu marches ? »
 4. « 10 secondes. Un nom. C'est tout. »
-5. « J'ai fait 9/30. Fais pire, je t'attends. »
+5. « J'ai fait 12/50. Fais pire, je t'attends. »
 6. « Le meuble le plus vendu au monde, et personne ne connaît son nom. »
 7. « Tu es allé chez IKEA. Tu es ressorti avec ça. Son nom ? »
 8. « Devine le nom ou avoue que tu as pris la notice. »
@@ -75,7 +75,7 @@ Document opérationnel. Il dit quels comptes ouvrir, dans quel ordre, avec quels
 11. « Combien de ces 5 meubles peux-tu nommer ? »
 12. « Le prix, tout le monde le connaît. Le nom, personne. »
 13. « Une photo. Pas de triche. Pas de Google. »
-14. « Mon record : 30/30. Le tien ? »
+14. « Mon record : 50/50. Le tien ? »
 15. « Ce meuble a un nom. Tu l'as oublié. »
 16. « 10 produits du jour. Une seule partie. »
 17. « Je te défie : même grille, même 10 secondes. »

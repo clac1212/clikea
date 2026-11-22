@@ -36,13 +36,15 @@ Ce que font les jeux qui marchent :
 
 ### A. Le 10 du jour — la récurrence
 
-**Règle.** Dix produits, même tirage pour tout le monde, une seule partie par jour et par appareil. Dix questions en Carré (4 noms), 3 points chacune : **score sur 30**. Difficulté croissante : 3 produits connus, 4 moyens, 3 durs. Pas de choix de mode, environ 2 minutes.
+**Règle.** Dix produits, même tirage pour tout le monde, une seule partie par jour et par appareil. Chaque produit se joue en Duo (1 pt), Carré (3 pts) ou Cash (5 pts), exactement comme la partie libre : **score sur 50**. Difficulté croissante : 3 produits connus, 4 moyens, 3 durs. Environ 2 minutes.
+
+**Deux portes, un seul jeu.** L'accueil propose les produits du jour ou la partie libre, rien d'autre. Duo, Carré et Cash ne sont pas des modes de jeu mais la façon de répondre à chaque produit : ils restent dans les deux portes. La simplicité se joue sur le nombre d'entrées, pas sur la mécanique de la question.
 
 **Pourquoi 10 et pas 5.** À 10 s maximum par produit, 5 questions durent 30 à 50 s : trop court pour un rendez-vous. Les scores se tassent (beaucoup de 15/15), et une réponse au hasard fait basculer le résultat. 20 reste le format de la partie libre, trop long pour un quotidien.
 
 **Pourquoi.** C'est le format Wordle/Métrodoku : tout le monde parle de la même grille le même jour, et le résultat se partage en une ligne. C'est le seul mode qui crée une habitude.
 
-**Partage.** `CLIKEA du jour 24/30` + dix cases sur deux lignes (🟩🟥) + `🔥 6 jours` + lien.
+**Partage.** `CLIKEA du jour 34/50` + dix cases sur deux lignes (🟩🟥) + `🔥 6 jours` + lien.
 
 **Série.** Compter les **jours consécutifs joués**, pas les sans-faute : une série qui casse à la première erreur décourage. Afficher la série sur l'accueil et dans le partage.
 
