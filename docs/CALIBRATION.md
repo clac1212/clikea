@@ -1,5 +1,7 @@
 # Calibrage : un jeu qui apprend de ses joueurs
 
+Version partageable : https://karma-arbor-g2wk.here.now/
+
 Décidé le 22 novembre 2026. Remplace la logique « inédits d'abord » de `PRODUITS.md` pour le choix des produits ; la fraîcheur et les plafonds restent.
 
 ## Le problème
