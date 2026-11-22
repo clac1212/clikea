@@ -99,4 +99,6 @@ curl -s -o /dev/null -w '%{http_code}\n' https://clever-bloom-q2pw.here.now/
 
 - [`docs/POURQUOI.md`](docs/POURQUOI.md) — problème, public, objectif, métriques, principes, non-objectifs, journal des décisions.
 - [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) — structure du code, flux de jeu, données, Supabase, PostHog, hébergement, contrôles.
-- [`docs/VIRALITE.md`](docs/VIRALITE.md) — recherches sur la viralité des jeux web et plan de lancement.
+- [`docs/VIRALITE.md`](docs/VIRALITE.md) — recherches sur la viralité des jeux web et état du produit.
+- [`docs/MODES.md`](docs/MODES.md) — modes de jeu (5 du jour, duel, chrono, virée), récurrence, ordre de construction.
+- [`docs/LANCEMENT.md`](docs/LANCEMENT.md) — comptes sociaux, bios, piliers de contenu, calendrier 30 jours.
