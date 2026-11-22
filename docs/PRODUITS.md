@@ -73,6 +73,15 @@ Version partageable : https://rapid-reef-8rww.here.now/ — décisions du 22 nov
 - **À ajouter** : jours joués au total, meilleure série, paliers 7 / 30 / 100 jours.
 - **À décider** : un joker par semaine qui protège la série d'un jour manqué.
 
+## Mise en œuvre
+
+- **Skill d'import** : `scripts/catalog/catalog.py`, étapes relançables avec cache disque (`scripts/catalog/cache/`, ignoré par git) :
+  `families` → `fetch-fr` → `parse` → `llm` → `fetch-langs` → `build` → `images` → `sql` → `export`.
+  Les traductions d'un article sont reliées par l'identifiant de photo (`pe…`), identique dans tous les pays : un type affiché correspond toujours à la photo.
+- **Tables** : `clikea_families` (gamme, culte, famille visuelle, difficulté, orthographes), `clikea_articles` (article principal, types 5 langues, photo), `clikea_players` et `clikea_exposures` (niveau des appareils, premières rencontres), `clikea_daily_grid.slots` (rôle, difficulté, format de chaque place).
+- **Chaque nuit** : `clikea_update_difficulty()` à 22 h 00 UTC (Elo, premières rencontres seulement, orthographe exclue), puis `clikea_plan_days(14)` à 22 h 05 UTC (recette, plafonds, replis).
+- **Jeu** : `PRODUCTS` est généré par `catalog.py export` à partir de la base (difficulté à jour). Partie libre « faciles » = cultes + 40 % des gammes les mieux trouvées.
+
 ## Ordre de construction
 
 1. Restructurer la base, corriger les incohérences, brancher difficulté, statuts, plafonds et recette.

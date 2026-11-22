@@ -1,6 +1,6 @@
 # Architecture
 
-CLIKEA est une **page unique** : `index.html` contient le balisage, les styles, le code du jeu, les 109 produits, les traductions et le générateur de ticket. Il n'y a ni framework, ni étape de build, ni dépendance à installer. Deux fichiers JSON à la racine sont des archives de données, pas des ressources chargées.
+CLIKEA est une **page unique** : `index.html` contient le balisage, les styles, le code du jeu, le catalogue (`PRODUCTS`, exporté de Supabase par `scripts/catalog/catalog.py export`), les traductions et le générateur de ticket. Il n'y a ni framework ni dépendance à installer ; la seule étape de génération est l'export du catalogue.
 
 ## Vue d'ensemble
 
@@ -22,7 +22,7 @@ Aucun serveur applicatif : GitHub Pages sert un fichier statique, Supabase et Po
 | `<head>` | Titre, description, favicon SVG en `data:` (logo CLIKEA), variables CSS. |
 | CSS | Thème bleu IKEA / jaune, quatre écrans, ticket, feuille de partage, media queries. |
 | Écrans | `#intro`, `#game`, `#end`, `#board`, plus `#shareSheet` en surcouche. Un seul est visible (`show(id)`). |
-| Données | `PRODUCTS` (109 objets), `DECOR` (5 produits décoratifs de l'accueil), `EASY_NAMES` (49 noms cultes), `FACTS` (faits vérifiés), `I18N` (5 langues). |
+| Données | `PRODUCTS` (~1 740 gammes : `n` nom, `t` types 5 langues, `p` prix, `i` photo, `k` culte, `d` difficulté, `v` famille visuelle, `o` fausses orthographes, `x` hors tirage), `DECOR`, `FACTS`, `I18N` (5 langues). |
 | Moteur | `startGame`, `chooseMode`, `resolve`, `next`, `endGame`. |
 | Classement | `submitScore`, `loadRank`, `loadBoard`, `renderBoard`. |
 | Ticket | `printTicket` (DOM), `drawTrophy` (canvas 1080 × 1350), `shareTrophy`, `shareTo`. |
@@ -40,12 +40,12 @@ Aucun serveur applicatif : GitHub Pages sert un fichier statique, Supabase et Po
 - `n` : nom IKEA, unique. Sert d'identifiant et de réponse.
 - `t` : type de meuble par langue. Le code tolère une chaîne simple (`typeOf`).
 - `p` : prix indicatif en euros, catalogue français.
-- `i` : chemin local de la photo WebP 640 × 640, dans `img/`. Les URL d'origine restent dans `produits.json`.
+- `i` : chemin local de la photo WebP 640 × 640, dans `img/`. Les URL d'origine sont dans `clikea_articles`.
 
 ## Déroulement d'une partie
 
 1. **Accueil** : choix du niveau (`easy` par défaut / `hard`), pseudo (obligatoire pour démarrer, 20 caractères max), bouton « Jouer ». Le classement du niveau est chargé en arrière-plan.
-2. **Tirage** : `poolIndexes(difficulty)` construit le vivier — les 49 noms de `EASY_NAMES` en facile, tous les autres en difficile — puis `shuffle(...).slice(0, 20)`. Les deux viviers sont disjoints et couvrent les 109 produits.
+2. **Tirage (partie libre)** : `poolIndexes(difficulty)` — facile = cultes + 40 % des gammes les mieux trouvées (note `d`), difficile = le reste ; `x` exclus. Puis `shuffle(...).slice(0, 20)`. Le 10 du jour vient de `clikea_daily_grid.slots` (voir `docs/PRODUITS.md`).
 3. **Question** : photo du produit, « Quel est ce meuble ? », choix du mode.
    - **Duo** : 2 propositions, dont la bonne ; les leurres sont tirés parmi les 108 autres produits.
    - **Carré** : 4 propositions.

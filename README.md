@@ -46,10 +46,9 @@ Deux portes à l'accueil : **le 10 du jour** (bouton principal) et **la partie l
 | Fichier | Rôle |
 |---|---|
 | `index.html` | Tout le jeu : HTML, CSS, JavaScript, données produits, logo SVG, génération du ticket, traductions. Aucun build, aucune dépendance. |
-| `img/` | Les 109 photos produit en WebP, 640 × 640, servies localement (~1,5 Mo au total, 4 à 37 Ko par photo). |
+| `img/` | Les photos produit en WebP, 640 × 640, servies localement (~1 740 fichiers, ~27 Mo), générées par `catalog.py images`. |
 | `og.png` | Image d'aperçu 1200 × 630 pour les partages de lien (Open Graph, Twitter Card). |
-| `produits.json` | Source de la base produits (109 entrées : nom, type localisé, prix, URL photo d'origine). **Non chargée au runtime** — les données sont embarquées dans `index.html`. Sert d'archive éditable. |
-| `types.json` | Archive des libellés de types par langue. Non chargée au runtime. |
+| `scripts/catalog/catalog.py` | Skill d'import du catalogue IKEA (voir `docs/PRODUITS.md`). Génère `PRODUCTS` dans `index.html` et les photos de `img/`. |
 | `CNAME` | Domaine personnalisé GitHub Pages : `clikeagame.com`. |
 | `robots.txt`, `sitemap.xml` | Indexation du domaine. |
 | `docs/` | Pourquoi, architecture, viralité. |
@@ -99,12 +98,12 @@ curl -s -o /dev/null -w '%{http_code}\n' https://clever-bloom-q2pw.here.now/
 ## Notes et limites
 
 - **Pastiche non officiel**, sans lien avec IKEA. Le logo reprend la logique du logo IKEA (cartouche bleu, ellipse jaune, mot en tracés) sans fichier de police ni asset IKEA.
-- **Photos** : copies locales en WebP dans `img/`, redimensionnées à 640 × 640, à partir du CDN `ikea.com`. Le fichier `produits.json` garde les URL d'origine.
+- **Photos** : copies locales en WebP dans `img/`, redimensionnées à 640 × 640, à partir du CDN `ikea.com`. Les URL d'origine sont dans la table `clikea_articles`.
 - **Prix** : catalogue français au moment de la constitution de la base, indicatifs.
 - **Pas de compte, pas de modération du pseudo** : le classement accepte tout nom de 24 caractères, et un score peut être forgé (la clé publique autorise l'insertion).
 - **Aperçu de lien** : balises Open Graph et Twitter Card avec `og.png` ; l'aperçu ne montre pas le score du joueur, seulement l'image générique du jeu.
 - **Défi** : le score et le pseudo passent par l'URL ; le pseudo est échappé avant affichage.
-- Les données embarquées dans `index.html` et les fichiers `produits.json` / `types.json` peuvent diverger : la source de vérité à l'exécution est `index.html`.
+- Source de vérité du catalogue : Supabase (`clikea_families`, `clikea_articles`). `PRODUCTS` dans `index.html` en est un export (`catalog.py export`).
 
 ## Documentation
 
