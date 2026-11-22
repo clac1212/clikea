@@ -116,6 +116,16 @@ h1 mark{background:none;color:var(--yellow);padding:0;box-decoration-break:clone
 .btn:focus-visible,.choice:focus-visible,.diff.on:focus-visible{outline:2px solid #111;outline-offset:-2px}
 .cta-row{margin:18px 0 0;max-width:420px}
 .cta-row .btn{font-size:20px;padding:19px}
+.calib-head{margin:0 0 10px;font-size:12px;color:#cfe0ee}
+.calib-head b{color:var(--yellow);text-transform:uppercase;letter-spacing:.08em}
+.calib-photo{max-width:320px;margin:0 auto}
+.calib-name{margin-top:12px;text-align:center;font-size:30px;font-weight:900;letter-spacing:-.01em}
+.calib-type{text-align:center;font-size:13px;color:#cfe0ee;margin-bottom:12px}
+.calib-btns{display:grid;grid-template-columns:1fr 1fr;gap:8px;max-width:420px;margin:0 auto}
+.calib-btns .btn{font-size:16px;padding:16px 8px}
+.calib-flags{text-align:center;font-size:11px;color:#cfe0ee;margin:14px 0 0}
+.calib-flags button{background:none;border:1px solid rgba(255,255,255,.4);color:#fff;font:inherit;font-size:11px;padding:4px 8px;margin:2px;cursor:pointer}
+.calib-note{max-width:420px;margin:12px auto 0;font-size:11px;color:#9fbdd6;text-align:center;line-height:1.4}
 .photo .tag.hot{background:var(--yellow);color:#111}
 .btn.daily{flex-direction:column;align-items:flex-start;gap:4px;text-align:left;padding:16px 18px}
 .btn.daily b{font-size:22px;font-weight:900;line-height:1;letter-spacing:-.01em}
@@ -445,6 +455,26 @@ footer .wrap{padding:14px var(--pad);display:flex;gap:16px;flex-wrap:wrap;justif
     </div>
   </section>
 
+  <!-- CALIBRAGE (outil d'équipe, ?calibrage=1) -->
+  <section class="screen" id="calib">
+    <div class="wrap game">
+      <p class="calib-head"><b>Calibrage</b> · <span id="calibCount">0</span> produits notés sur cet appareil</p>
+      <div class="photo calib-photo"><img id="calibImg" alt="Produit à calibrer" width="640" height="640" decoding="async"></div>
+      <div class="calib-name" id="calibName"></div>
+      <div class="calib-type" id="calibType"></div>
+      <div class="calib-btns">
+        <button class="btn" type="button" id="calibYes">Je connais</button>
+        <button class="btn ghost" type="button" id="calibNo">Je ne connais pas</button>
+      </div>
+      <p class="calib-flags">Signaler et passer :
+        <button type="button" data-reason="niche">trop niche</button>
+        <button type="button" data-reason="photo">photo</button>
+        <button type="button" data-reason="type">type faux</button>
+      </p>
+      <p class="calib-note">« Je connais » = tu aurais trouvé le nom sans aide. Réponds vite, au premier réflexe. Ces réponses ne comptent ni pour le classement ni pour ta série.</p>
+    </div>
+  </section>
+
   <!-- CLASSEMENT -->
   <section class="screen" id="board">
     <div class="wrap board">
@@ -602,7 +632,7 @@ fr:{
  endNameNote:'Facultatif. Sans nom, le score n’est pas enregistré.',
  tName:'Entrez votre nom pour commencer', tPhoto:'Photo indisponible, on passe au suivant',
  tEmpty:'Écrivez un nom', tCopied:'Score copié', tCopyFail:'Partage impossible', tDownload:'Ticket téléchargé en image',
- dToday:'Aujourd’hui', boardNoteDay:'Classement final de la grille #{n}.', dayPrev:'Jour précédent', dayNext:'Jour suivant', promptOrtho:'Question d’orthographe : choisissez votre mode', askOrtho:'Quelle est la bonne orthographe ?', promptCashOrtho:'Cash : écrivez le nom exact, accents compris', tagOrtho:'Orthographe', tagTrap:'Piège du jour', playedN:'{n} jours joués', sPlayed:'Jours joués', playedLine:'{n} · record {best}', trainBtn:'Entraîne-toi en partie libre', trainNext:'Prochaine grille dans {left}. En attendant, 20 produits au hasard, sans effet sur ta série.', copyShort:'Copier', share:'Partager', shareOther:'Ou partager ailleurs', shareTip2:'WhatsApp et X ouvrent l’app ou le site. « Image » : pour ta story Instagram ou TikTok.', imgShort:'Image', imgTitle:'Image pour ta story', imgNoteTouch:'Appuie longuement sur l’image pour l’enregistrer, puis ajoute-la à ta story Instagram ou TikTok.', imgNoteDesk:'Télécharge l’image, puis publie-la depuis ton téléphone.', imgShare:'Partager l’image', imgDownload:'Télécharger l’image', endNameNoteDaily:'Facultatif. Ton score est déjà enregistré ; ton nom l’affiche dans le classement du jour.', dDaily:'Du jour', dailyT:'Le 10 du jour', dailyS:'#{n} · 10 produits, 2 minutes', dailyDone:'#{n} · fait : {pts}/50 · prochaine grille dans {left}', dailyResume:'#{n} · reprendre à la question {i}', daysN:'{n} jours d’affilée', daysN1:'1 jour', freeT:'Partie libre · 20 produits', freeStart:'Lancer la partie libre', dailyLabel:'10 du jour #{n}', dailyResult:'CLIKEA du jour #{n} · {pts}/{max}', dailyShare:'J’ai fait {pts}/{max} au 10 du jour CLIKEA #{n}. À toi.', defiDaily:'<b>{name}</b> a fait <b>{pts}/50</b> au 10 du jour #{n}. Tu fais mieux ?', rankDaily:'Ta place aujourd’hui : {rank} sur {total}', sDays:'Jours d’affilée', tGrid:'Grille du jour indisponible, réessayez dans un instant', boardNoteDaily:'Classement du jour, remis à zéro à minuit (heure de Paris).', freeShort:'Partie libre',
+ dToday:'Aujourd’hui', boardNoteDay:'Classement final de la grille #{n}.', dayPrev:'Jour précédent', dayNext:'Jour suivant', promptOrtho:'Question d’orthographe : choisissez votre mode', askOrtho:'Quelle est la bonne orthographe ?', promptCashOrtho:'Cash : écrivez le nom exact, lettre par lettre', tagOrtho:'Orthographe', tagTrap:'Piège du jour', playedN:'{n} jours joués', sPlayed:'Jours joués', playedLine:'{n} · record {best}', trainBtn:'Entraîne-toi en partie libre', trainNext:'Prochaine grille dans {left}. En attendant, 20 produits au hasard, sans effet sur ta série.', copyShort:'Copier', share:'Partager', shareOther:'Ou partager ailleurs', shareTip2:'WhatsApp et X ouvrent l’app ou le site. « Image » : pour ta story Instagram ou TikTok.', imgShort:'Image', imgTitle:'Image pour ta story', imgNoteTouch:'Appuie longuement sur l’image pour l’enregistrer, puis ajoute-la à ta story Instagram ou TikTok.', imgNoteDesk:'Télécharge l’image, puis publie-la depuis ton téléphone.', imgShare:'Partager l’image', imgDownload:'Télécharger l’image', endNameNoteDaily:'Facultatif. Ton score est déjà enregistré ; ton nom l’affiche dans le classement du jour.', dDaily:'Du jour', dailyT:'Le 10 du jour', dailyS:'#{n} · 10 produits, 2 minutes', dailyDone:'#{n} · fait : {pts}/50 · prochaine grille dans {left}', dailyResume:'#{n} · reprendre à la question {i}', daysN:'{n} jours d’affilée', daysN1:'1 jour', freeT:'Partie libre · 20 produits', freeStart:'Lancer la partie libre', dailyLabel:'10 du jour #{n}', dailyResult:'CLIKEA du jour #{n} · {pts}/{max}', dailyShare:'J’ai fait {pts}/{max} au 10 du jour CLIKEA #{n}. À toi.', defiDaily:'<b>{name}</b> a fait <b>{pts}/50</b> au 10 du jour #{n}. Tu fais mieux ?', rankDaily:'Ta place aujourd’hui : {rank} sur {total}', sDays:'Jours d’affilée', tGrid:'Grille du jour indisponible, réessayez dans un instant', boardNoteDaily:'Classement du jour, remis à zéro à minuit (heure de Paris).', freeShort:'Partie libre',
  f2:'Photos produit : ikea.com'
 },
 en:{
@@ -653,7 +683,7 @@ en:{
  endNameNote:'Optional. Without a name, the score is not saved.',
  tName:'Enter your name to start', tPhoto:'Photo unavailable, skipping',
  tEmpty:'Type a name', tCopied:'Score copied', tCopyFail:'Sharing failed', tDownload:'Ticket saved as an image',
- dToday:'Today', boardNoteDay:'Final leaderboard for grid #{n}.', dayPrev:'Previous day', dayNext:'Next day', promptOrtho:'Spelling question: choose your mode', askOrtho:'Which spelling is right?', promptCashOrtho:'Cash: type the exact name, accents included', tagOrtho:'Spelling', tagTrap:'Today’s trap', playedN:'{n} days played', sPlayed:'Days played', playedLine:'{n} · best {best}', trainBtn:'Practise in free play', trainNext:'Next grid in {left}. Meanwhile, 20 random products, no effect on your streak.', copyShort:'Copy', share:'Share', shareOther:'Or share elsewhere', shareTip2:'WhatsApp and X open the app or site. “Image”: for your Instagram or TikTok story.', imgShort:'Image', imgTitle:'Image for your story', imgNoteTouch:'Press and hold the image to save it, then add it to your Instagram or TikTok story.', imgNoteDesk:'Download the image, then post it from your phone.', imgShare:'Share the image', imgDownload:'Download the image', endNameNoteDaily:'Optional. Your score is already saved; your name shows it on today’s leaderboard.', dDaily:'Daily', dailyT:'Daily 10', dailyS:'#{n} · 10 products, 2 minutes', dailyDone:'#{n} · done: {pts}/50 · next grid in {left}', dailyResume:'#{n} · resume at question {i}', daysN:'{n}-day streak', daysN1:'1-day streak', freeT:'Free play · 20 products', freeStart:'Start free play', dailyLabel:'Daily 10 #{n}', dailyResult:'CLIKEA daily #{n} · {pts}/{max}', dailyShare:'I scored {pts}/{max} on CLIKEA Daily 10 #{n}. Your turn.', defiDaily:'<b>{name}</b> scored <b>{pts}/50</b> on Daily 10 #{n}. Can you beat it?', rankDaily:'Today: #{rank} of {total}', sDays:'Day streak', tGrid:'Daily grid unavailable, try again in a moment', boardNoteDaily:'Today’s leaderboard, reset at midnight (Paris time).', freeShort:'Free play',
+ dToday:'Today', boardNoteDay:'Final leaderboard for grid #{n}.', dayPrev:'Previous day', dayNext:'Next day', promptOrtho:'Spelling question: choose your mode', askOrtho:'Which spelling is right?', promptCashOrtho:'Cash: type the exact name, letter by letter', tagOrtho:'Spelling', tagTrap:'Today’s trap', playedN:'{n} days played', sPlayed:'Days played', playedLine:'{n} · best {best}', trainBtn:'Practise in free play', trainNext:'Next grid in {left}. Meanwhile, 20 random products, no effect on your streak.', copyShort:'Copy', share:'Share', shareOther:'Or share elsewhere', shareTip2:'WhatsApp and X open the app or site. “Image”: for your Instagram or TikTok story.', imgShort:'Image', imgTitle:'Image for your story', imgNoteTouch:'Press and hold the image to save it, then add it to your Instagram or TikTok story.', imgNoteDesk:'Download the image, then post it from your phone.', imgShare:'Share the image', imgDownload:'Download the image', endNameNoteDaily:'Optional. Your score is already saved; your name shows it on today’s leaderboard.', dDaily:'Daily', dailyT:'Daily 10', dailyS:'#{n} · 10 products, 2 minutes', dailyDone:'#{n} · done: {pts}/50 · next grid in {left}', dailyResume:'#{n} · resume at question {i}', daysN:'{n}-day streak', daysN1:'1-day streak', freeT:'Free play · 20 products', freeStart:'Start free play', dailyLabel:'Daily 10 #{n}', dailyResult:'CLIKEA daily #{n} · {pts}/{max}', dailyShare:'I scored {pts}/{max} on CLIKEA Daily 10 #{n}. Your turn.', defiDaily:'<b>{name}</b> scored <b>{pts}/50</b> on Daily 10 #{n}. Can you beat it?', rankDaily:'Today: #{rank} of {total}', sDays:'Day streak', tGrid:'Daily grid unavailable, try again in a moment', boardNoteDaily:'Today’s leaderboard, reset at midnight (Paris time).', freeShort:'Free play',
  f2:'Product photos: ikea.com'
 },
 es:{
@@ -704,7 +734,7 @@ es:{
  endNameNote:'Opcional. Sin nombre, la puntuación no se guarda.',
  tName:'Escribe tu nombre para empezar', tPhoto:'Foto no disponible, pasamos a la siguiente',
  tEmpty:'Escribe un nombre', tCopied:'Puntuación copiada', tCopyFail:'No se pudo compartir', tDownload:'Ticket guardado como imagen',
- dToday:'Hoy', boardNoteDay:'Clasificación final de la rejilla #{n}.', dayPrev:'Día anterior', dayNext:'Día siguiente', promptOrtho:'Pregunta de ortografía: elige tu modo', askOrtho:'¿Cuál es la ortografía correcta?', promptCashOrtho:'Cash: escribe el nombre exacto, con acentos', tagOrtho:'Ortografía', tagTrap:'Trampa del día', playedN:'{n} días jugados', sPlayed:'Días jugados', playedLine:'{n} · récord {best}', trainBtn:'Entrénate en partida libre', trainNext:'Próxima rejilla en {left}. Mientras tanto, 20 productos al azar, sin efecto en tu racha.', copyShort:'Copiar', share:'Compartir', shareOther:'O compartir en otro sitio', shareTip2:'WhatsApp y X abren la app o la web. «Imagen»: para tu historia de Instagram o TikTok.', imgShort:'Imagen', imgTitle:'Imagen para tu historia', imgNoteTouch:'Mantén pulsada la imagen para guardarla y añádela a tu historia de Instagram o TikTok.', imgNoteDesk:'Descarga la imagen y publícala desde tu móvil.', imgShare:'Compartir la imagen', imgDownload:'Descargar la imagen', endNameNoteDaily:'Opcional. Tu puntuación ya está guardada; tu nombre la muestra en la clasificación del día.', dDaily:'Del día', dailyT:'Los 10 del día', dailyS:'#{n} · 10 productos, 2 minutos', dailyDone:'#{n} · hecho: {pts}/50 · próxima en {left}', dailyResume:'#{n} · seguir en la pregunta {i}', daysN:'{n} días seguidos', daysN1:'1 día', freeT:'Partida libre · 20 productos', freeStart:'Empezar partida libre', dailyLabel:'10 del día #{n}', dailyResult:'CLIKEA del día #{n} · {pts}/{max}', dailyShare:'He hecho {pts}/{max} en los 10 del día de CLIKEA #{n}. Te toca.', defiDaily:'<b>{name}</b> ha hecho <b>{pts}/50</b> en los 10 del día #{n}. ¿Lo superas?', rankDaily:'Hoy: {rank}.º de {total}', sDays:'Días seguidos', tGrid:'Rejilla del día no disponible, inténtalo en un momento', boardNoteDaily:'Clasificación del día, se reinicia a medianoche (hora de París).', freeShort:'Partida libre',
+ dToday:'Hoy', boardNoteDay:'Clasificación final de la rejilla #{n}.', dayPrev:'Día anterior', dayNext:'Día siguiente', promptOrtho:'Pregunta de ortografía: elige tu modo', askOrtho:'¿Cuál es la ortografía correcta?', promptCashOrtho:'Cash: escribe el nombre exacto, letra por letra', tagOrtho:'Ortografía', tagTrap:'Trampa del día', playedN:'{n} días jugados', sPlayed:'Días jugados', playedLine:'{n} · récord {best}', trainBtn:'Entrénate en partida libre', trainNext:'Próxima rejilla en {left}. Mientras tanto, 20 productos al azar, sin efecto en tu racha.', copyShort:'Copiar', share:'Compartir', shareOther:'O compartir en otro sitio', shareTip2:'WhatsApp y X abren la app o la web. «Imagen»: para tu historia de Instagram o TikTok.', imgShort:'Imagen', imgTitle:'Imagen para tu historia', imgNoteTouch:'Mantén pulsada la imagen para guardarla y añádela a tu historia de Instagram o TikTok.', imgNoteDesk:'Descarga la imagen y publícala desde tu móvil.', imgShare:'Compartir la imagen', imgDownload:'Descargar la imagen', endNameNoteDaily:'Opcional. Tu puntuación ya está guardada; tu nombre la muestra en la clasificación del día.', dDaily:'Del día', dailyT:'Los 10 del día', dailyS:'#{n} · 10 productos, 2 minutos', dailyDone:'#{n} · hecho: {pts}/50 · próxima en {left}', dailyResume:'#{n} · seguir en la pregunta {i}', daysN:'{n} días seguidos', daysN1:'1 día', freeT:'Partida libre · 20 productos', freeStart:'Empezar partida libre', dailyLabel:'10 del día #{n}', dailyResult:'CLIKEA del día #{n} · {pts}/{max}', dailyShare:'He hecho {pts}/{max} en los 10 del día de CLIKEA #{n}. Te toca.', defiDaily:'<b>{name}</b> ha hecho <b>{pts}/50</b> en los 10 del día #{n}. ¿Lo superas?', rankDaily:'Hoy: {rank}.º de {total}', sDays:'Días seguidos', tGrid:'Rejilla del día no disponible, inténtalo en un momento', boardNoteDaily:'Clasificación del día, se reinicia a medianoche (hora de París).', freeShort:'Partida libre',
  f2:'Fotos de producto: ikea.com'
 },
 de:{
@@ -755,7 +785,7 @@ de:{
  endNameNote:'Optional. Ohne Namen wird die Punktzahl nicht gespeichert.',
  tName:'Geben Sie Ihren Namen ein', tPhoto:'Foto nicht verfügbar, weiter zum nächsten',
  tEmpty:'Namen eingeben', tCopied:'Punktzahl kopiert', tCopyFail:'Teilen nicht möglich', tDownload:'Ticket als Bild gespeichert',
- dToday:'Heute', boardNoteDay:'Endstand für Raster #{n}.', dayPrev:'Vorheriger Tag', dayNext:'Nächster Tag', promptOrtho:'Rechtschreibfrage: Modus wählen', askOrtho:'Welche Schreibweise stimmt?', promptCashOrtho:'Cash: genauen Namen tippen, mit Umlauten', tagOrtho:'Schreibweise', tagTrap:'Falle des Tages', playedN:'{n} Tage gespielt', sPlayed:'Tage gespielt', playedLine:'{n} · Rekord {best}', trainBtn:'Im freien Spiel üben', trainNext:'Nächstes Raster in {left}. Bis dahin 20 zufällige Produkte, ohne Einfluss auf deine Serie.', copyShort:'Kopieren', share:'Teilen', shareOther:'Oder woanders teilen', shareTip2:'WhatsApp und X öffnen die App oder Website. „Bild“: für deine Instagram- oder TikTok-Story.', imgShort:'Bild', imgTitle:'Bild für deine Story', imgNoteTouch:'Bild lange drücken, um es zu speichern, dann zur Instagram- oder TikTok-Story hinzufügen.', imgNoteDesk:'Bild herunterladen und vom Handy aus posten.', imgShare:'Bild teilen', imgDownload:'Bild herunterladen', endNameNoteDaily:'Optional. Deine Punktzahl ist gespeichert; mit Namen erscheint sie in der Tagesrangliste.', dDaily:'Des Tages', dailyT:'Die 10 des Tages', dailyS:'#{n} · 10 Produkte, 2 Minuten', dailyDone:'#{n} · gespielt: {pts}/50 · nächstes Raster in {left}', dailyResume:'#{n} · weiter bei Frage {i}', daysN:'{n} Tage in Folge', daysN1:'1 Tag', freeT:'Freies Spiel · 20 Produkte', freeStart:'Freies Spiel starten', dailyLabel:'10 des Tages #{n}', dailyResult:'CLIKEA des Tages #{n} · {pts}/{max}', dailyShare:'Ich habe {pts}/{max} bei den CLIKEA 10 des Tages #{n}. Du bist dran.', defiDaily:'<b>{name}</b> hat <b>{pts}/50</b> bei den 10 des Tages #{n}. Schaffst du mehr?', rankDaily:'Heute: Platz {rank} von {total}', sDays:'Tage in Folge', tGrid:'Tagesraster nicht verfügbar, gleich noch einmal versuchen', boardNoteDaily:'Rangliste des Tages, um Mitternacht zurückgesetzt (Pariser Zeit).', freeShort:'Freies Spiel',
+ dToday:'Heute', boardNoteDay:'Endstand für Raster #{n}.', dayPrev:'Vorheriger Tag', dayNext:'Nächster Tag', promptOrtho:'Rechtschreibfrage: Modus wählen', askOrtho:'Welche Schreibweise stimmt?', promptCashOrtho:'Cash: genauen Namen tippen, Buchstabe für Buchstabe', tagOrtho:'Schreibweise', tagTrap:'Falle des Tages', playedN:'{n} Tage gespielt', sPlayed:'Tage gespielt', playedLine:'{n} · Rekord {best}', trainBtn:'Im freien Spiel üben', trainNext:'Nächstes Raster in {left}. Bis dahin 20 zufällige Produkte, ohne Einfluss auf deine Serie.', copyShort:'Kopieren', share:'Teilen', shareOther:'Oder woanders teilen', shareTip2:'WhatsApp und X öffnen die App oder Website. „Bild“: für deine Instagram- oder TikTok-Story.', imgShort:'Bild', imgTitle:'Bild für deine Story', imgNoteTouch:'Bild lange drücken, um es zu speichern, dann zur Instagram- oder TikTok-Story hinzufügen.', imgNoteDesk:'Bild herunterladen und vom Handy aus posten.', imgShare:'Bild teilen', imgDownload:'Bild herunterladen', endNameNoteDaily:'Optional. Deine Punktzahl ist gespeichert; mit Namen erscheint sie in der Tagesrangliste.', dDaily:'Des Tages', dailyT:'Die 10 des Tages', dailyS:'#{n} · 10 Produkte, 2 Minuten', dailyDone:'#{n} · gespielt: {pts}/50 · nächstes Raster in {left}', dailyResume:'#{n} · weiter bei Frage {i}', daysN:'{n} Tage in Folge', daysN1:'1 Tag', freeT:'Freies Spiel · 20 Produkte', freeStart:'Freies Spiel starten', dailyLabel:'10 des Tages #{n}', dailyResult:'CLIKEA des Tages #{n} · {pts}/{max}', dailyShare:'Ich habe {pts}/{max} bei den CLIKEA 10 des Tages #{n}. Du bist dran.', defiDaily:'<b>{name}</b> hat <b>{pts}/50</b> bei den 10 des Tages #{n}. Schaffst du mehr?', rankDaily:'Heute: Platz {rank} von {total}', sDays:'Tage in Folge', tGrid:'Tagesraster nicht verfügbar, gleich noch einmal versuchen', boardNoteDaily:'Rangliste des Tages, um Mitternacht zurückgesetzt (Pariser Zeit).', freeShort:'Freies Spiel',
  f2:'Produktfotos: ikea.com'
 },
 it:{
@@ -806,7 +836,7 @@ it:{
  endNameNote:'Facoltativo. Senza nome, il punteggio non viene salvato.',
  tName:'Inserisci il tuo nome per iniziare', tPhoto:'Foto non disponibile, passiamo avanti',
  tEmpty:'Scrivi un nome', tCopied:'Punteggio copiato', tCopyFail:'Condivisione non riuscita', tDownload:'Ticket salvato come immagine',
- dToday:'Oggi', boardNoteDay:'Classifica finale della griglia #{n}.', dayPrev:'Giorno precedente', dayNext:'Giorno successivo', promptOrtho:'Domanda di ortografia: scegli la modalità', askOrtho:'Qual è la grafia giusta?', promptCashOrtho:'Cash: scrivi il nome esatto, accenti compresi', tagOrtho:'Ortografia', tagTrap:'Trappola del giorno', playedN:'{n} giorni giocati', sPlayed:'Giorni giocati', playedLine:'{n} · record {best}', trainBtn:'Allenati in partita libera', trainNext:'Prossima griglia tra {left}. Nel frattempo, 20 prodotti a caso, senza effetto sulla serie.', copyShort:'Copia', share:'Condividi', shareOther:'O condividi altrove', shareTip2:'WhatsApp e X aprono l’app o il sito. «Immagine»: per la tua storia Instagram o TikTok.', imgShort:'Immagine', imgTitle:'Immagine per la tua storia', imgNoteTouch:'Tieni premuta l’immagine per salvarla, poi aggiungila alla storia Instagram o TikTok.', imgNoteDesk:'Scarica l’immagine e pubblicala dal telefono.', imgShare:'Condividi l’immagine', imgDownload:'Scarica l’immagine', endNameNoteDaily:'Facoltativo. Il punteggio è già salvato; il nome lo mostra nella classifica del giorno.', dDaily:'Del giorno', dailyT:'I 10 del giorno', dailyS:'#{n} · 10 prodotti, 2 minuti', dailyDone:'#{n} · fatto: {pts}/50 · prossima griglia tra {left}', dailyResume:'#{n} · riprendi dalla domanda {i}', daysN:'{n} giorni di fila', daysN1:'1 giorno', freeT:'Partita libera · 20 prodotti', freeStart:'Avvia partita libera', dailyLabel:'10 del giorno #{n}', dailyResult:'CLIKEA del giorno #{n} · {pts}/{max}', dailyShare:'Ho fatto {pts}/{max} ai 10 del giorno CLIKEA #{n}. Tocca a te.', defiDaily:'<b>{name}</b> ha fatto <b>{pts}/50</b> ai 10 del giorno #{n}. Fai meglio?', rankDaily:'Oggi: {rank}° su {total}', sDays:'Giorni di fila', tGrid:'Griglia del giorno non disponibile, riprova tra poco', boardNoteDaily:'Classifica del giorno, azzerata a mezzanotte (ora di Parigi).', freeShort:'Partita libera',
+ dToday:'Oggi', boardNoteDay:'Classifica finale della griglia #{n}.', dayPrev:'Giorno precedente', dayNext:'Giorno successivo', promptOrtho:'Domanda di ortografia: scegli la modalità', askOrtho:'Qual è la grafia giusta?', promptCashOrtho:'Cash: scrivi il nome esatto, lettera per lettera', tagOrtho:'Ortografia', tagTrap:'Trappola del giorno', playedN:'{n} giorni giocati', sPlayed:'Giorni giocati', playedLine:'{n} · record {best}', trainBtn:'Allenati in partita libera', trainNext:'Prossima griglia tra {left}. Nel frattempo, 20 prodotti a caso, senza effetto sulla serie.', copyShort:'Copia', share:'Condividi', shareOther:'O condividi altrove', shareTip2:'WhatsApp e X aprono l’app o il sito. «Immagine»: per la tua storia Instagram o TikTok.', imgShort:'Immagine', imgTitle:'Immagine per la tua storia', imgNoteTouch:'Tieni premuta l’immagine per salvarla, poi aggiungila alla storia Instagram o TikTok.', imgNoteDesk:'Scarica l’immagine e pubblicala dal telefono.', imgShare:'Condividi l’immagine', imgDownload:'Scarica l’immagine', endNameNoteDaily:'Facoltativo. Il punteggio è già salvato; il nome lo mostra nella classifica del giorno.', dDaily:'Del giorno', dailyT:'I 10 del giorno', dailyS:'#{n} · 10 prodotti, 2 minuti', dailyDone:'#{n} · fatto: {pts}/50 · prossima griglia tra {left}', dailyResume:'#{n} · riprendi dalla domanda {i}', daysN:'{n} giorni di fila', daysN1:'1 giorno', freeT:'Partita libera · 20 prodotti', freeStart:'Avvia partita libera', dailyLabel:'10 del giorno #{n}', dailyResult:'CLIKEA del giorno #{n} · {pts}/{max}', dailyShare:'Ho fatto {pts}/{max} ai 10 del giorno CLIKEA #{n}. Tocca a te.', defiDaily:'<b>{name}</b> ha fatto <b>{pts}/50</b> ai 10 del giorno #{n}. Fai meglio?', rankDaily:'Oggi: {rank}° su {total}', sDays:'Giorni di fila', tGrid:'Griglia del giorno non disponibile, riprova tra poco', boardNoteDaily:'Classifica del giorno, azzerata a mezzanotte (ora di Parigi).', freeShort:'Partita libera',
  f2:'Foto prodotto: ikea.com'
 },
 ko:{
@@ -857,7 +887,7 @@ ko:{
  endNameNote:'선택 사항. 이름이 없으면 점수가 저장되지 않아요.',
  tName:'시작하려면 이름을 입력하세요', tPhoto:'사진을 불러올 수 없어 다음으로 넘어가요',
  tEmpty:'이름을 입력하세요', tCopied:'점수를 복사했어요', tCopyFail:'공유할 수 없어요', tDownload:'영수증 이미지를 저장했어요',
- dToday:'오늘', boardNoteDay:'#{n} 그리드 최종 순위.', dayPrev:'이전 날', dayNext:'다음 날', promptOrtho:'철자 문제: 모드를 고르세요', askOrtho:'올바른 철자는?', promptCashOrtho:'캐시: 정확한 이름을 입력하세요 (특수 문자 포함)', tagOrtho:'철자', tagTrap:'오늘의 함정', playedN:'{n}일 플레이', sPlayed:'플레이한 날', playedLine:'{n} · 최고 {best}', trainBtn:'자유 게임으로 연습하기', trainNext:'다음 그리드까지 {left}. 그동안 무작위 제품 20개로 연습하세요. 연속 기록에는 영향이 없어요.', copyShort:'복사', share:'공유하기', shareOther:'다른 곳에 공유', shareTip2:'WhatsApp과 X는 앱이나 웹사이트를 열어요. « 이미지 »: 인스타그램·틱톡 스토리용.', imgShort:'이미지', imgTitle:'스토리용 이미지', imgNoteTouch:'이미지를 길게 눌러 저장한 다음 인스타그램이나 틱톡 스토리에 올리세요.', imgNoteDesk:'이미지를 다운로드한 뒤 휴대폰에서 올리세요.', imgShare:'이미지 공유', imgDownload:'이미지 다운로드', endNameNoteDaily:'선택 사항. 점수는 이미 저장됐어요. 이름을 넣으면 오늘의 순위에 표시돼요.', dDaily:'오늘의', dailyT:'오늘의 10', dailyS:'#{n} · 제품 10개, 2분', dailyDone:'#{n} · 완료: {pts}/50 · 다음 그리드까지 {left}', dailyResume:'#{n} · {i}번 문제부터 이어서', daysN:'{n}일 연속', daysN1:'1일', freeT:'자유 게임 · 제품 20개', freeStart:'자유 게임 시작', dailyLabel:'오늘의 10 #{n}', dailyResult:'CLIKEA 오늘의 10 #{n} · {pts}/{max}', dailyShare:'CLIKEA 오늘의 10 #{n}에서 {pts}/{max}점. 네 차례야.', defiDaily:'<b>{name}</b>님이 오늘의 10 #{n}에서 <b>{pts}/50</b>점을 받았어요. 더 잘할 수 있어요?', rankDaily:'오늘 순위: {total}명 중 {rank}위', sDays:'연속 일수', tGrid:'오늘의 그리드를 불러올 수 없어요. 잠시 후 다시 시도하세요', boardNoteDaily:'오늘의 순위, 파리 시간 자정에 초기화돼요.', freeShort:'자유 게임',
+ dToday:'오늘', boardNoteDay:'#{n} 그리드 최종 순위.', dayPrev:'이전 날', dayNext:'다음 날', promptOrtho:'철자 문제: 모드를 고르세요', askOrtho:'올바른 철자는?', promptCashOrtho:'캐시: 정확한 이름을 한 글자씩 입력하세요', tagOrtho:'철자', tagTrap:'오늘의 함정', playedN:'{n}일 플레이', sPlayed:'플레이한 날', playedLine:'{n} · 최고 {best}', trainBtn:'자유 게임으로 연습하기', trainNext:'다음 그리드까지 {left}. 그동안 무작위 제품 20개로 연습하세요. 연속 기록에는 영향이 없어요.', copyShort:'복사', share:'공유하기', shareOther:'다른 곳에 공유', shareTip2:'WhatsApp과 X는 앱이나 웹사이트를 열어요. « 이미지 »: 인스타그램·틱톡 스토리용.', imgShort:'이미지', imgTitle:'스토리용 이미지', imgNoteTouch:'이미지를 길게 눌러 저장한 다음 인스타그램이나 틱톡 스토리에 올리세요.', imgNoteDesk:'이미지를 다운로드한 뒤 휴대폰에서 올리세요.', imgShare:'이미지 공유', imgDownload:'이미지 다운로드', endNameNoteDaily:'선택 사항. 점수는 이미 저장됐어요. 이름을 넣으면 오늘의 순위에 표시돼요.', dDaily:'오늘의', dailyT:'오늘의 10', dailyS:'#{n} · 제품 10개, 2분', dailyDone:'#{n} · 완료: {pts}/50 · 다음 그리드까지 {left}', dailyResume:'#{n} · {i}번 문제부터 이어서', daysN:'{n}일 연속', daysN1:'1일', freeT:'자유 게임 · 제품 20개', freeStart:'자유 게임 시작', dailyLabel:'오늘의 10 #{n}', dailyResult:'CLIKEA 오늘의 10 #{n} · {pts}/{max}', dailyShare:'CLIKEA 오늘의 10 #{n}에서 {pts}/{max}점. 네 차례야.', defiDaily:'<b>{name}</b>님이 오늘의 10 #{n}에서 <b>{pts}/50</b>점을 받았어요. 더 잘할 수 있어요?', rankDaily:'오늘 순위: {total}명 중 {rank}위', sDays:'연속 일수', tGrid:'오늘의 그리드를 불러올 수 없어요. 잠시 후 다시 시도하세요', boardNoteDaily:'오늘의 순위, 파리 시간 자정에 초기화돼요.', freeShort:'자유 게임',
  f2:'제품 사진: ikea.com'
 }
 };
@@ -1021,6 +1051,7 @@ const DAILY_SIZE = 10;
 const DAILY_MAX = DAILY_SIZE * MODES.cash.pts;
 const DAILY_EPOCH = '2026-11-22';
 const DAILY_KEY = SELFTEST ? 'clikea-daily-selftest' : 'clikea-daily';
+const LEVEL_KEY = SELFTEST ? 'clikea-level-selftest' : 'clikea-level';
 const SB_REST = 'https://vubopkycvzzqufpqxpbg.supabase.co/rest/v1';
 
 /* ---------- le 10 du jour : dates à l'heure de Paris ---------- */
@@ -1388,7 +1419,80 @@ function beginGame(queue, kind, day, resume, slots){
   render();
 }
 function startGame(){
-  beginGame(shuffle(poolIndexes(state.difficulty)).slice(0, GAME_SIZE), 'free', null, null);
+  const lv = levelStore();
+  lv.sess = (lv.sess || []).filter(ts => Date.now() - ts < 2 * 3600 * 1000).concat(Date.now()).slice(-10);
+  levelSave(lv);
+  beginGame(adaptiveQueue(GAME_SIZE), 'free', null, null);
+}
+
+/* ---------- calibrage par les joueurs (docs/CALIBRATION.md) ---------- */
+// Valeurs de repli si la base ne répond pas ; les vraies valeurs viennent de clikea_settings.
+const SETTINGS = {free_conf_min: 0.85, free_zone_min: 0.5, free_share_conf: 0.25, free_share_defi: 0.15, free_explore: 0.1,
+  free_session_step: 0.15, free_repeat_days: 3, calibrated_min: 8, ref_theta: 0};
+async function loadCalibration(){
+  try{
+    const [rs, rd] = await Promise.all([
+      fetch(SB_REST + '/clikea_settings?select=key,value', {headers: apiHeaders()}),
+      fetch(SB_REST + '/rpc/clikea_difficulties', {method: 'POST', headers: apiHeaders(), body: '{}'})
+    ]);
+    if(rs.ok) (await rs.json()).forEach(r => { SETTINGS[r.key] = Number(r.value); });
+    if(rd.ok){
+      const dd = await rd.json();
+      PRODUCTS.forEach(p => { const v = dd[p.n]; if(v){ p.d = Number(v[0]); p.c = Number(v[1]); } });
+      EASY_SET = null;
+    }
+  }catch(e){}
+}
+function levelStore(){
+  let lv = null;
+  try{ lv = JSON.parse(localStorage.getItem(LEVEL_KEY) || 'null'); }catch(e){}
+  return lv || {t: SETTINGS.ref_theta, n: 0, sess: [], seen: {}};
+}
+function levelSave(lv){ try{ localStorage.setItem(LEVEL_KEY, JSON.stringify(lv)); }catch(e){} }
+function chanceOf(theta, d, c){ return c + (1 - c) / (1 + Math.exp(-(theta - d))); }
+// Niveau du joueur : même modèle que la base (Elo avec part de hasard), mis à jour à chaque réponse.
+function levelUpdate(p, ok, mode, ortho){
+  const lv = levelStore();
+  lv.seen = lv.seen || {};
+  lv.seen[p.n] = Date.now();
+  if(!ortho){
+    const c = mode === 'duo' ? 0.5 : mode === 'carre' ? 0.25 : 0;
+    const k = Math.max(0.15, 0.8 / (1 + 0.05 * lv.n));
+    lv.t += k * ((ok ? 1 : 0) - chanceOf(lv.t, p.d, c));
+    lv.n++;
+  }
+  const keys = Object.keys(lv.seen);
+  if(keys.length > 600) keys.sort((a, b) => lv.seen[a] - lv.seen[b]).slice(0, keys.length - 600).forEach(k2 => delete lv.seen[k2]);
+  levelSave(lv);
+}
+// Partie libre : 25 % de produits sûrs, 60 % dans la zone, 15 % de défis, dont 10 % de produits peu mesurés.
+function adaptiveQueue(size){
+  const S = SETTINGS, lv = levelStore();
+  const sessions = (lv.sess || []).length - 1;
+  const t = lv.t + Math.max(0, sessions) * S.free_session_step + (state.difficulty === 'hard' ? 0.8 : 0);
+  const recent = Date.now() - S.free_repeat_days * 86400000;
+  const all = PRODUCTS.map((p, i) => i).filter(i => !PRODUCTS[i].x && !((lv.seen || {})[PRODUCTS[i].n] > recent));
+  const pc = i => chanceOf(t, PRODUCTS[i].d, 0.25);
+  const conf = shuffle(all.filter(i => pc(i) >= S.free_conf_min));
+  const zone = shuffle(all.filter(i => pc(i) >= S.free_zone_min && pc(i) < S.free_conf_min));
+  const defi = shuffle(all.filter(i => pc(i) >= 0.3 && pc(i) < S.free_zone_min));
+  const isNew = i => (PRODUCTS[i].c || 0) < S.calibrated_min;
+  const nConf = Math.round(size * S.free_share_conf), nDefi = Math.round(size * S.free_share_defi);
+  const nExplore = Math.round(size * S.free_explore), nZone = size - nConf - nDefi;
+  const used = new Set();
+  const take = (pool, k, pred) => { const out = []; for(const i of pool){ if(out.length >= k) break; if(!used.has(i) && (!pred || pred(i))){ out.push(i); used.add(i); } } return out; };
+  const c1 = take(conf, nConf);
+  const explore = take(zone.concat(defi), nExplore, isNew);
+  const z = take(zone, nZone - explore.length, i => !isNew(i));
+  const dfi = take(defi, nDefi, i => !isNew(i));
+  let mid = explore.concat(z, dfi);
+  // Manques (catalogue peu mesuré, joueur hors norme) : on complète par les produits les plus proches de la zone.
+  const rest = all.filter(i => !used.has(i)).sort((a, b) => Math.abs(pc(a) - 0.7) - Math.abs(pc(b) - 0.7));
+  while(c1.length + mid.length < size && rest.length){ const i = rest.shift(); used.add(i); mid.push(i); }
+  // Ordre : deux produits sûrs pour entrer, le reste mélangé, un produit sûr pour finir (règle pic-fin).
+  const confQ = c1.slice();
+  const head = confQ.splice(0, 2), tail = confQ.splice(0, 1);
+  return head.concat(shuffle(mid.concat(confQ)), tail).slice(0, size);
 }
 
 /* ---------- le 10 du jour : grille, progression locale, série ---------- */
@@ -1535,7 +1639,7 @@ function logAnswer(p, ok){
 
 function show(id){
   document.body.dataset.screen = id;
-  ['intro','game','end','board'].forEach(s=>$('#'+s).classList.toggle('on', s===id));
+  ['intro','game','end','board','calib'].forEach(s=>$('#'+s).classList.toggle('on', s===id));
   window.scrollTo(0, 0);
 }
 
@@ -1555,7 +1659,6 @@ function distractors(p, k, hard){
   const pool = hard ? near.concat(far) : far.concat(near);
   return pool.slice(0, k).map(x => x.n);
 }
-function strictName(s){ return String(s || '').trim().toUpperCase().replace(/\s+/g, ' '); }
 
 function render(){
   if(state.i >= state.queue.length){ return finish(); }
@@ -1717,6 +1820,7 @@ function resolve(ok, pick){
   });
   state.results.push(state.timedOut ? 'to' : (ok ? 'ok' : 'ko'));
   logAnswer(p, ok);
+  if(state.kind !== 'calib') levelUpdate(p, ok, state.mode, isOrtho());
   dailyProgress({i: state.i + 1, pending: null});
   state.last = { ok, gain, p, isLast: state.i + 1 >= state.queue.length };
   renderFeedback();
@@ -1762,8 +1866,8 @@ function submitCash(){
   if(state.locked || state.mode !== 'cash') return;
   const val = $('#cashInput').value;
   if(!val.trim()){ toast(t('tEmpty')); $('#cashInput').focus(); return; }
-  // Orthographe : seule l'écriture exacte compte (accents compris).
-  resolve(isOrtho() ? strictName(val) === strictName(current().n) : matchName(val, current().n));
+  // Orthographe : accents ignorés (comme partout), mais lettres exactes, sans tolérance de faute.
+  resolve(isOrtho() ? norm(val) === norm(current().n) : matchName(val, current().n));
 }
 
 function next(){
@@ -2385,6 +2489,62 @@ $('#metaScore').textContent = '0 pt';
 })();
 
 setTimeout(()=>{ try{ loadBoard(); }catch(e){} }, 0);
+if(!SELFTEST) loadCalibration();
+
+/* ---------- mode calibrage (?calibrage=1) ---------- */
+const CALIB = !SELFTEST && /[?&]calibrage/.test(location.search);
+const CALIB_KEY = 'clikea-calib-done';
+let calibIdx = -1, calibStart = 0;
+function calibDone(){ try{ return JSON.parse(localStorage.getItem(CALIB_KEY) || '[]'); }catch(e){ return []; } }
+function calibMark(name){
+  const done = calibDone(); done.push(name);
+  try{ localStorage.setItem(CALIB_KEY, JSON.stringify(done)); }catch(e){}
+  $('#calibCount').textContent = done.length;
+}
+// Produits les moins mesurés d'abord, au hasard parmi eux.
+function calibNext(){
+  const done = new Set(calibDone());
+  const pool = PRODUCTS.map((p, i) => i).filter(i => !PRODUCTS[i].x && !done.has(PRODUCTS[i].n));
+  if(!pool.length){ $('#calibName').textContent = 'Tout est noté. Merci !'; return; }
+  const minC = Math.min(...pool.map(i => PRODUCTS[i].c || 0));
+  const low = shuffle(pool.filter(i => (PRODUCTS[i].c || 0) <= minC + 2)).slice(0, 1);
+  calibIdx = low[0];
+  const p = PRODUCTS[calibIdx];
+  $('#calibImg').src = p.i;
+  $('#calibName').textContent = p.n;
+  $('#calibType').textContent = typeOf(p);
+  calibStart = Date.now();
+  shuffle(pool.slice()).slice(0, 2).forEach(i => { const im = new Image(); im.src = PRODUCTS[i].i; });
+}
+function calibAnswer(known){
+  if(calibIdx < 0) return;
+  const p = PRODUCTS[calibIdx];
+  const n = calibDone().length;
+  fetch(SB_REST + '/clikea_answers', {method: 'POST', headers: apiHeaders({'Prefer': 'return=minimal'}), keepalive: true,
+    body: JSON.stringify({device_id: deviceId(), source: 'calib', day: null, difficulty: null, position: n % 20 + 1,
+      product: p.n, mode: 'cash', correct: known, timed_out: false, ms: Math.min(600000, Date.now() - calibStart), lang: lang, format: 'photo', role: null})
+  }).catch(() => {});
+  calibMark(p.n);
+  calibNext();
+}
+function calibFlag(reason){
+  if(calibIdx < 0) return;
+  const p = PRODUCTS[calibIdx];
+  fetch(SB_REST + '/clikea_flags', {method: 'POST', headers: apiHeaders({'Prefer': 'return=minimal'}),
+    body: JSON.stringify({device_id: deviceId(), product: p.n, reason: reason})}).catch(() => {});
+  calibMark(p.n);
+  toast('Signalé : ' + p.n);
+  calibNext();
+}
+$('#calibYes').addEventListener('click', () => calibAnswer(true));
+$('#calibNo').addEventListener('click', () => calibAnswer(false));
+document.querySelectorAll('.calib-flags button').forEach(b => b.addEventListener('click', () => calibFlag(b.dataset.reason)));
+if(CALIB){
+  show('calib');
+  $('#calibCount').textContent = calibDone().length;
+  loadCalibration().then(calibNext);
+  track('clikea_calib_open', {});
+}
 renderDailyEntry();
 
 // --- démo de l'impression, ?demo=1 ---
@@ -2680,6 +2840,25 @@ if(location.search.includes('selftest')){
     state.challenge = {score: 30, name: 'Ben', day: today}; renderDefi();
     ok(document.getElementById('defiBanner').textContent.indexOf('Ben a fait 30/50 au 10 du jour #'+dayNo(today))===0,'bandeau de défi du jour');
     state.challenge = null; renderDefi();
+    // --- partie libre adaptative ---
+    localStorage.removeItem(LEVEL_KEY);
+    PRODUCTS.forEach((p, i) => { p.c = i % 3 === 0 ? 0 : 20; });
+    const aq = adaptiveQueue(20);
+    ok(aq.length === 20 && new Set(aq).size === 20,'partie libre : 20 produits distincts');
+    const lv0 = levelStore().t;
+    const pcq = i => chanceOf(lv0, PRODUCTS[i].d, 0.25);
+    ok(pcq(aq[0]) >= SETTINGS.free_conf_min && pcq(aq[19]) >= SETTINGS.free_conf_min,'partie libre : commence et finit par des produits sûrs');
+    ok(aq.filter(i => pcq(i) < 0.3).length === 0,'partie libre : jamais de produit quasi inconnu');
+    levelUpdate(PRODUCTS[aq[0]], true, 'cash', false);
+    ok(levelStore().t > lv0 && levelStore().n === 1,'niveau du joueur monte après une bonne réponse');
+    const seenNow = levelStore().seen[PRODUCTS[aq[0]].n];
+    ok(seenNow && adaptiveQueue(20).indexOf(aq[0]) === -1,'produit vu récemment : pas de retour avant quelques jours');
+    const lvH = levelStore(); lvH.t = 2; levelSave(lvH);
+    const hq = adaptiveQueue(20);
+    ok(hq.reduce((a, i) => a + PRODUCTS[i].d, 0) / 20 > aq.reduce((a, i) => a + PRODUCTS[i].d, 0) / 20,'joueur fort : produits plus difficiles');
+    localStorage.removeItem(LEVEL_KEY);
+    PRODUCTS.forEach(p => { delete p.c; });
+
     // --- format orthographe et faux noms ---
     const oi = PRODUCTS.findIndex(p => p.k && p.o.length >= 3);
     const op = PRODUCTS[oi];
@@ -2699,7 +2878,7 @@ if(location.search.includes('selftest')){
     const plain = op.n.normalize('NFD').replace(/[\u0300-\u036f]/g,'');
     document.querySelector('#cashInput').value = plain === op.n ? op.n.toLowerCase() : plain;
     document.querySelector('#cashBtn').click();
-    ok(plain === op.n ? state.pts === 8 : state.pts === 3,'cash orthographe : écriture exacte exigée ('+op.n+' / '+plain+')');
+    ok(state.pts === 8,'cash orthographe : accents ignorés ('+op.n+' / '+plain+')');
     const hp = PRODUCTS.find(p => PRODUCTS.filter(x => x.v === p.v).length >= 4);
     const hd = distractors(hp, 3, true), ed = distractors(hp, 3, false);
     ok(hd.every(n => PRODUCTS.find(x => x.n === n).v === hp.v),'faux noms durs : même famille visuelle ('+hp.v+')');

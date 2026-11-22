@@ -108,6 +108,7 @@ curl -s -o /dev/null -w '%{http_code}\n' https://clever-bloom-q2pw.here.now/
 ## Documentation
 
 - [`docs/POURQUOI.md`](docs/POURQUOI.md) — problème, public, objectif, métriques, principes, non-objectifs, journal des décisions.
+- [`docs/CALIBRATION.md`](docs/CALIBRATION.md) — calibrage par les joueurs : difficulté mesurée, partie libre adaptative, tirage du jour, mode `?calibrage=1`, réglages.
 - [`docs/PRODUITS.md`](docs/PRODUITS.md) — catalogue, difficulté, recette de fraîcheur du 10 du jour, format orthographe, séries.
 - [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) — structure du code, flux de jeu, données, Supabase, PostHog, hébergement, contrôles.
 - [`docs/VIRALITE.md`](docs/VIRALITE.md) — recherches sur la viralité des jeux web et état du produit.

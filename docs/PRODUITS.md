@@ -1,5 +1,7 @@
 # Produits : catalogue, difficulté, recette du 10 du jour
 
+> **Mise à jour :** le choix des produits suit maintenant [`CALIBRATION.md`](CALIBRATION.md) (probabilité de réussite mesurée par les joueurs, partie libre adaptative, calibrage nocturne). Les statuts de fraîcheur et les plafonds ci-dessous restent en vigueur comme préférences.
+
 Version partageable : https://rapid-reef-8rww.here.now/ — décisions du 22 novembre 2026.
 
 ## Principes décidés
