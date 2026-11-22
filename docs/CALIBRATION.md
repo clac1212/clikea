@@ -45,6 +45,16 @@ Pour chaque produit, chance de le trouver en Carré pour ce joueur, puis :
 - « Produits difficiles » : niveau + 0,8 (sélection plus exigeante, classement séparé).
 - Répétition : un produit vu revient après 3 jours, jamais deux fois dans une partie. Les cultes reviennent donc régulièrement.
 
+## L'orthographe : la deuxième façon de jouer un produit
+
+Un produit qu'on connaît redevient un défi quand la question porte sur son écriture. C'est ainsi qu'on réutilise les cultes et les produits déjà trouvés sans lassitude.
+
+- **Quand** : seulement sur des produits connus du joueur — cultes, produits « sûrs » pour lui (≥ 85 %), ou déjà trouvés (mémoire `known` dans `clikea-level`). Jamais sur un produit inconnu : il faut savoir ce que c'est pour juger l'écriture.
+- **Partie libre** : 3 ou 4 questions d'orthographe sur 20, jamais sur les deux premières ni sur la dernière. Jusqu'à 2 produits déjà trouvés il y a plus de 3 jours reviennent exprès, en priorité en orthographe.
+- **10 du jour** : une question d'orthographe chaque jour, sur une place sûre (1, 2 ou 10), réservée aux cultes et aux produits mesurés (au moins 8 premières rencontres).
+- **Fausses orthographes** : des variantes de lettres crédibles (sons proches K/C, KS/X, V/W ; lettres doublées ou simples ; voyelles voisines), une par famille de piège quand c'est possible. **Aucune variante qui ne change qu'un accent** : le jeu ignore les accents, y compris en Cash d'orthographe où seules les lettres comptent (KALLAX oui, KALAX non). Jamais un vrai nom IKEA.
+- **Mesure séparée** : l'orthographe n'entre pas dans la difficulté Elo du produit ; sa réussite propre est dans `clikea_product_stats.pct_ortho`.
+
 ## 10 du jour : calibré sur l'ensemble des joueurs
 
 Même grille pour tous, donc pas d'adaptation individuelle. Chance en Carré pour un joueur de niveau `ref_theta` :

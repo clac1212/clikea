@@ -279,26 +279,56 @@ def step_fetch_langs():
     print('langues terminé :', len(langs))
 
 
+def strip_accents(s):
+    s = unicodedata.normalize('NFD', s.replace('Ø', 'O').replace('ø', 'o'))
+    return ''.join(c for c in s if unicodedata.category(c) != 'Mn')
+
+
 def fake_spellings(name, real):
-    """Fausses orthographes plausibles, jamais un vrai nom IKEA."""
+    """Fausses orthographes crédibles qui changent des lettres, jamais seulement un accent
+    (le jeu ignore les accents), et jamais un vrai nom IKEA. Une variante par famille de piège si possible."""
     n = name
-    out = set()
-    swaps = [('Ä', 'A'), ('Ö', 'O'), ('Å', 'AA'), ('Å', 'A'), ('A', 'Ä'), ('O', 'Ö'), ('K', 'C'), ('C', 'K'), ('KS', 'X'),
-             ('X', 'KS'), ('V', 'W'), ('W', 'V'), ('J', 'Y'), ('Y', 'J'), ('I', 'Y'), ('E', 'Ë'), ('Ä', 'E'), ('Ö', 'Ø')]
-    for a, b in swaps:
-        i = n.find(a)
-        while i != -1:
-            out.add(n[:i] + b + n[i + len(a):])
-            i = n.find(a, i + 1)
+    base = strip_accents(n)
+    real_plain = {strip_accents(r) for r in real}
+    classes = [
+        # sons proches
+        [('K', 'C'), ('C', 'K'), ('CK', 'K'), ('K', 'CK'), ('KS', 'X'), ('X', 'KS'), ('V', 'W'), ('W', 'V'), ('J', 'Y'),
+         ('Y', 'J'), ('I', 'Y'), ('Y', 'I'), ('Å', 'O'), ('Å', 'AA'), ('Ä', 'E'), ('Ö', 'Ø'), ('Ö', 'EU'), ('S', 'Z'), ('Z', 'S'),
+         ('F', 'PH'), ('T', 'TH'), ('G', 'GH'), ('Q', 'K')],
+        # lettres doublées ou simples
+        [],
+        # voyelles voisines
+        [('E', 'A'), ('A', 'E'), ('O', 'U'), ('U', 'O'), ('I', 'E'), ('E', 'I')],
+    ]
+    found = [[], [], []]
+    for k in (0, 2):
+        for a, b in classes[k]:
+            i = n.find(a)
+            while i != -1:
+                found[k].append(n[:i] + b + n[i + len(a):])
+                i = n.find(a, i + 1)
     for i in range(len(n) - 1):  # lettre doublée -> simple
         if n[i] == n[i + 1] and n[i].isalpha():
-            out.add(n[:i] + n[i + 1:])
+            found[1].append(n[:i] + n[i + 1:])
     for i, c in enumerate(n):  # consonne simple -> doublée
-        if c in 'LMNPRSTKF' and (i + 1 >= len(n) or n[i + 1] != c) and (i == 0 or n[i - 1] != c) and 0 < i < len(n) - 1:
-            out.add(n[:i] + c + c + n[i + 1:])
-    out = sorted(s for s in out if s != n and s not in real)
-    random.Random(n).shuffle(out)
-    return out[:3]
+        if c in 'LMNPRSTKFGD' and 0 < i < len(n) - 1 and n[i + 1] != c and n[i - 1] != c:
+            found[1].append(n[:i] + c + c + n[i + 1:])
+    rnd = random.Random(n)
+    ok = lambda v: v != n and strip_accents(v) != base and strip_accents(v) not in real_plain and v not in real
+    pools = []
+    for f in found:
+        f = sorted(set(v for v in f if ok(v)))
+        rnd.shuffle(f)
+        pools.append(f)
+    out = []
+    while len(out) < 3 and any(pools):  # une variante de chaque famille à tour de rôle
+        for f in pools:
+            while f and len(out) < 3:
+                v = f.pop()
+                if strip_accents(v) not in {strip_accents(o) for o in out}:
+                    out.append(v)
+                    break
+    return out
 
 
 def seed_difficulty(r_total, top, iconic):
