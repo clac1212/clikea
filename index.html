@@ -165,6 +165,11 @@ h1 mark{background:none;color:var(--yellow);padding:0;box-decoration-break:clone
 .rank-body .sc{font-weight:800;font-variant-numeric:tabular-nums}
 .rank-body .sc i{font-style:normal;font-size:10px;color:var(--ink-3);font-weight:700}
 .rank-body .row.me{background:#FFF7CC}
+.endboard{width:100%;max-width:420px;margin:12px auto 4px;text-align:left}
+.endboard .rank-body{border-top:3px solid var(--yellow)}
+.endboard .row.gap{padding:2px 14px;font-size:12px;color:var(--ink-3);display:block;text-align:center}
+.endboard-btn{display:block;width:100%;padding:13px 14px;border:0;border-top:1px solid var(--line);background:#fff;color:#111;font:inherit;font-size:13px;font-weight:900;text-transform:uppercase;letter-spacing:.04em;cursor:pointer}
+.endboard-btn:hover{background:#FFF7CC}
 .rank-body .empty{padding:16px 14px;font-size:12px;color:var(--ink-3)}
 
 /* ---------- jeu ---------- */
@@ -663,6 +668,10 @@ footer .wrap{padding:14px var(--pad);display:flex;gap:16px;flex-wrap:wrap;justif
 
       <p class="verdict" id="verdict"></p>
       <span class="rankline" id="rankLine" hidden></span>
+      <aside class="rank endboard" id="endBoard" hidden>
+        <div class="rank-body" id="endBoardRows"></div>
+        <button class="endboard-btn" type="button" id="boardFromEnd">Voir tout le classement →</button>
+      </aside>
       <div class="end-dex" id="endDex">
         <button type="button" id="endDexOpen"><span class="end-dex-kicker">CLIKEDEX</span><strong id="endDexTitle"></strong><span id="endDexProducts"></span><span id="endDexNote"></span><span class="end-dex-link" id="endDexLink"></span></button>
       </div>
@@ -685,7 +694,6 @@ footer .wrap{padding:14px var(--pad);display:flex;gap:16px;flex-wrap:wrap;justif
         <p class="share-label"><span id="shareLabelText">Ou partager ailleurs</span></p>
         <div class="targets" id="shareTargets"></div>
         <p class="share-tip" id="shareTip">WhatsApp et X ouvrent l’app ou le site. « Image » : pour ta story Instagram ou TikTok.</p>
-        <button class="linkish" type="button" id="boardFromEnd">Voir le classement</button>
       </div>
     </div>
   </section>
@@ -1053,12 +1061,12 @@ function ptsLabel(n){ return t(n > 1 ? 'gainMany' : 'gain').replace('{n}', n); }
 function metaScoreLabel(n){ return t(n > 1 ? 'metaScoreMany' : 'metaScore').replace('{n}', n); }
 
 const UI = {
- fr:{quit:'Quitter la partie',shareLabel:'Partager le ticket',note:"Image du ticket ou résultat texte",boardLink:'Voir le classement',native:'Partager maintenant',close:'Fermer',img:'Image 1080 × 1350 jointe automatiquement'},
- en:{quit:'Quit the game',shareLabel:'Share the receipt',note:'Ticket image or text result',boardLink:'See the leaderboard',native:'Share now',close:'Close',img:'1080 × 1350 image attached automatically'},
- es:{quit:'Salir de la partida',shareLabel:'Compartir el ticket',note:'Imagen del ticket o resultado en texto',boardLink:'Ver la clasificación',native:'Compartir ahora',close:'Cerrar',img:'Imagen 1080 × 1350 adjunta automáticamente'},
- de:{quit:'Spiel verlassen',shareLabel:'Ticket teilen',note:'Ticketbild oder Ergebnis als Text',boardLink:'Rangliste ansehen',native:'Jetzt teilen',close:'Schließen',img:'Bild 1080 × 1350 wird automatisch angehängt'},
- ko:{quit:'게임 그만하기',shareLabel:'영수증 공유',note:'영수증 이미지 또는 텍스트 결과',boardLink:'순위 보기',native:'지금 공유',close:'닫기',img:'1080 × 1350 이미지 자동 첨부'},
- it:{quit:'Esci dalla partita',shareLabel:'Condividi lo scontrino',note:"Immagine dello scontrino o risultato in testo",boardLink:'Vedi la classifica',native:'Condividi ora',close:'Chiudi',img:'Immagine 1080 × 1350 allegata automaticamente'}
+ fr:{quit:'Quitter la partie',shareLabel:'Partager le ticket',note:"Image du ticket ou résultat texte",boardLink:'Voir tout le classement →',me:'Toi',native:'Partager maintenant',close:'Fermer',img:'Image 1080 × 1350 jointe automatiquement'},
+ en:{quit:'Quit the game',shareLabel:'Share the receipt',note:'Ticket image or text result',boardLink:'See the full leaderboard →',me:'You',native:'Share now',close:'Close',img:'1080 × 1350 image attached automatically'},
+ es:{quit:'Salir de la partida',shareLabel:'Compartir el ticket',note:'Imagen del ticket o resultado en texto',boardLink:'Ver toda la clasificación →',me:'Tú',native:'Compartir ahora',close:'Cerrar',img:'Imagen 1080 × 1350 adjunta automáticamente'},
+ de:{quit:'Spiel verlassen',shareLabel:'Ticket teilen',note:'Ticketbild oder Ergebnis als Text',boardLink:'Ganze Rangliste ansehen →',me:'Du',native:'Jetzt teilen',close:'Schließen',img:'Bild 1080 × 1350 wird automatisch angehängt'},
+ ko:{quit:'게임 그만하기',shareLabel:'영수증 공유',note:'영수증 이미지 또는 텍스트 결과',boardLink:'전체 순위 보기 →',me:'나',native:'지금 공유',close:'닫기',img:'1080 × 1350 이미지 자동 첨부'},
+ it:{quit:'Esci dalla partita',shareLabel:'Condividi lo scontrino',note:"Immagine dello scontrino o risultato in testo",boardLink:'Vedi tutta la classifica →',me:'Tu',native:'Condividi ora',close:'Chiudi',img:'Immagine 1080 × 1350 allegata automaticamente'}
 };
 
 function applyLang(next, opts){
@@ -1444,6 +1452,33 @@ function setSubmitLine(){
   } else {
     el.hidden = true;
   }
+  loadEndBoard();
+}
+async function loadEndBoard(){
+  const box = $('#endBoard'), rows = $('#endBoardRows'); if(!box || !rows) return;
+  const diff = state.kind === 'free' ? 'arcade' : 'daily';
+  const key = diff + '|' + state.pts + '|' + (state.rank || '') + '|' + (state.player || '');
+  if(loadEndBoard.key === key) return; loadEndBoard.key = key;
+  const keep = state.boardDay; state.boardDay = null;
+  const q = boardQuery(diff); state.boardDay = keep;
+  let data = [];
+  try{ const r = await fetch(q, {headers: apiHeaders()}); if(r.ok) data = await r.json(); }catch(e){}
+  if(loadEndBoard.key !== key) return;
+  const me = (state.player || '').trim().toLowerCase();
+  const top = (data || []).slice(0, 3);
+  let mineShown = false;
+  let html = top.map((r, i) => {
+    const mine = me && r.name.trim().toLowerCase() === me && r.score === state.pts;
+    if(mine) mineShown = true;
+    return '<div class="row' + (mine ? ' me' : '') + '"><span class="pos">' + (i + 1) + '</span><span class="nm">' + escapeHtml(r.name) + '</span><span class="sc">' + boardScore(r, diff) + '</span></div>';
+  }).join('');
+  if(!mineShown && state.rank && state.submitOk){
+    if(state.rank > top.length + 1) html += '<div class="row gap">⋯</div>';
+    html += '<div class="row me"><span class="pos">' + state.rank + '</span><span class="nm">' + escapeHtml(state.player || (UI[lang] || UI.fr).me) + '</span><span class="sc">' + boardScore({score: state.pts}, diff) + '</span></div>';
+  }
+  if(!html){ box.hidden = true; return; }
+  rows.innerHTML = html;
+  box.hidden = false;
 }
 async function openBoard(diff, back){
   state.boardBack = back || 'intro';
