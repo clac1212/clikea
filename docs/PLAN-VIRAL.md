@@ -147,7 +147,6 @@ Données : tableau de bord PostHog du projet CLIKEA, requêtes du 23/11/2026. So
 
 ## 8. Validation (CLIKEA, 23 novembre 2026)
 
-- **Validés** : T1 Créateurs (validé par César, messages relus par CLIKEA puis César avant envoi), T2 Agrégateurs (formulaires seulement, pas la suggestion GitHub), T3 Vidéo courte (les deux formats).
-- **Non validés pour l'instant par César** : T4 Cercles, T5 Reddit, la suggestion GitHub sur « dles ». Ne pas les lancer ; on en reparle au bilan du 1er décembre.
+- **Validés par César, en entier** : T1 Créateurs, T2 Agrégateurs (suggestion GitHub comprise, depuis le compte de César), T3 Vidéo courte (les deux formats), T4 Cercles (César, Ben, Simon), T5 Reddit. Les messages et posts sont relus par CLIKEA puis par César avant de partir.
 - **Produit** : 1) filtre anti-robots sur les tuiles PostHog, tout de suite (invisible) ; 2) H4 aperçu du défi avec le score, version suivante (il faut une fonction serveur pour l'image d'aperçu, le site est statique) ; 3) H5 ligne du piège, version d'après.
 - **Contraintes** : Buffer gratuit = 10 posts programmés par canal ; ne jamais montrer la grille du jour.
