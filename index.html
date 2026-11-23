@@ -3391,5 +3391,38 @@ if(location.search.includes('selftest')){
 
 
 </script>
+<style>
+#dexShareBtn{margin-top:18px;width:100%;font-size:14px}#dxShareModal .sheetbox{max-height:92dvh;overflow:auto}#dxShareModal img{display:block;width:100%;max-height:52dvh;object-fit:contain;border-radius:12px;background:#0058a3}#dxShareModal .targets{margin:16px 0}#dxShareModal p{font-size:12px;line-height:1.5;color:#666}#dxShareModal h3{margin:0 0 14px}
+</style>
+<div class="sheetwrap" id="dxShareModal" hidden><div class="sheetbox" role="dialog" aria-modal="true" aria-labelledby="dxShareTitle"><h3 id="dxShareTitle">Ma collection, mon flex.</h3><img id="dxSharePreview" alt="Carte de ma collection Clikedex"><div class="targets" id="dxShareTargets"></div><button class="btn wide" id="dxShareNative" disabled>Préparation…</button><p>Instagram / Story : partage l’image depuis ton téléphone, ou enregistre-la pour l’ajouter à ta publication. WhatsApp et X partagent le texte et le lien.</p><button class="btn ghost wide" id="dxShareClose">Fermer</button></div></div>
+<script>
+let dxShareFile=null,dxShareURL=null,dxSharePrevious=null;
+const dxShareButton=document.createElement('button'); dxShareButton.id='dexShareBtn';dxShareButton.className='btn ghost';dxShareButton.textContent='↗ Partager ma collection';dxShareButton.type='button';
+$('#dexStats').after(dxShareButton);
+function dxShareText(source){const s=dexStats();return `Mon Clikedex : ${s.found}/${s.total} meubles reconnus.\n★ ${s.r1f}/${s.r1} rares · ★★ ${s.r2f}/${s.r2} très rares\nEt toi, t’en reconnais combien ?\nhttps://clikeagame.com/?utm_source=${source}&utm_medium=share&utm_campaign=clikedex`;}
+function dxDrawCard(){
+ const s=dexStats(),c=document.createElement('canvas');c.width=1080;c.height=1350;const x=c.getContext('2d');
+ const text=(v,px,y,color='#fff',weight=700)=>{x.fillStyle=color;x.font=`${weight} ${px}px Arial`;x.fillText(v,80,y);};
+ x.fillStyle='#0058a3';x.fillRect(0,0,1080,1350);x.fillStyle='#ffda1a';x.fillRect(70,60,290,76);x.fillStyle='#0058a3';x.font='900 52px Arial';x.fillText('CLIKEA',100,117);
+ text('MON CLIKEDEX',28,195,'#c9dff1');text(String(s.found),180,374,'#ffda1a',900);const numberWidth=x.measureText(String(s.found)).width;x.font='700 56px Arial';x.fillStyle='#fff';x.fillText('/ '+s.total,110+numberWidth,374);
+ text('MEUBLES RECONNUS',34,430);x.fillStyle='#387cb6';x.fillRect(80,465,920,12);x.fillStyle='#ffda1a';x.fillRect(80,465,920*s.found/s.total,12);
+ text('★  '+s.r1f+' / '+s.r1+' rares',38,554,'#ffda1a');text('★★  '+s.r2f+' / '+s.r2+' très rares',38,614,'#ffda1a');
+ const d=dexStore(),list=dexList();const cols=32,rows=Math.ceil(list.length/cols),size=Math.min(20,250/rows),gap=7,top=670;
+ list.forEach((i,k)=>{x.fillStyle=dexStateOf(d[PRODUCTS[i].n])==='found'?'#ffda1a':'#377caf';x.beginPath();x.roundRect(80+(k%cols)*(size+gap),top+Math.floor(k/cols)*(size+gap),size,size,4);x.fill();});
+ text('Chaque carré, un meuble à trouver.',24,top+rows*(size+gap)+37,'#c9dff1',400);
+ text('Et toi, t’en reconnais',48,1155);text('combien ?',48,1215);text('clikeagame.com',30,1290,'#ffda1a');return c;
+}
+function dxCloseShare(){ $('#dxShareModal').hidden=true;document.body.style.overflow='';if(dxSharePrevious)dxSharePrevious.focus(); }
+$('#dxShareClose').onclick=dxCloseShare;$('#dxShareModal').onclick=e=>{if(e.target.id==='dxShareModal')dxCloseShare();};
+document.addEventListener('keydown',e=>{if($('#dxShareModal').hidden)return;if(e.key==='Escape')dxCloseShare();if(e.key==='Tab'){const a=[...$('#dxShareModal').querySelectorAll('a,button:not(:disabled)')];if(e.shiftKey&&document.activeElement===a[0]){e.preventDefault();a.at(-1).focus();}else if(!e.shiftKey&&document.activeElement===a.at(-1)){e.preventDefault();a[0].focus();}}});
+dxShareButton.onclick=()=>{
+ dxSharePrevious=document.activeElement;$('#dxShareModal').hidden=false;document.body.style.overflow='hidden';$('#dxShareClose').focus();dxShareFile=null;$('#dxShareNative').disabled=true;
+ $('#dxShareTargets').innerHTML=['WhatsApp','X','Copier'].map(n=>n==='Copier'?'<button type="button" id="dxCopy">Copier</button>':'<a target="_blank" rel="noopener" href="'+(n==='X'?'https://x.com/intent/post?text=':'https://wa.me/?text=')+encodeURIComponent(dxShareText(n.toLowerCase()))+'">'+n+'</a>').join('');
+ $('#dxCopy').onclick=()=>{const v=dxShareText('copy');const done=()=>toast(t('copyDone'));if(navigator.clipboard)navigator.clipboard.writeText(v).then(done).catch(()=>fallbackCopy(v,done));else fallbackCopy(v,done);};
+ dxDrawCard().toBlob(blob=>{if(!blob){toast('Image indisponible. Réessaie.');return;}if(dxShareURL)URL.revokeObjectURL(dxShareURL);dxShareURL=URL.createObjectURL(blob);dxShareFile=new File([blob],'mon-clikedex.png',{type:'image/png'});$('#dxSharePreview').src=dxShareURL;$('#dxShareNative').disabled=false;$('#dxShareNative').textContent=navigator.canShare&&navigator.canShare({files:[dxShareFile]})?'Partager l’image':'Télécharger l’image';},'image/png');
+};
+$('#dxShareNative').onclick=()=>{if(!dxShareFile)return;if(navigator.canShare&&navigator.canShare({files:[dxShareFile]})){navigator.share({files:[dxShareFile],text:dxShareText('native')}).catch(e=>{if(e.name!=='AbortError')toast('Enregistre l’image avec un appui long.');});}else{const a=document.createElement('a');a.href=dxShareURL;a.download='mon-clikedex.png';a.click();}};
+</script>
+
 </body>
 </html>
