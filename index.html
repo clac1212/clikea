@@ -2309,6 +2309,14 @@ $('#shareSheet').addEventListener('click', (e)=>{ if(e.target.id==='shareSheet')
 $('#shareNative').addEventListener('click', shareImage);
 document.addEventListener('keydown', (e)=>{ if(e.key==='Escape') closeShare(); });
 $('#quitBtn').addEventListener('click', ()=>{ stopClock(); show('intro'); renderDailyEntry(); });
+$('#logoHome').addEventListener('click', e => {
+  e.preventDefault();
+  stopClock(); leaveBoard();
+  if(typeof closeDexCard === 'function') closeDexCard();
+  show('intro'); renderDailyEntry(); if(typeof renderDexLink === 'function') renderDexLink();
+  window.scrollTo(0, 0);
+  track('clikea_logo_home', {});
+});
 
 /* ---------- Clikedex : tous les produits en jeu, trouvés ou non (stockage local) ---------- */
 const DEX_KEY = SELFTEST ? 'clikea-dex-selftest' : 'clikea-dex';
@@ -3395,7 +3403,8 @@ if(location.search.includes('selftest')){
     ok(shareUrl('x').indexOf('jour='+today)>-1 && shareUrl('x').indexOf('defi='+dexp)>-1,'lien de défi sur la même grille');
     ok(document.getElementById('trainBox').hidden===false && document.getElementById('replayBtn').hidden===true,'entraînement proposé après la partie du jour');
     ok(getComputedStyle(document.getElementById('tkBottom')).display==='none','plus de bandeau « Prêt à me battre ? » sur le ticket');
-    show('intro'); renderDailyEntry();
+    $('#logoHome').click();
+    ok($('#intro').classList.contains('on') && !$('#end').classList.contains('on'),'logo : retour à l’accueil depuis la fin');
     ok(document.getElementById('dailySub').textContent.indexOf(dexp+'/50')>-1,'accueil : partie du jour déjà faite ('+document.getElementById('dailySub').textContent+')');
     ok(document.getElementById('dailySub').textContent.indexOf('🔥 1')===0,'accueil : série affichée');
     showDailyResult(dailyStore()[today]);
