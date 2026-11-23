@@ -133,6 +133,28 @@ Chaque contenu porte une question qui appelle un commentaire ou un envoi (« env
 - Bio : « Le jeu des noms IKEA. Jeu de fan, non affilié à IKEA. »
 - Pas de logo IKEA ni de « IKEA » dans le pseudo.
 
+### Reddit et groupes Facebook (ajout du 23 novembre 2026)
+
+Principe : à visage découvert, depuis les vrais comptes de César ou Ben (« avec un pote, on a codé un petit jeu »). Pas de faux comptes ni de faux avis : Reddit repère les comptes neufs qui ne font que de la pub et les bannit sans prévenir, et les admins Facebook suppriment ces posts.
+
+| Communauté | Règle relevée le 23/11/2026 | Approche |
+|---|---|---|
+| r/WebGames | titre qui commence par le nom du jeu, lien direct vers le jeu, pas d'inscription obligatoire, un post par jeu tous les 3 mois | post en anglais |
+| r/IKEA | hors-sujet ou contenu jugé faible retirés à la discrétion des modérateurs | écrire d'abord aux modérateurs |
+| r/IndieGaming | compte d'au moins 1 semaine, un post toutes les 2 semaines au plus | post de présentation |
+| r/Quebec | spam interdit, contenu original autorisé | post francophone |
+| r/france | Forum Libre seulement, compte actif | commentaire dans le Forum Libre |
+| r/trivia, r/ikeahacks | autopromotion interdite / hacks seulement | ne pas poster |
+
+Facebook (public plus âgé) : chercher « IKEA », « astuces IKEA », « bons plans IKEA » suivi de la ville, « déco petit budget », « quiz culture générale », « jeux de lettres ». Choisir les groupes actifs, demander l'accord de l'admin, poster une photo avec « Vous connaissez son vrai nom ? » et mettre le lien en commentaire. Aucun groupe n'a encore été vérifié : la recherche demande d'être connecté.
+
+Liens suivis : `?utm_source=reddit&utm_campaign=<communauté>` et `?utm_source=facebook`.
+
+Brouillons :
+- r/WebGames : « CLIKEA – guess the real name of IKEA products from a photo » / « A friend and I made a small free browser game: you see an IKEA product and pick its real name (2 choices, 4 choices, or type it). A new "daily 10" every day, no sign-up, 6 languages. Fan project, not affiliated with IKEA. Feedback welcome! »
+- Message aux modérateurs de r/IKEA : « A friend and I built a free fan game where you guess IKEA product names from photos (no ads, no sign-up, not affiliated with IKEA). Would it be OK to share it once with the community? »
+- Groupe Facebook : « Petit défi 🙂 Vous connaissez le vrai nom de ce meuble IKEA ? Avec un ami, on a créé un petit jeu gratuit pour tester ça, le lien est en commentaire. Moi, j'en ai trouvé 6 sur 10… »
+
 ## 7. Suivi et itération
 
 - **Rapport hebdomadaire**, chaque lundi matin (routine) :
