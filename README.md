@@ -38,6 +38,7 @@ Deux portes à l'accueil : **le 10 du jour** (bouton principal) et **la partie l
 - **Deux façons de partager** :
   - **résultat texte copiable** — `CLIKEA 52/100 · 13/20 noms · série 6` suivi d'une grille de cases vert/rouge, sans aucun nom de produit, donc sans spoiler ;
   - **image PNG du ticket** en 1080 × 1350, via le partage natif du téléphone, sinon téléchargement.
+- **Clikedex** (lien discret sous « Partie libre ») : tous les produits en jeu (réseau cœur + déjà vus, plus tout produit croisé), en trois états comme un Pokédex — *trouvé* au moins une fois (photo, nom, type, prix, historique), *raté* (photo grise, nom caché), *inconnu* (photo floue, rien d'autre). Aucun moyen de voir un nom sans le trouver en partie. Stats (trouvés, ratés, Cash, réussite), onglets, recherche, et collection de rares : ★★ = 8 % les plus durs du réseau, ★ = 22 % suivants (rareté propre au Clikedex, le barème ne change pas). Progression locale (`localStorage` `clikea-dex`), amorcée depuis la mémoire de niveau.
 - **Défi nominatif** : un lien partagé contient le score (`?defi=52&par=Cesar`) ; l'accueil affiche « Cesar a marqué 52/100. Tu fais mieux ? ».
 - **Traçabilité** : chaque lien partagé porte un `utm_source` (x, whatsapp, linkedin, copy, native).
 
@@ -92,7 +93,7 @@ curl -s -o /dev/null -w '%{http_code}\n' https://clever-bloom-q2pw.here.now/
 
 - **Le 10 du jour** : grilles, scores du jour et réponses par produit dans Supabase (`clikea_daily_grid`, `clikea_daily_scores`, `clikea_answers`, vue `clikea_product_stats`). Détails dans [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md#le-10-du-jour).
 - **Classement** : Supabase, projet `vubopkycvzzqufpqxpbg`, table `public.clikea_scores`. La clé publiable est dans `index.html` — c'est normal, elle ne permet que lecture et insertion ; la suppression est refusée.
-- **Analytics** : PostHog EU (`https://eu.i.posthog.com`), projet « CLIKEA ». Événements : `clikea_view`, `clikea_defi_view`, `clikea_game_started`, `clikea_question_answered`, `clikea_game_finished`, `clikea_score_submitted`, `clikea_name_added`, `clikea_share_sheet`, `clikea_share`, `clikea_lang_changed`, `clikea_difficulty_selected`.
+- **Analytics** : PostHog EU (`https://eu.i.posthog.com`), projet « CLIKEA ». Événements : `clikea_view`, `clikea_defi_view`, `clikea_game_started`, `clikea_question_answered`, `clikea_game_finished`, `clikea_score_submitted`, `clikea_name_added`, `clikea_share_sheet`, `clikea_share`, `clikea_lang_changed`, `clikea_difficulty_selected`, `clikea_dex_open`, `clikea_dex_rarity`.
 - Détail des schémas, permissions et flux : [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md).
 
 ## Notes et limites

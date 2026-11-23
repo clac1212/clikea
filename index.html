@@ -71,7 +71,7 @@ a{color:inherit}
 .band .tile img{width:100%;height:84px;object-fit:contain;background:#fff;padding:5px}
 .band .tile .pt{display:block;background:#111;font-size:10px;font-weight:800;padding:3px 5px;color:var(--yellow)}
 @media (min-width:720px){.band .tile{width:118px}.band .tile img{height:118px}}
-body[data-screen="game"] .band,body[data-screen="end"] .band,body[data-screen="board"] .band{display:none}
+body[data-screen="game"] .band,body[data-screen="end"] .band,body[data-screen="board"] .band,body[data-screen="dex"] .band{display:none}
 body[data-screen="game"] footer,body[data-screen="end"] footer{display:none}
 @media (prefers-reduced-motion:reduce){.band-track{animation:none}}
 
@@ -241,6 +241,80 @@ h1 mark{background:none;color:var(--yellow);padding:0;box-decoration-break:clone
 .daynav button:disabled{color:#c9c9c9;cursor:default}
 .daynav span{text-align:center;font-size:13px;font-weight:800}
 .board .actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:18px;max-width:520px}
+
+/* ---------- Clikedex ---------- */
+.dex-link{display:inline-flex;align-items:center;gap:9px;margin-top:14px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.45);padding:9px 12px;font:inherit;font-size:12px;font-weight:700;letter-spacing:.04em;color:#d6e4f0;cursor:pointer;transition:background .12s ease,border-color .12s ease}
+.dex-link b{color:#fff;font-weight:900}
+.dex-link::after{content:'→';margin-left:2px;font-size:14px;font-weight:900;color:var(--yellow);transition:transform .12s ease}
+.dex-link:hover{color:#fff;background:rgba(255,255,255,.16);border-color:#fff}
+.dex-link:hover::after{transform:translateX(3px)}
+.dex-link:active{transform:translateY(1px)}
+.dex-link .dex-dot{width:9px;height:9px;border-radius:50%;background:var(--yellow);box-shadow:0 0 0 2px rgba(255,219,0,.25)}
+.dex{padding-top:22px;padding-bottom:36px;max-width:880px}
+.dex h2{font-size:clamp(28px,8.6vw,46px);font-weight:900;letter-spacing:-.02em;text-transform:uppercase;margin:0}
+.dex-lede{margin:6px 0 0;font-size:13px;line-height:1.4;color:#d6e4f0;max-width:46ch}
+.dex-stats{background:#fff;color:#111;border-top:3px solid var(--yellow);margin-top:16px;padding:14px}
+.dex-big{display:flex;align-items:baseline;gap:8px}
+.dex-big b{font-size:34px;font-weight:900;letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+.dex-big span{font-size:12px;font-weight:800;color:var(--ink-3);text-transform:uppercase;letter-spacing:.08em}
+.dex-bar{height:6px;background:#EDEAE0;margin:8px 0 12px;position:relative}
+.dex-bar i{position:absolute;inset:0 auto 0 0;background:var(--blue)}
+.dex-mini{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
+.dex-coll{margin:2px 0 12px;display:grid;gap:6px}
+.dex-coll h4{margin:0;font-size:10px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-3)}
+.dex-rr{display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:10px;width:100%;background:#F7F5EE;border:2px solid transparent;padding:8px 10px;font:inherit;color:#111;cursor:pointer;text-align:left}
+.dex-rr.on{border-color:#111}
+.dex-rr .st{font-size:12px;font-weight:900;color:var(--blue);min-width:2.2em}
+.dex-rr.r2 .st{color:#111;background:var(--yellow);padding:1px 4px;text-align:center}
+.dex-rr .lb{font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:.05em}
+.dex-rr .lb i{display:block;height:4px;background:#E4E0D4;margin-top:5px;position:relative;font-style:normal}
+.dex-rr .lb i u{position:absolute;inset:0 auto 0 0;background:var(--blue)}
+.dex-rr.r2 .lb i u{background:#D4A800}
+.dex-rr b{font-size:15px;font-weight:900;font-variant-numeric:tabular-nums}
+.dex-mini div{border-left:2px solid var(--line);padding-left:7px}
+.dex-mini b{display:block;font-size:17px;font-weight:900;font-variant-numeric:tabular-nums}
+.dex-mini span{display:block;font-size:9.5px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-3);line-height:1.2}
+.dex .tabs{grid-template-columns:repeat(4,1fr);max-width:none}
+.dex .tab b{font-weight:900;color:inherit;opacity:.7;margin-left:3px}
+.dex-search{width:100%;margin-top:8px;padding:11px 12px;border:0;font:inherit;font-size:14px;background:#fff;color:#111}
+.dex-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:8px}
+@media (min-width:600px){.dex-grid{grid-template-columns:repeat(5,1fr)}}
+@media (min-width:860px){.dex-grid{grid-template-columns:repeat(6,1fr)}}
+.dex-card{display:block;position:relative;background:#fff;color:#111;border:0;padding:0;font:inherit;text-align:left;cursor:pointer;overflow:hidden}
+.dex-card img{display:block;width:100%;height:auto;aspect-ratio:1;object-fit:contain;background:#fff}
+.dex-card .dc-no,.dex-card .dc-cash,.dex-card.miss::after{z-index:1}
+.dex-card .dc-no{position:absolute;top:4px;left:5px;font-size:9px;font-weight:800;color:var(--ink-3);font-variant-numeric:tabular-nums}
+.dex-card .dc-nm{display:flex;justify-content:space-between;gap:4px;padding:5px 6px 6px;font-size:11px;font-weight:900;letter-spacing:.02em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;border-top:1px solid var(--line)}
+.dex-card.miss img,.dex-card.new img{filter:grayscale(1) contrast(1.05) blur(3px);opacity:.8;transform:scale(1.06)}
+.dex-card.new img{filter:grayscale(1) blur(8px);opacity:.55;transform:scale(1.12)}
+.dex-card.miss .dc-nm,.dex-card.new .dc-nm{color:#9a968c;letter-spacing:.2em}
+.dex-card.found .dc-nm{background:var(--yellow)}
+.dex-card .dc-nm span{overflow:hidden;text-overflow:ellipsis}
+.dex-card .dc-r{font-style:normal;letter-spacing:0;color:var(--blue);flex:none}
+.dex-card .dc-r.r2{color:#111;background:var(--yellow);padding:0 3px}
+.dex-card.found .dc-r.r2{background:#111;color:var(--yellow)}
+.dex-card.found.rr2{box-shadow:inset 0 0 0 3px var(--yellow)}
+.dex-card.miss::after{content:'';position:absolute;top:5px;right:5px;width:8px;height:8px;border-radius:50%;background:var(--red)}
+.dex-card .dc-cash{position:absolute;top:3px;right:4px;font-size:9px;font-weight:900;background:#111;color:var(--yellow);padding:1px 4px}
+.dex-more{margin-top:10px}
+.dex-note{margin:10px 0 0;font-size:11px;color:#b9d2e6}
+.dex .actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:16px;max-width:520px}
+.dexbox{position:relative}
+.dexbox .dx-photo{display:flex;justify-content:center;border:1px solid var(--line);margin-bottom:10px}
+.dexbox .dx-photo img{width:min(220px,58vw);height:auto;aspect-ratio:1;object-fit:contain}
+.dexbox.miss .dx-photo img,.dexbox.new .dx-photo img{filter:grayscale(1)}
+.dexbox.new .dx-photo{overflow:hidden}
+.dexbox.new .dx-photo img{filter:grayscale(1) blur(10px);opacity:.6;transform:scale(1.1)}
+.dx-lock{font-size:12px;font-weight:700;color:var(--blue);margin:2px 0 8px}
+.dx-top .r2{color:#111;background:var(--yellow);padding:1px 5px}
+.dx-top{display:flex;justify-content:space-between;font-size:10px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3)}
+.dx-name{font-size:26px;font-weight:900;letter-spacing:.01em;margin:4px 0 2px;min-height:32px}
+.dx-name.hid{color:#b8b3a6;letter-spacing:.25em}
+.dx-type{font-size:13px;color:var(--ink-3);margin-bottom:8px}
+.dx-rec{font-size:12.5px;font-weight:700;padding:8px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.dx-fact{font-size:12px;line-height:1.4;margin:8px 0 0}
+.dx-nav{display:grid;grid-template-columns:48px 1fr 48px;gap:8px;margin-top:12px}
+.dexbox .dx-nav .btn{padding:12px 0;font-size:18px}
 
 /* ---------- ticket de fin ---------- */
 .print{padding-top:14px;padding-bottom:104px;max-width:none}
@@ -420,6 +494,7 @@ footer .wrap{padding:14px var(--pad);display:flex;gap:16px;flex-wrap:wrap;justif
         <div class="free">
           <button class="btn ghost wide free-toggle" type="button" id="startBtn">Partie libre · 20 produits</button>
         </div>
+        <button class="dex-link" type="button" id="dexOpen"><i class="dex-dot" aria-hidden="true"></i><span id="dexLink">Clikedex</span></button>
       </div>
 
       <aside class="rank" aria-label="Classement">
@@ -512,6 +587,29 @@ footer .wrap{padding:14px var(--pad);display:flex;gap:16px;flex-wrap:wrap;justif
     </div>
   </section>
 
+  <!-- CLIKEDEX -->
+  <section class="screen" id="dex">
+    <div class="wrap dex">
+      <h2>Clikedex</h2>
+      <p class="dex-lede" id="dexLede"></p>
+      <div class="dex-stats" id="dexStats"></div>
+      <div class="tabs" id="dexTabs">
+        <button class="tab on" type="button" data-f="all"></button>
+        <button class="tab" type="button" data-f="found"></button>
+        <button class="tab" type="button" data-f="miss"></button>
+        <button class="tab" type="button" data-f="new"></button>
+      </div>
+      <input class="dex-search" id="dexSearch" type="search" autocomplete="off" spellcheck="false">
+      <div class="dex-grid" id="dexGrid"></div>
+      <button class="btn ghost wide dex-more" type="button" id="dexMore" hidden></button>
+      <p class="dex-note" id="dexNote"></p>
+      <div class="actions">
+        <button class="btn" type="button" id="dexPlay">Jouer</button>
+        <button class="btn ghost" type="button" id="dexBack">Retour</button>
+      </div>
+    </div>
+  </section>
+
   <!-- TICKET -->
   <section class="screen print" id="end">
     <div class="wrap">
@@ -583,6 +681,9 @@ footer .wrap{padding:14px var(--pad);display:flex;gap:16px;flex-wrap:wrap;justif
 
 <div class="toast" id="toast"></div>
 
+<div class="sheetwrap" id="dexSheet" hidden>
+  <div class="sheetbox dexbox" id="dexBox" role="dialog" aria-modal="true" aria-label="Clikedex"></div>
+</div>
 <div class="sheetwrap" id="shareSheet" hidden>
   <div class="sheetbox" role="dialog" aria-modal="true" aria-label="Partager">
     <h3 id="sheetTitle">Image pour ta story</h3>
@@ -987,6 +1088,7 @@ function applyLang(next, opts){
   renderTargets();
   if(state.kind !== 'free' && state.day) html('#trainNext', L.trainNext.replace('{left}', '<b>' + untilMidnight() + '</b>'));
   renderDailyEntry();
+  try{ if($('#dex').classList.contains('on')) renderDex(); if(!$('#dexSheet').hidden) dexCard(); }catch(e){}
   const bnote = document.querySelector('#boardNote'); if(bnote) bnote.textContent = state.boardDiff === 'daily' ? L.boardNoteDaily : L.boardNote;
   if(typeof renderBoardTabs === 'function') renderBoardTabs();
   if(typeof setSubmitLine === 'function') setSubmitLine();
@@ -1650,6 +1752,7 @@ function showDailyResult(rec){
   else loadDailyRank();
 }
 function renderDailyEntry(){
+  try{ renderDexLink(); }catch(e){}
   const b = $('#dailySub'); if(!b) return;
   const today = parisDay(), all = dailyStore(), rec = all[today], n = dayNo(today);
   const streak = dayStreak(all, today);
@@ -1724,7 +1827,7 @@ function logAnswer(p, ok){
 
 function show(id){
   document.body.dataset.screen = id;
-  ['intro','game','end','board','calib'].forEach(s=>$('#'+s).classList.toggle('on', s===id));
+  ['intro','game','end','board','calib','dex'].forEach(s=>$('#'+s).classList.toggle('on', s===id));
   window.scrollTo(0, 0);
 }
 
@@ -1909,7 +2012,7 @@ function resolve(ok, pick){
   });
   state.results.push(state.timedOut ? 'to' : (ok ? 'ok' : 'ko'));
   logAnswer(p, ok);
-  if(state.kind !== 'calib') levelUpdate(p, ok, state.mode, isOrtho());
+  if(state.kind !== 'calib'){ levelUpdate(p, ok, state.mode, isOrtho()); dexRecord(p, ok, state.mode); }
   dailyProgress({i: state.i + 1, pending: null});
   state.last = { ok, gain, p, isLast: state.i + 1 >= state.queue.length };
   renderFeedback();
@@ -2134,6 +2237,239 @@ $('#shareSheet').addEventListener('click', (e)=>{ if(e.target.id==='shareSheet')
 $('#shareNative').addEventListener('click', shareImage);
 document.addEventListener('keydown', (e)=>{ if(e.key==='Escape') closeShare(); });
 $('#quitBtn').addEventListener('click', ()=>{ stopClock(); show('intro'); renderDailyEntry(); });
+
+/* ---------- Clikedex : tous les produits en jeu, trouvés ou non (stockage local) ---------- */
+const DEX_KEY = SELFTEST ? 'clikea-dex-selftest' : 'clikea-dex';
+const DEX_PAGE = 60;
+const DEX_MODE = { duo: 1, carre: 2, cash: 3 };
+const DEX_T = {
+ fr:{link:'Clikedex · <b>{f}</b>/{n} trouvés', lede:'Tous les produits en jeu : ceux que tu as nommés, ceux qui t’ont échappé, ceux que tu n’as jamais croisés. De quoi réviser avant la prochaine partie.',
+  found:'trouvés', miss:'Ratés', cash:'En Cash', rare:'Très rares', acc:'Réussite', fAll:'Tous', fFound:'Trouvés', fMiss:'Ratés', fNew:'Inconnus',
+  search:'Chercher un nom trouvé ou un type', more:'Afficher plus ({n})', empty:'Rien ici pour l’instant. Lance une partie.',
+  note:'Le Clikedex grandit quand de nouveaux produits entrent en jeu. Ta progression reste sur cet appareil.',
+  lock:'Trouve-le en partie pour révéler son nom.', rares:'Rares', coll:'Collection', seen1:'Vu 1 fois', seenN:'Vu {s} fois', hit0:'jamais trouvé', hit1:'trouvé 1 fois', hitN:'trouvé {f} fois', best:'Meilleur : {m}', never:'Jamais croisé en partie',
+  r0:'Commun', r1:'Rare', r2:'Très rare', close:'Fermer', prev:'Précédent', next:'Suivant', play:'Jouer', back:'Retour'},
+ en:{link:'Clikedex · <b>{f}</b>/{n} found', lede:'Every product in play: the ones you named, the ones that got away, the ones you have never met. Revise before your next game.',
+  found:'found', miss:'Missed', cash:'In Cash', rare:'Very rare', acc:'Hit rate', fAll:'All', fFound:'Found', fMiss:'Missed', fNew:'Unseen',
+  search:'Search a found name or a type', more:'Show more ({n})', empty:'Nothing here yet. Play a game.',
+  note:'The Clikedex grows as new products enter the game. Your progress stays on this device.',
+  lock:'Find it in a game to reveal its name.', rares:'Rare', coll:'Collection', seen1:'Seen once', seenN:'Seen {s} times', hit0:'never found', hit1:'found once', hitN:'found {f} times', best:'Best: {m}', never:'Never met in a game',
+  r0:'Common', r1:'Rare', r2:'Very rare', close:'Close', prev:'Previous', next:'Next', play:'Play', back:'Back'},
+ es:{link:'Clikedex · <b>{f}</b>/{n} encontrados', lede:'Todos los productos en juego: los que nombraste, los que se te escaparon y los que nunca viste. Para repasar antes de la próxima partida.',
+  found:'encontrados', miss:'Fallados', cash:'En Cash', rare:'Muy raros', acc:'Acierto', fAll:'Todos', fFound:'Encontrados', fMiss:'Fallados', fNew:'Sin ver',
+  search:'Buscar un nombre encontrado o un tipo', more:'Ver más ({n})', empty:'Nada todavía. Juega una partida.',
+  note:'El Clikedex crece cuando entran nuevos productos en el juego. Tu progreso se queda en este dispositivo.',
+  lock:'Encuéntralo en una partida para revelar su nombre.', rares:'Raros', coll:'Colección', seen1:'Visto 1 vez', seenN:'Visto {s} veces', hit0:'nunca encontrado', hit1:'encontrado 1 vez', hitN:'encontrado {f} veces', best:'Mejor: {m}', never:'Nunca visto en una partida',
+  r0:'Común', r1:'Raro', r2:'Muy raro', close:'Cerrar', prev:'Anterior', next:'Siguiente', play:'Jugar', back:'Volver'},
+ de:{link:'Clikedex · <b>{f}</b>/{n} gefunden', lede:'Alle Produkte im Spiel: die du benannt hast, die dir entwischt sind, und die du noch nie gesehen hast. Zum Üben vor der nächsten Runde.',
+  found:'gefunden', miss:'Verpasst', cash:'Mit Cash', rare:'Sehr selten', acc:'Trefferquote', fAll:'Alle', fFound:'Gefunden', fMiss:'Verpasst', fNew:'Ungesehen',
+  search:'Gefundenen Namen oder Typ suchen', more:'Mehr zeigen ({n})', empty:'Noch nichts hier. Spiel eine Runde.',
+  note:'Der Clikedex wächst, wenn neue Produkte ins Spiel kommen. Dein Fortschritt bleibt auf diesem Gerät.',
+  lock:'Finde es im Spiel, um seinen Namen aufzudecken.', rares:'Selten', coll:'Sammlung', seen1:'1× gesehen', seenN:'{s}× gesehen', hit0:'nie gefunden', hit1:'1× gefunden', hitN:'{f}× gefunden', best:'Bestes: {m}', never:'Im Spiel noch nie gesehen',
+  r0:'Häufig', r1:'Selten', r2:'Sehr selten', close:'Schließen', prev:'Zurück', next:'Weiter', play:'Spielen', back:'Zurück'},
+ it:{link:'Clikedex · <b>{f}</b>/{n} trovati', lede:'Tutti i prodotti in gioco: quelli che hai nominato, quelli che ti sono sfuggiti e quelli mai visti. Per ripassare prima della prossima partita.',
+  found:'trovati', miss:'Sbagliati', cash:'In Cash', rare:'Rarissimi', acc:'Precisione', fAll:'Tutti', fFound:'Trovati', fMiss:'Sbagliati', fNew:'Mai visti',
+  search:'Cerca un nome trovato o un tipo', more:'Mostra altri ({n})', empty:'Ancora niente. Fai una partita.',
+  note:'Il Clikedex cresce quando nuovi prodotti entrano in gioco. I tuoi progressi restano su questo dispositivo.',
+  lock:'Trovalo in partita per svelarne il nome.', rares:'Rari', coll:'Collezione', seen1:'Visto 1 volta', seenN:'Visto {s} volte', hit0:'mai trovato', hit1:'trovato 1 volta', hitN:'trovato {f} volte', best:'Migliore: {m}', never:'Mai visto in partita',
+  r0:'Comune', r1:'Raro', r2:'Rarissimo', close:'Chiudi', prev:'Precedente', next:'Successivo', play:'Gioca', back:'Indietro'},
+ ko:{link:'Clikedex · <b>{f}</b>/{n} 찾음', lede:'게임에 나오는 모든 제품: 맞힌 것, 놓친 것, 아직 만나지 못한 것. 다음 게임 전에 복습해 보세요.',
+  found:'찾음', miss:'놓침', cash:'Cash 정답', rare:'아주 희귀', acc:'정답률', fAll:'전체', fFound:'찾음', fMiss:'놓침', fNew:'미발견',
+  search:'찾은 이름이나 종류 검색', more:'더 보기 ({n})', empty:'아직 아무것도 없어요. 게임을 시작하세요.',
+  note:'새 제품이 게임에 들어오면 Clikedex도 커집니다. 진행 상황은 이 기기에 저장됩니다.',
+  lock:'게임에서 맞혀야 이름이 공개됩니다.', rares:'희귀', coll:'컬렉션', seen1:'1번 봄', seenN:'{s}번 봄', hit0:'아직 못 맞힘', hit1:'1번 맞힘', hitN:'{f}번 맞힘', best:'최고: {m}', never:'게임에서 아직 못 봄',
+  r0:'흔함', r1:'희귀', r2:'아주 희귀', close:'닫기', prev:'이전', next:'다음', play:'시작', back:'뒤로'}
+};
+function dt(key, vars){
+  let s = (DEX_T[lang] || DEX_T.fr)[key] || DEX_T.fr[key] || '';
+  if(vars) Object.keys(vars).forEach(k => { s = s.split('{' + k + '}').join(vars[k]); });
+  return s;
+}
+// Format : { NOM: [vu, trouvé, meilleur mode 0-3, 1re trouvaille (ms)] }. Amorcé une fois depuis la mémoire de niveau.
+function dexStore(){
+  let d = null;
+  try{ d = JSON.parse(localStorage.getItem(DEX_KEY) || 'null'); }catch(e){}
+  if(d && typeof d === 'object') return d;
+  d = {};
+  const lv = levelStore();
+  Object.keys(lv.seen || {}).concat(Object.keys(lv.mem || {})).forEach(n => { d[n] = d[n] || [1, 0, 0, 0]; });
+  Object.keys(lv.known || {}).forEach(n => { d[n] = d[n] || [1, 0, 0, 0]; d[n][1] = 1; d[n][3] = (lv.seen && lv.seen[n]) || Date.now(); });
+  dexSave(d);
+  return d;
+}
+function dexSave(d){ try{ localStorage.setItem(DEX_KEY, JSON.stringify(d)); }catch(e){} }
+function dexRecord(p, ok, mode){
+  const d = dexStore();
+  const r = d[p.n] || [0, 0, 0, 0];
+  r[0]++;
+  if(ok){ r[1]++; r[2] = Math.max(r[2], DEX_MODE[mode] || 0); if(!r[3]) r[3] = Date.now(); }
+  d[p.n] = r;
+  dexSave(d);
+}
+// Rareté de collection (indépendante du barème) : rang de difficulté dans le réseau en jeu, 8 % ★★, 22 % ★.
+const DEX_RARE = { very: 0.08, rare: 0.22 };
+let DEX_CUT = null;
+function dexCut(){
+  const ds = PRODUCTS.filter(p => !p.x && (p.k || (p.r || 0) > 0)).map(p => p.d).sort((a, b) => b - a);
+  const key = ds.length + ':' + ds.join(',').length + ':' + (ds[0] || 0);
+  if(DEX_CUT && DEX_CUT.key === key) return DEX_CUT;
+  const at = f => ds[Math.max(0, Math.round(ds.length * f) - 1)];
+  DEX_CUT = { key: key, d2: at(DEX_RARE.very), d1: at(DEX_RARE.very + DEX_RARE.rare) };
+  return DEX_CUT;
+}
+function dexRar(p){ const c = dexCut(); return p.d >= c.d2 ? 2 : p.d >= c.d1 ? 1 : 0; }
+function dexStateOf(rec){ return rec && rec[1] > 0 ? 'found' : (rec && rec[0] > 0 ? 'miss' : 'new'); }
+// Produits du Clikedex : le réseau en jeu (cœur + déjà vus), plus tout produit que le joueur a croisé.
+function dexList(){
+  const d = dexStore();
+  const out = [];
+  PRODUCTS.forEach((p, i) => { if(!p.x && (p.k || (p.r || 0) > 0 || d[p.n])) out.push(i); });
+  return out;
+}
+function dexStats(){
+  const d = dexStore(), list = dexList();
+  const s = {total: list.length, found: 0, miss: 0, fresh: 0, cash: 0, seen: 0, hits: 0, r1: 0, r1f: 0, r2: 0, r2f: 0};
+  list.forEach(i => {
+    const p = PRODUCTS[i], r = d[p.n], st = dexStateOf(r);
+    if(st === 'found') s.found++; else if(st === 'miss') s.miss++; else s.fresh++;
+    const ra = dexRar(p);
+    if(ra){ s['r' + ra]++; if(st === 'found') s['r' + ra + 'f']++; }
+    if(r){ s.seen += r[0]; s.hits += r[1]; if(r[2] === 3) s.cash++; }
+  });
+  s.acc = s.seen ? Math.round(100 * s.hits / s.seen) : 0;
+  return s;
+}
+const dexUi = { filter: 'all', rar: 0, q: '', shown: DEX_PAGE, view: [], at: -1 };
+const DEX_STARS = ['', '★', '★★'];
+function dexNo(i){ return '#' + String(i + 1).padStart(4, '0'); }
+const DEX_HIDDEN = '? ? ? ?';
+function renderDexLink(){
+  const el = document.querySelector('#dexLink'); if(!el) return;
+  const s = dexStats();
+  el.innerHTML = dt('link', {f: s.found, n: s.total});
+}
+function renderDexStats(){
+  const s = dexStats();
+  const pct = s.total ? Math.round(100 * s.found / s.total) : 0;
+  $('#dexStats').innerHTML =
+    '<div class="dex-big"><b>' + s.found + ' / ' + s.total + '</b><span>' + dt('found') + ' · ' + pct + ' %</span></div>' +
+    '<div class="dex-bar"><i style="width:' + pct + '%"></i></div>' +
+    '<div class="dex-coll"><h4>' + dt('coll') + '</h4>' + [1, 2].map(ra => {
+      const n = s['r' + ra], f = s['r' + ra + 'f'];
+      return '<button class="dex-rr r' + ra + (dexUi.rar === ra ? ' on' : '') + '" type="button" data-rar="' + ra + '" aria-pressed="' + (dexUi.rar === ra) + '">' +
+        '<span class="st">' + DEX_STARS[ra] + '</span><span class="lb">' + dt(ra === 1 ? 'rares' : 'rare') + '<i><u style="width:' + (n ? Math.round(100 * f / n) : 0) + '%"></u></i></span><b>' + f + ' / ' + n + '</b></button>';
+    }).join('') + '</div>' +
+    '<div class="dex-mini">' +
+      '<div><b>' + s.miss + '</b><span>' + dt('miss') + '</span></div>' +
+      '<div><b>' + s.cash + '</b><span>' + dt('cash') + '</span></div>' +
+      '<div><b>' + (s.seen ? s.acc + ' %' : '–') + '</b><span>' + dt('acc') + '</span></div>' +
+    '</div>';
+  $('#dexStats').querySelectorAll('.dex-rr').forEach(b => b.addEventListener('click', () => {
+    const ra = Number(b.dataset.rar); dexUi.rar = dexUi.rar === ra ? 0 : ra; dexUi.shown = DEX_PAGE;
+    if(dexUi.rar) track('clikea_dex_rarity', {rarity: dexUi.rar});
+    renderDexStats(); renderDexGrid();
+  }));
+  const counts = {all: s.total, found: s.found, miss: s.miss, 'new': s.fresh};
+  const labels = {all: 'fAll', found: 'fFound', miss: 'fMiss', 'new': 'fNew'};
+  document.querySelectorAll('#dexTabs .tab').forEach(b => {
+    b.innerHTML = dt(labels[b.dataset.f]) + '<b>' + counts[b.dataset.f] + '</b>';
+    b.classList.toggle('on', b.dataset.f === dexUi.filter);
+  });
+}
+function dexFiltered(){
+  const d = dexStore(), q = norm(dexUi.q || '');
+  return dexList().filter(i => {
+    const p = PRODUCTS[i], st = dexStateOf(d[p.n]);
+    if(dexUi.filter !== 'all' && st !== dexUi.filter) return false;
+    if(dexUi.rar && dexRar(p) !== dexUi.rar) return false;
+    if(!q) return true;
+    return (st === 'found' && norm(p.n).includes(q)) || norm(typeOf(p)).includes(q);
+  });
+}
+function renderDexGrid(){
+  const d = dexStore();
+  dexUi.view = dexFiltered();
+  const items = dexUi.view.slice(0, dexUi.shown);
+  $('#dexGrid').innerHTML = items.length ? items.map((i, k) => {
+    const p = PRODUCTS[i], r = d[p.n], st = dexStateOf(r);
+    const name = st === 'found' ? escapeHtml(p.n) : DEX_HIDDEN, ra = dexRar(p);
+    return '<button class="dex-card ' + st + (ra ? ' rr' + ra : '') + '" type="button" data-k="' + k + '" aria-label="' + (st === 'found' ? escapeHtml(p.n) : dexNo(i)) + '">' +
+      '<span class="dc-no">' + dexNo(i) + '</span>' + (r && r[2] === 3 ? '<span class="dc-cash">CASH</span>' : '') +
+      '<img src="' + p.i + '" alt="" loading="lazy" decoding="async" width="640" height="640">' +
+      '<span class="dc-nm"><span>' + name + '</span>' + (ra ? '<i class="dc-r r' + ra + '">' + DEX_STARS[ra] + '</i>' : '') + '</span></button>';
+  }).join('') : '<p class="dex-note">' + dt('empty') + '</p>';
+  const left = dexUi.view.length - items.length;
+  const more = $('#dexMore');
+  more.hidden = left <= 0;
+  more.textContent = dt('more', {n: left});
+}
+function renderDex(){
+  $('#dexLede').textContent = dt('lede');
+  $('#dexSearch').placeholder = dt('search');
+  $('#dexNote').textContent = dt('note');
+  $('#dexPlay').textContent = dt('play');
+  $('#dexBack').textContent = dt('back');
+  renderDexStats();
+  renderDexGrid();
+}
+function openDex(){
+  dexUi.filter = 'all'; dexUi.rar = 0; dexUi.q = ''; dexUi.shown = DEX_PAGE;
+  $('#dexSearch').value = '';
+  renderDex();
+  show('dex');
+  const s = dexStats();
+  track('clikea_dex_open', {found: s.found, total: s.total});
+}
+function dexCard(){
+  const i = dexUi.view[dexUi.at]; if(i === undefined) return;
+  const p = PRODUCTS[i], r = dexStore()[p.n], st = dexStateOf(r);
+  const box = $('#dexBox');
+  box.className = 'sheetbox dexbox ' + st;
+  const price = fmtPrice(p.p), fact = factOf(p), found = st === 'found', ra = dexRar(p);
+  const rec = r ? dt(r[0] === 1 ? 'seen1' : 'seenN', {s: r[0]}) + ' · ' + dt(r[1] === 0 ? 'hit0' : r[1] === 1 ? 'hit1' : 'hitN', {f: r[1]}) + (r[2] ? ' · ' + dt('best', {m: t(MODEKEY[Object.keys(DEX_MODE)[r[2] - 1]])}) : '') : dt('never');
+  // Trouvé : tout. Raté : photo vue, nom caché. Jamais vu : photo floue, ni nom ni type.
+  box.innerHTML =
+    '<div class="dx-top"><span>' + dexNo(i) + '</span><span class="r' + ra + '">' + (ra ? DEX_STARS[ra] + ' ' : '') + dt('r' + ra) + '</span></div>' +
+    '<div class="dx-photo"><img src="' + p.i + '" alt="" width="640" height="640"></div>' +
+    '<div class="dx-name' + (found ? '' : ' hid') + '">' + (found ? escapeHtml(p.n) : DEX_HIDDEN) + '</div>' +
+    (found ? '' : '<p class="dx-lock">' + dt('lock') + '</p>') +
+    '<div class="dx-type">' + (st === 'new' ? '? ? ?' : escapeHtml(typeOf(p)) + (price ? ' · ' + price : '')) + '</div>' +
+    '<div class="dx-rec">' + rec + '</div>' +
+    (found && fact ? '<p class="dx-fact"><b>' + (FACT_LABEL[lang] || FACT_LABEL.en) + '</b> ' + fact + '</p>' : '') +
+    '<div class="dx-nav">' +
+      '<button class="btn ghost" type="button" id="dxPrev" aria-label="' + dt('prev') + '"' + (dexUi.at <= 0 ? ' disabled' : '') + '>‹</button>' +
+      '<button class="btn ghost" type="button" id="dxClose">' + dt('close') + '</button>' +
+      '<button class="btn ghost" type="button" id="dxNext" aria-label="' + dt('next') + '"' + (dexUi.at >= dexUi.view.length - 1 ? ' disabled' : '') + '>›</button>' +
+    '</div>';
+  box.querySelector('#dxPrev').addEventListener('click', () => dexStep(-1));
+  box.querySelector('#dxNext').addEventListener('click', () => dexStep(1));
+  box.querySelector('#dxClose').addEventListener('click', closeDexCard);
+}
+function dexStep(n){
+  const at = dexUi.at + n;
+  if(at < 0 || at >= dexUi.view.length) return;
+  dexUi.at = at;
+  if(at >= dexUi.shown){ dexUi.shown = at + 1; renderDexGrid(); }
+  dexCard();
+}
+function openDexCard(k){ dexUi.at = k; dexCard(); $('#dexSheet').hidden = false; }
+function closeDexCard(){ $('#dexSheet').hidden = true; }
+$('#dexOpen').addEventListener('click', openDex);
+$('#dexBack').addEventListener('click', () => { closeDexCard(); show('intro'); renderDailyEntry(); renderDexLink(); });
+$('#dexPlay').addEventListener('click', () => { closeDexCard(); show('intro'); renderDailyEntry(); renderDexLink(); });
+$('#dexMore').addEventListener('click', () => { dexUi.shown += DEX_PAGE; renderDexGrid(); });
+$('#dexSearch').addEventListener('input', (e) => { dexUi.q = e.target.value; dexUi.shown = DEX_PAGE; renderDexGrid(); });
+$('#dexGrid').addEventListener('click', (e) => { const c = e.target.closest('.dex-card'); if(c) openDexCard(Number(c.dataset.k)); });
+document.querySelectorAll('#dexTabs .tab').forEach(b => b.addEventListener('click', () => {
+  dexUi.filter = b.dataset.f; dexUi.shown = DEX_PAGE; renderDexStats(); renderDexGrid();
+}));
+$('#dexSheet').addEventListener('click', (e) => { if(e.target.id === 'dexSheet') closeDexCard(); });
+document.addEventListener('keydown', (e) => {
+  if($('#dexSheet').hidden) return;
+  if(e.key === 'Escape') closeDexCard();
+  else if(e.key === 'ArrowLeft') dexStep(-1);
+  else if(e.key === 'ArrowRight') dexStep(1);
+});
 
 /* ---------- logo CLIKEA (tracés Archivo Expanded Black, proportions IKEA) ---------- */
 const LOGO={W:132,H:40,s:0.0210858,stretch:1.08,baseline:27.2324,glyphs:{C:"M487 12Q338 12 240 -28.5Q142 -69 93.5 -148Q45 -227 45 -344Q45 -515 158 -607.5Q271 -700 489 -700Q609 -700 700 -662.5Q791 -625 842.5 -558.5Q894 -492 894 -405H654Q654 -441 633 -469Q612 -497 574 -513Q536 -529 485 -529Q421 -529 379.5 -506Q338 -483 318.5 -444Q299 -405 299 -357V-332Q299 -286 318.5 -246.5Q338 -207 378 -183Q418 -159 480 -159Q537 -159 577.5 -174Q618 -189 639.5 -216Q661 -243 661 -279H894Q894 -195 845.5 -129Q797 -63 706 -25.5Q615 12 487 12Z",L:"M74 0V-688H321V-189H767V0Z",I:"M74 0V-688H321V0Z",K:"M74 0V-688H321V-384L654 -688H960L656 -407L968 0H667L474 -259L321 -135V0Z",E:"M74 0V-688H809V-517H322V-428H742V-266H322V-171H817V0Z",A:"M8 0 341 -688H613L946 0H681L640 -91H303L263 0ZM378 -262H565L517 -378Q514 -386 509 -399.5Q504 -413 498 -430Q492 -447 486.5 -464Q481 -481 476 -495H469Q463 -478 455 -456Q447 -434 439.5 -413Q432 -392 426 -378Z"},place:[["C", 9.535], ["L", 30.919], ["I", 48.818], ["K", 57.813], ["E", 80.313], ["A", 99.897]]};
@@ -2988,6 +3324,62 @@ if(location.search.includes('selftest')){
     ok(bestDayStreak({'2026-11-01':{done:true},'2026-11-02':{done:true},'2026-11-03':{done:true},'2026-11-10':{done:true}})===3,'meilleure série');
     localStorage.removeItem(DAILY_KEY);
     state.kind = 'free'; state.day = null; state.slots = null;
+
+    // Clikedex
+    ok(dexStore()[PRODUCTS[state.queue[0]].n] !== undefined,'clikedex : réponses de partie enregistrées');
+    localStorage.removeItem(DEX_KEY);
+    localStorage.setItem(LEVEL_KEY, JSON.stringify({t:0, n:1, sess:[], seen:{BILLY: 1}, known:{BILLY: 1}}));
+    ok(dexStateOf(dexStore().BILLY) === 'found','clikedex : amorcé depuis la mémoire de niveau');
+    localStorage.removeItem(LEVEL_KEY);
+    localStorage.setItem(DEX_KEY, '{}');
+    const dl = dexList(), pool = PRODUCTS.filter(p => !p.x && (p.k || (p.r || 0) > 0)).length;
+    ok(dl.length === pool && dl.every(i => !PRODUCTS[i].x),'clikedex : réseau en jeu ('+dl.length+'), sans produit exclu');
+    const dp = PRODUCTS[dl[0]];
+    dexRecord(dp, false, 'carre');
+    ok(dexStateOf(dexStore()[dp.n]) === 'miss','clikedex : raté');
+    dexRecord(dp, true, 'cash'); dexRecord(dp, true, 'duo');
+    const dr = dexStore()[dp.n];
+    ok(dr[0] === 3 && dr[1] === 2 && dr[2] === 3 && dr[3] > 0,'clikedex : vu 3, trouvé 2, meilleur Cash');
+    const ds = dexStats();
+    ok(ds.found === 1 && ds.miss === 0 && ds.cash === 1 && ds.total === pool && ds.acc === 67,'clikedex : stats calculées');
+    const outP = PRODUCTS.find(p => !p.x && !p.k && !(p.r > 0));
+    if(outP){ dexRecord(outP, false, 'duo'); ok(dexList().length === pool + 1,'clikedex : produit croisé hors réseau ajouté'); }
+    renderDexLink();
+    ok($('#dexLink').textContent.includes('1/' + dexList().length),'clikedex : lien accueil ('+$('#dexLink').textContent+')');
+    openDex();
+    ok($('#dex').classList.contains('on'),'clikedex : écran ouvert');
+    const cards = document.querySelectorAll('#dexGrid .dex-card');
+    ok(cards.length === Math.min(DEX_PAGE, dexList().length) && !$('#dexMore').hidden,'clikedex : page de ' + cards.length + ' + afficher plus');
+    const fc = document.querySelector('#dexGrid .dex-card.found'), nc = document.querySelector('#dexGrid .dex-card.new');
+    ok(fc && fc.querySelector('.dc-nm span').textContent === dp.n,'clikedex : nom du trouvé visible');
+    ok(nc && nc.querySelector('.dc-nm span').textContent === DEX_HIDDEN && !nc.textContent.includes(PRODUCTS[dexUi.view[Number(nc.dataset.k)]].n),'clikedex : nom caché si pas trouvé');
+    document.querySelector('#dexTabs .tab[data-f="found"]').click();
+    ok(document.querySelectorAll('#dexGrid .dex-card').length === 1 && $('#dexMore').hidden,'clikedex : filtre trouvés');
+    document.querySelector('#dexTabs .tab[data-f="all"]').click();
+    $('#dexSearch').value = norm(dp.n).slice(0, 4); $('#dexSearch').dispatchEvent(new Event('input'));
+    ok([...document.querySelectorAll('#dexGrid .dex-card')].some(c => c.textContent.includes(dp.n)),'clikedex : recherche par nom trouvé');
+    $('#dexSearch').value = ''; $('#dexSearch').dispatchEvent(new Event('input'));
+    const missCard = document.querySelector('#dexGrid .dex-card.miss'), mk = Number(missCard.dataset.k), mp = PRODUCTS[dexUi.view[mk]];
+    missCard.click();
+    ok(!$('#dexSheet').hidden && $('#dexBox .dx-name').textContent === DEX_HIDDEN && !$('#dexBox').textContent.includes(mp.n) && !$('#dxReveal'),'clikedex : fiche ratée, nom caché, pas de bouton pour le voir');
+    ok($('#dexBox .dx-type').textContent.includes(typeOf(mp)),'clikedex : fiche ratée, type visible');
+    $('#dxNext').click();
+    ok(dexUi.at === mk + 1,'clikedex : produit suivant');
+    closeDexCard();
+    const newCard = document.querySelector('#dexGrid .dex-card.new'), np = PRODUCTS[dexUi.view[Number(newCard.dataset.k)]];
+    newCard.click();
+    ok($('#dexBox').classList.contains('new') && getComputedStyle($('#dexBox .dx-photo img')).filter.includes('blur') && !$('#dexBox').textContent.includes(typeOf(np)),'clikedex : jamais vu, photo floue, type caché');
+    closeDexCard();
+    const st0 = dexStats(), rr2 = $('#dexStats .dex-rr[data-rar="2"]');
+    rr2.click();
+    ok(dexUi.rar === 2 && dexUi.view.length === st0.r2 && dexUi.view.every(i => dexRar(PRODUCTS[i]) === 2),'clikedex : filtre très rares (' + st0.r2 + ')');
+    ok(st0.r2 >= 1 && st0.r2 <= Math.ceil(st0.total * 0.1) && st0.r1 > st0.r2 && st0.r1 <= Math.ceil(st0.total * 0.25) && $('#dexStats .dex-rr[data-rar="2"]').classList.contains('on'),'clikedex : collection rares ('+st0.r1+') / très rares ('+st0.r2+')');
+    $('#dexStats .dex-rr[data-rar="2"]').click();
+    ok(dexUi.rar === 0 && dexUi.view.length === st0.total,'clikedex : filtre rareté retiré');
+    applyLang('en'); ok($('#dexNote').textContent.startsWith('The Clikedex'),'clikedex : traduit'); applyLang('fr');
+    closeDexCard(); $('#dexBack').click();
+    ok($('#intro').classList.contains('on') && $('#dexSheet').hidden,'clikedex : retour accueil');
+    localStorage.removeItem(DEX_KEY);
 
     const pre=document.createElement('pre');
     pre.id='selftest';
