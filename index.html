@@ -94,6 +94,20 @@ main{flex:1;display:flex;flex-direction:column}
 .link{background:none;border:0;padding:0;font:inherit;font-size:12px;font-weight:700;color:var(--blue);text-decoration:none;cursor:pointer;white-space:nowrap}
 .link:hover{text-decoration:underline}
 
+/* Collection after a game, with the same secondary action style. */
+.end-dex{max-width:420px;margin:14px auto;text-align:left}
+.end-dex>button{display:block;width:100%;padding:14px;border:1px solid rgba(255,255,255,.55);background:rgba(255,255,255,.08);color:#fff;text-align:left;cursor:pointer;font:inherit}
+.end-dex-kicker{display:block;color:var(--yellow);font-size:10px;letter-spacing:.12em;font-weight:900}
+#endDexTitle{display:block;font-size:17px;line-height:1.3;margin:5px 0}
+#endDexNote{display:block;font-size:12px;line-height:1.4;color:#cfe0ee}
+.end-dex-link{display:block;font-size:12px;font-weight:800;margin-top:9px;color:var(--yellow)}
+#endDexProducts{display:flex;gap:7px;margin:9px 0}
+#endDexProducts:empty{display:none}
+.end-dex-product{width:calc((100% - 21px)/4);min-width:0}
+.end-dex-product img{width:100%;height:52px;object-fit:contain;background:#fff;padding:3px}
+.end-dex-product span{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:9px;margin-top:4px;font-weight:800}
+.end-dex-product i{font-style:normal;color:var(--yellow)}
+.dex-train{margin:12px 0 18px}.dex-train .btn{font-size:13px;padding:13px 9px}.dex-train .dex-note{margin:8px 0 0}
 /* ---------- accueil ---------- */
 .home{display:grid;grid-template-columns:1fr;gap:26px;padding-top:20px;padding-bottom:32px}
 h1{margin:0;font-size:clamp(34px,10.4vw,62px);line-height:.9;letter-spacing:-.03em;font-weight:900;text-transform:uppercase}
@@ -597,6 +611,10 @@ footer .wrap{padding:14px var(--pad);display:flex;gap:16px;flex-wrap:wrap;justif
         <button class="btn wide" type="button" id="dexShareBtn">↗ Partager ma collection</button>
         <div class="share"><div class="targets" id="dexShareTargets"></div></div>
       </div>
+      <div class="dex-train">
+        <button class="btn ghost wide" type="button" id="dexTrain"></button>
+        <p class="dex-note" id="dexTrainNote"></p>
+      </div>
       <div class="tabs" id="dexTabs">
         <button class="tab on" type="button" data-f="all"></button>
         <button class="tab" type="button" data-f="found"></button>
@@ -645,6 +663,9 @@ footer .wrap{padding:14px var(--pad);display:flex;gap:16px;flex-wrap:wrap;justif
 
       <p class="verdict" id="verdict"></p>
       <span class="rankline" id="rankLine" hidden></span>
+      <div class="end-dex" id="endDex">
+        <button type="button" id="endDexOpen"><span class="end-dex-kicker">CLIKEDEX</span><strong id="endDexTitle"></strong><span id="endDexProducts"></span><span id="endDexNote"></span><span class="end-dex-link" id="endDexLink"></span></button>
+      </div>
 
       <div class="namebox" id="nameRow" hidden>
         <label for="endName" id="endNameLabel">Ton nom pour le classement</label>
@@ -1094,6 +1115,7 @@ function applyLang(next, opts){
   renderTargets('dex');
   if(state.kind !== 'free' && state.day) html('#trainNext', L.trainNext.replace('{left}', '<b>' + untilMidnight() + '</b>'));
   renderDailyEntry();
+  if($('#end').classList.contains('on')) renderEndDex();
   try{ if($('#dex').classList.contains('on')) renderDex(); if(!$('#dexSheet').hidden) dexCard(); }catch(e){}
   const bnote = document.querySelector('#boardNote'); if(bnote) bnote.textContent = state.boardDiff === 'daily' ? L.boardNoteDaily : L.boardNote;
   if(typeof renderBoardTabs === 'function') renderBoardTabs();
@@ -1150,6 +1172,7 @@ const state = {
   boardDay: null,
   boardBack: 'intro',
   results: [],
+  dexUnlocks: [],
   slots: null,
   shareFile: null,
   shareImageUrl: null,
@@ -1547,6 +1570,8 @@ function beginGame(queue, kind, day, resume, slots){
   state.i = 0; state.good = 0; state.pts = 0; state.streak = 0; state.bestStreak = 0;
   state.mode = null; state.locked = false; state.answered = 0; state.skipped = 0; state.last = null;
   state.results = [];
+  state.dexUnlocks = [];
+  dexStore();
   state.submitted = false; state.submitOk = null; state.rank = null; state.rankTotal = null; state.submitP = null; state.secsSaved = null; state.beatPct = null;
   const nr = $('#nameRow'); if(nr) nr.hidden = true;
   const rl = $('#rankLine'); if(rl) rl.hidden = true;
@@ -1555,6 +1580,7 @@ function beginGame(queue, kind, day, resume, slots){
   const sl = $('#submitLine'); if(sl) sl.textContent = '';
   state.started = Date.now();
   if(resume){
+    state.dexUnlocks = Array.isArray(resume.dexUnlocks) ? resume.dexUnlocks.slice() : [];
     state.i = resume.i; state.pts = resume.pts; state.good = resume.good;
     state.results = resume.results.slice(); state.streak = resume.streak; state.bestStreak = resume.bestStreak;
     state.started = resume.started;
@@ -1700,7 +1726,7 @@ function dailySave(rec){
 function dailyProgress(extra){
   if(state.kind !== 'daily') return;
   dailySave(Object.assign({
-    day: state.day, i: state.i, pts: state.pts, good: state.good, results: state.results,
+    day: state.day, i: state.i, pts: state.pts, good: state.good, results: state.results, dexUnlocks: state.dexUnlocks,
     streak: state.streak, bestStreak: state.bestStreak, started: state.started, player: state.player, done: false
   }, extra || {}));
 }
@@ -1747,6 +1773,7 @@ function playDaily(){
 }
 function showDailyResult(rec){
   state.kind = 'daily'; state.day = rec.day;
+  state.dexUnlocks = Array.isArray(rec.dexUnlocks) ? rec.dexUnlocks.slice() : [];
   state.queue = new Array(DAILY_SIZE).fill(-1);
   state.pts = rec.pts; state.good = rec.good; state.results = rec.results.slice();
   state.bestStreak = rec.bestStreak; state.started = rec.started; state.secsSaved = rec.secs;
@@ -2018,7 +2045,10 @@ function resolve(ok, pick){
   });
   state.results.push(state.timedOut ? 'to' : (ok ? 'ok' : 'ko'));
   logAnswer(p, ok);
-  if(state.kind !== 'calib'){ levelUpdate(p, ok, state.mode, isOrtho()); dexRecord(p, ok, state.mode); }
+  if(state.kind !== 'calib'){
+    if(dexRecord(p, ok, state.mode) && !state.dexUnlocks.includes(p.n)) state.dexUnlocks.push(p.n);
+    levelUpdate(p, ok, state.mode, isOrtho());
+  }
   dailyProgress({i: state.i + 1, pending: null});
   state.last = { ok, gain, p, isLast: state.i + 1 >= state.queue.length };
   renderFeedback();
@@ -2192,11 +2222,12 @@ function finish(reopen){
     const nr = $('#nameRow'); const ni = $('#endName');
     if(nr) nr.hidden = false;
     if(ni){ ni.value = ''; ni.placeholder = t('endNamePh'); }
-    setTimeout(() => { try{ nr.scrollIntoView({block: 'center', behavior: 'smooth'}); }catch(e){} }, 60);
+    // Keep the ticket and collection discovery visible at the top of the result.
   }
   state.share = daily
     ? t('dailyShare', {pts: state.pts, max: max, n: dayNo(state.day)})
     : t('shareArcade', {pts: state.pts, good: state.good, total: total});
+  renderEndDex();
   prepareShareImage();
   show('end');
   refreshShareLinks();
@@ -2249,37 +2280,37 @@ const DEX_KEY = SELFTEST ? 'clikea-dex-selftest' : 'clikea-dex';
 const DEX_PAGE = 60;
 const DEX_MODE = { duo: 1, carre: 2, cash: 3 };
 const DEX_T = {
- fr:{link:'Clikedex · <b>{f}</b>/{n} trouvés', lede:'Tous les produits en jeu : ceux que tu as nommés, ceux qui t’ont échappé, ceux que tu n’as jamais croisés. De quoi réviser avant la prochaine partie.',
+ fr:{train:"Entraîne-toi en partie rapide",trainNote:"Trouve de nouveaux noms, débloque des meubles et collectionne les rares.",unlock1:"1 nouveau meuble débloqué !",unlockN:"{n} nouveaux meubles débloqués !",collectionWait:"Ta collection t’attend",collectionProgress:"{f}/{n} meubles trouvés · continue à collectionner les rares.",discoveries:"Voir mes découvertes →",openCollection:"Ouvrir mon Clikedex →",unlockRares:"★ Collection de rares : +{n}",link:'Clikedex · <b>{f}</b>/{n} trouvés', lede:'Tous les produits en jeu : ceux que tu as nommés, ceux qui t’ont échappé, ceux que tu n’as jamais croisés. De quoi réviser avant la prochaine partie.',
   found:'trouvés', miss:'Ratés', cash:'En Cash', rare:'Très rares', acc:'Réussite', fAll:'Tous', fFound:'Trouvés', fMiss:'Ratés', fNew:'Inconnus',
   search:'Chercher un nom trouvé ou un type', more:'Afficher plus ({n})', empty:'Rien ici pour l’instant. Lance une partie.',
   note:'Le Clikedex grandit quand de nouveaux produits entrent en jeu. Ta progression reste sur cet appareil.',
   lock:'Trouve-le en partie pour révéler son nom.', rares:'Rares', coll:'Collection', seen1:'Vu 1 fois', seenN:'Vu {s} fois', hit0:'jamais trouvé', hit1:'trouvé 1 fois', hitN:'trouvé {f} fois', best:'Meilleur : {m}', never:'Jamais croisé en partie',
   r0:'Commun', r1:'Rare', r2:'Très rare', close:'Fermer', prev:'Précédent', next:'Suivant', play:'Jouer', back:'Retour'},
- en:{link:'Clikedex · <b>{f}</b>/{n} found', lede:'Every product in play: the ones you named, the ones that got away, the ones you have never met. Revise before your next game.',
+ en:{train:"Practise in free play",trainNote:"Find new names, unlock products and collect rare ones.",unlock1:"1 new product unlocked!",unlockN:"{n} new products unlocked!",collectionWait:"Your collection is waiting",collectionProgress:"{f}/{n} products found · keep collecting rare ones.",discoveries:"See my discoveries →",openCollection:"Open my Clikedex →",unlockRares:"★ {n} rare product(s) unlocked this game.",link:'Clikedex · <b>{f}</b>/{n} found', lede:'Every product in play: the ones you named, the ones that got away, the ones you have never met. Revise before your next game.',
   found:'found', miss:'Missed', cash:'In Cash', rare:'Very rare', acc:'Hit rate', fAll:'All', fFound:'Found', fMiss:'Missed', fNew:'Unseen',
   search:'Search a found name or a type', more:'Show more ({n})', empty:'Nothing here yet. Play a game.',
   note:'The Clikedex grows as new products enter the game. Your progress stays on this device.',
   lock:'Find it in a game to reveal its name.', rares:'Rare', coll:'Collection', seen1:'Seen once', seenN:'Seen {s} times', hit0:'never found', hit1:'found once', hitN:'found {f} times', best:'Best: {m}', never:'Never met in a game',
   r0:'Common', r1:'Rare', r2:'Very rare', close:'Close', prev:'Previous', next:'Next', play:'Play', back:'Back'},
- es:{link:'Clikedex · <b>{f}</b>/{n} encontrados', lede:'Todos los productos en juego: los que nombraste, los que se te escaparon y los que nunca viste. Para repasar antes de la próxima partida.',
+ es:{train:"Entrénate en partida libre",trainNote:"Encuentra nuevos nombres, desbloquea productos y colecciona los raros.",unlock1:"¡1 nuevo producto desbloqueado!",unlockN:"¡{n} nuevos productos desbloqueados!",collectionWait:"Tu colección te espera",collectionProgress:"{f}/{n} productos encontrados · sigue coleccionando los raros.",discoveries:"Ver mis descubrimientos →",openCollection:"Abrir mi Clikedex →",unlockRares:"★ {n} producto(s) raro(s) desbloqueado(s) en esta partida.",link:'Clikedex · <b>{f}</b>/{n} encontrados', lede:'Todos los productos en juego: los que nombraste, los que se te escaparon y los que nunca viste. Para repasar antes de la próxima partida.',
   found:'encontrados', miss:'Fallados', cash:'En Cash', rare:'Muy raros', acc:'Acierto', fAll:'Todos', fFound:'Encontrados', fMiss:'Fallados', fNew:'Sin ver',
   search:'Buscar un nombre encontrado o un tipo', more:'Ver más ({n})', empty:'Nada todavía. Juega una partida.',
   note:'El Clikedex crece cuando entran nuevos productos en el juego. Tu progreso se queda en este dispositivo.',
   lock:'Encuéntralo en una partida para revelar su nombre.', rares:'Raros', coll:'Colección', seen1:'Visto 1 vez', seenN:'Visto {s} veces', hit0:'nunca encontrado', hit1:'encontrado 1 vez', hitN:'encontrado {f} veces', best:'Mejor: {m}', never:'Nunca visto en una partida',
   r0:'Común', r1:'Raro', r2:'Muy raro', close:'Cerrar', prev:'Anterior', next:'Siguiente', play:'Jugar', back:'Volver'},
- de:{link:'Clikedex · <b>{f}</b>/{n} gefunden', lede:'Alle Produkte im Spiel: die du benannt hast, die dir entwischt sind, und die du noch nie gesehen hast. Zum Üben vor der nächsten Runde.',
+ de:{train:"Im freien Spiel üben",trainNote:"Finde neue Namen, schalte Produkte frei und sammle seltene.",unlock1:"1 neues Produkt freigeschaltet!",unlockN:"{n} neue Produkte freigeschaltet!",collectionWait:"Deine Sammlung wartet",collectionProgress:"{f}/{n} Produkte gefunden · sammle weiter seltene Produkte.",discoveries:"Meine Entdeckungen ansehen →",openCollection:"Meinen Clikedex öffnen →",unlockRares:"★ {n} seltene Produkte in dieser Runde freigeschaltet.",link:'Clikedex · <b>{f}</b>/{n} gefunden', lede:'Alle Produkte im Spiel: die du benannt hast, die dir entwischt sind, und die du noch nie gesehen hast. Zum Üben vor der nächsten Runde.',
   found:'gefunden', miss:'Verpasst', cash:'Mit Cash', rare:'Sehr selten', acc:'Trefferquote', fAll:'Alle', fFound:'Gefunden', fMiss:'Verpasst', fNew:'Ungesehen',
   search:'Gefundenen Namen oder Typ suchen', more:'Mehr zeigen ({n})', empty:'Noch nichts hier. Spiel eine Runde.',
   note:'Der Clikedex wächst, wenn neue Produkte ins Spiel kommen. Dein Fortschritt bleibt auf diesem Gerät.',
   lock:'Finde es im Spiel, um seinen Namen aufzudecken.', rares:'Selten', coll:'Sammlung', seen1:'1× gesehen', seenN:'{s}× gesehen', hit0:'nie gefunden', hit1:'1× gefunden', hitN:'{f}× gefunden', best:'Bestes: {m}', never:'Im Spiel noch nie gesehen',
   r0:'Häufig', r1:'Selten', r2:'Sehr selten', close:'Schließen', prev:'Zurück', next:'Weiter', play:'Spielen', back:'Zurück'},
- it:{link:'Clikedex · <b>{f}</b>/{n} trovati', lede:'Tutti i prodotti in gioco: quelli che hai nominato, quelli che ti sono sfuggiti e quelli mai visti. Per ripassare prima della prossima partita.',
+ it:{train:"Allenati in partita libera",trainNote:"Trova nuovi nomi, sblocca prodotti e colleziona quelli rari.",unlock1:"1 nuovo prodotto sbloccato!",unlockN:"{n} nuovi prodotti sbloccati!",collectionWait:"La tua collezione ti aspetta",collectionProgress:"{f}/{n} prodotti trovati · continua a collezionare quelli rari.",discoveries:"Vedi le mie scoperte →",openCollection:"Apri il mio Clikedex →",unlockRares:"★ {n} prodotti rari sbloccati in questa partita.",link:'Clikedex · <b>{f}</b>/{n} trovati', lede:'Tutti i prodotti in gioco: quelli che hai nominato, quelli che ti sono sfuggiti e quelli mai visti. Per ripassare prima della prossima partita.',
   found:'trovati', miss:'Sbagliati', cash:'In Cash', rare:'Rarissimi', acc:'Precisione', fAll:'Tutti', fFound:'Trovati', fMiss:'Sbagliati', fNew:'Mai visti',
   search:'Cerca un nome trovato o un tipo', more:'Mostra altri ({n})', empty:'Ancora niente. Fai una partita.',
   note:'Il Clikedex cresce quando nuovi prodotti entrano in gioco. I tuoi progressi restano su questo dispositivo.',
   lock:'Trovalo in partita per svelarne il nome.', rares:'Rari', coll:'Collezione', seen1:'Visto 1 volta', seenN:'Visto {s} volte', hit0:'mai trovato', hit1:'trovato 1 volta', hitN:'trovato {f} volte', best:'Migliore: {m}', never:'Mai visto in partita',
   r0:'Comune', r1:'Raro', r2:'Rarissimo', close:'Chiudi', prev:'Precedente', next:'Successivo', play:'Gioca', back:'Indietro'},
- ko:{link:'Clikedex · <b>{f}</b>/{n} 찾음', lede:'게임에 나오는 모든 제품: 맞힌 것, 놓친 것, 아직 만나지 못한 것. 다음 게임 전에 복습해 보세요.',
+ ko:{train:"자유 게임으로 연습하기",trainNote:"새 이름을 맞히고 제품을 해제하고 희귀 제품을 모으세요.",unlock1:"새 제품 1개 해제!",unlockN:"새 제품 {n}개 해제!",collectionWait:"컬렉션이 기다려요",collectionProgress:"{f}/{n}개 발견 · 희귀 제품을 계속 모으세요.",discoveries:"내 발견 보기 →",openCollection:"내 Clikedex 열기 →",unlockRares:"★ 이번 게임에서 희귀 제품 {n}개 해제.",link:'Clikedex · <b>{f}</b>/{n} 찾음', lede:'게임에 나오는 모든 제품: 맞힌 것, 놓친 것, 아직 만나지 못한 것. 다음 게임 전에 복습해 보세요.',
   found:'찾음', miss:'놓침', cash:'Cash 정답', rare:'아주 희귀', acc:'정답률', fAll:'전체', fFound:'찾음', fMiss:'놓침', fNew:'미발견',
   search:'찾은 이름이나 종류 검색', more:'더 보기 ({n})', empty:'아직 아무것도 없어요. 게임을 시작하세요.',
   note:'새 제품이 게임에 들어오면 Clikedex도 커집니다. 진행 상황은 이 기기에 저장됩니다.',
@@ -2307,10 +2338,12 @@ function dexSave(d){ try{ localStorage.setItem(DEX_KEY, JSON.stringify(d)); }cat
 function dexRecord(p, ok, mode){
   const d = dexStore();
   const r = d[p.n] || [0, 0, 0, 0];
+  const unlocked = ok && !r[1];
   r[0]++;
   if(ok){ r[1]++; r[2] = Math.max(r[2], DEX_MODE[mode] || 0); if(!r[3]) r[3] = Date.now(); }
   d[p.n] = r;
   dexSave(d);
+  return unlocked;
 }
 // Rareté de collection (indépendante du barème) : rang de difficulté dans le réseau en jeu, 8 % ★★, 22 % ★.
 const DEX_RARE = { very: 0.08, rare: 0.22 };
@@ -2390,7 +2423,7 @@ function dexFiltered(){
     if(dexUi.rar && dexRar(p) !== dexUi.rar) return false;
     if(!q) return true;
     return (st === 'found' && norm(p.n).includes(q)) || norm(typeOf(p)).includes(q);
-  });
+  }).sort((a,b) => Number(!!(dexUi.recent && dexUi.recent.has(PRODUCTS[b].n))) - Number(!!(dexUi.recent && dexUi.recent.has(PRODUCTS[a].n))));
 }
 function renderDexGrid(){
   const d = dexStore();
@@ -2409,17 +2442,33 @@ function renderDexGrid(){
   more.hidden = left <= 0;
   more.textContent = dt('more', {n: left});
 }
+function sessionDiscoveries(){
+  const names = new Set(state.dexUnlocks || []), d = dexStore();
+  return PRODUCTS.filter(p => names.has(p.n) && dexStateOf(d[p.n]) === 'found');
+}
+function renderEndDex(){
+  const found = sessionDiscoveries(), stats = dexStats();
+  const rares = found.filter(p => dexRar(p) > 0).length;
+  $('#endDexTitle').textContent = found.length ? dt(found.length === 1 ? 'unlock1' : 'unlockN', {n:found.length}) : dt('collectionWait');
+  $('#endDexProducts').innerHTML = found.slice(0,4).map(p => '<span class="end-dex-product"><img src="' + p.i + '" alt=""><span>' + (dexRar(p) ? '<i>' + DEX_STARS[dexRar(p)] + '</i> ' : '') + escapeHtml(p.n) + '</span></span>').join('');
+  $('#endDexNote').textContent = rares ? dt('unlockRares', {n:rares}) : dt('collectionProgress', {f:stats.found,n:stats.total});
+  $('#endDexLink').textContent = dt(found.length ? 'discoveries' : 'openCollection');
+}
 function renderDex(){
   $('#dexLede').textContent = dt('lede');
   $('#dexSearch').placeholder = dt('search');
   $('#dexNote').textContent = dt('note');
-  $('#dexPlay').textContent = dt('play');
+  $('#dexPlay').textContent = dt('train');
+  $('#dexTrain').textContent = dt('train');
+  $('#dexTrainNote').textContent = dt('trainNote');
   $('#dexBack').textContent = dt('back');
   renderDexStats();
   renderDexGrid();
 }
-function openDex(){
+function openDex(origin){
+  dexUi.recent = origin === 'result' ? new Set(state.dexUnlocks) : null;
   dexUi.filter = 'all'; dexUi.rar = 0; dexUi.q = ''; dexUi.shown = DEX_PAGE;
+  if(dexUi.recent && dexUi.recent.size) dexUi.filter = 'found';
   $('#dexSearch').value = '';
   renderDex();
   show('dex');
@@ -2463,7 +2512,13 @@ function openDexCard(k){ dexUi.at = k; dexCard(); $('#dexSheet').hidden = false;
 function closeDexCard(){ $('#dexSheet').hidden = true; }
 $('#dexOpen').addEventListener('click', openDex);
 $('#dexBack').addEventListener('click', () => { closeDexCard(); show('intro'); renderDailyEntry(); renderDexLink(); });
-$('#dexPlay').addEventListener('click', () => { closeDexCard(); show('intro'); renderDailyEntry(); renderDexLink(); });
+function trainFromDex(){ closeDexCard(); track('clikea_train_started', {from:'clikedex'}); startGame(); }
+$('#dexPlay').addEventListener('click', trainFromDex);
+$('#dexTrain').addEventListener('click', trainFromDex);
+$('#endDexOpen').addEventListener('click', () => {
+  track('clikea_dex_from_result', {kind:state.kind, unlocked:state.dexUnlocks.length});
+  openDex('result');
+});
 $('#dexMore').addEventListener('click', () => { dexUi.shown += DEX_PAGE; renderDexGrid(); });
 $('#dexSearch').addEventListener('input', (e) => { dexUi.q = e.target.value; dexUi.shown = DEX_PAGE; renderDexGrid(); });
 $('#dexGrid').addEventListener('click', (e) => { const c = e.target.closest('.dex-card'); if(c) openDexCard(Number(c.dataset.k)); });
@@ -3442,6 +3497,34 @@ if(location.search.includes('selftest')){
     closeDexCard(); $('#dexBack').click();
     ok($('#intro').classList.contains('on') && $('#dexSheet').hidden,'clikedex : retour accueil');
     localStorage.removeItem(DEX_KEY);
+
+    // New collection discoveries are per game, survive daily reopening, and never repeat.
+    localStorage.setItem(DEX_KEY, '{}'); localStorage.removeItem(LEVEL_KEY);
+    const discoveryIndex = PRODUCTS.findIndex(p => p.n === dp.n);
+    function discoveryRound(kind, correct){
+      beginGame([discoveryIndex], kind, today, null);
+      chooseMode('cash'); $('#cashInput').value = correct ? dp.n : 'xyzzy'; $('#cashBtn').click(); $('#nextBtn').click();
+    }
+    discoveryRound('daily', true);
+    ok(state.dexUnlocks.length === 1 && sessionDiscoveries().length === 1 && $('#endDexProducts').textContent.includes(dp.n), 'collection fin : première réussite révélée, même en Cash');
+    $('#endDexOpen').click();
+    ok(dexUi.filter === 'found' && dexUi.recent.has(dp.n) && PRODUCTS[dexUi.view[0]].n === dp.n, 'collection fin : accès direct aux découvertes en tête du Clikedex');
+    show('end');
+    const unlockedDay = dailyStore()[today];
+    ok(unlockedDay.dexUnlocks.length === 1, 'collection fin : découvertes sauvegardées avec le quotidien');
+    state.dexUnlocks = []; showDailyResult(unlockedDay);
+    ok(sessionDiscoveries().length === 1 && $('#endDexProducts').querySelectorAll('img').length === 1, 'collection fin : découvertes conservées quand on revoit son résultat');
+    discoveryRound('free', true);
+    ok(state.dexUnlocks.length === 0 && !$('#endDexProducts').textContent && $('#endDexTitle').textContent === dt('collectionWait'), 'collection fin : meuble déjà trouvé non recompté');
+    localStorage.setItem(DEX_KEY, '{}'); localStorage.removeItem(LEVEL_KEY);
+    discoveryRound('free', false);
+    ok(state.pts === 0 && state.dexUnlocks.length === 0 && sessionDiscoveries().length === 0 && $('#endDexOpen').textContent.includes(dt('openCollection')), 'collection fin : zéro point, lien collection sans fausse découverte');
+    $('#endDexOpen').click();
+    ok($('#dex').classList.contains('on') && $('#dexTrain').textContent === dt('train'), 'collection fin : accès au Clikedex et entraînement visible');
+    $('#dexTrain').click();
+    ok($('#game').classList.contains('on') && state.kind === 'free' && state.dexUnlocks.length === 0, 'Clikedex : entraînement démarre directement une nouvelle partie libre');
+    stopClock(); show('intro');
+    localStorage.removeItem(DEX_KEY); localStorage.removeItem(LEVEL_KEY); localStorage.removeItem(DAILY_KEY);
 
     const pre=document.createElement('pre');
     pre.id='selftest';
