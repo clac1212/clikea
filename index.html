@@ -1363,12 +1363,30 @@ const API_URL = 'https://vubopkycvzzqufpqxpbg.supabase.co/rest/v1/clikea_scores'
 const API_KEY = 'sb_publishable_WMYqRdE6kUMQNZJu6Jyrkw_WclrsN7Q';
 
 function boardMax(diff){ return diff === 'daily' ? DAILY_MAX : null; }
+function myName(){
+  if(state.player) return state.player.trim().toLowerCase();
+  const all = dailyStore(); const days = Object.keys(all).sort().reverse();
+  for(const d of days) if(all[d] && all[d].player) return String(all[d].player).trim().toLowerCase();
+  return '';
+}
+function isMine(r){ if(r && typeof r.me === 'boolean') return r.me; const me = myName(); return !!(me && r && r.name && r.name.trim().toLowerCase() === me); }
+function boardRow(pos, r, diff, mine){
+  return '<div class="row' + (mine ? ' me' : '') + '"><span class="pos">' + pos + '</span><span class="nm">' + escapeHtml(r.name) + streakTag(r) + '</span><span class="sc">' + boardScore(r, diff) + '</span></div>';
+}
+function boardRowsHtml(data, diff){
+  let found = false;
+  const html = data.map((r, i) => { const m = isMine(r) && !found; if(m) found = true; return boardRow(i + 1, r, diff, m); }).join('');
+  return {html: html, found: found};
+}
+function meRowHtml(rank, shown, score, diff){
+  return (rank > shown + 1 ? '<div class="row gap">⋯</div>' : '') + boardRow(rank, {name: state.player || (dailyStore()[parisDay()] || {}).player || (UI[lang] || UI.fr).me, score: score}, diff, true);
+}
 function streakTag(r){ return r && r.streak >= 2 ? ' <b class="streak">🔥' + r.streak + '</b>' : ''; }
 async function fetchBoard(diff, day){
   if(diff === 'daily' || diff === 'month'){
     try{
       const r = await fetch(SB_REST + '/rpc/clikea_daily_board', {method: 'POST', headers: apiHeaders({'Content-Type': 'application/json'}),
-        body: JSON.stringify({p_day: diff === 'month' ? parisDay() : day, p_period: diff === 'month' ? 'month' : 'day'})});
+        body: JSON.stringify({p_day: diff === 'month' ? parisDay() : day, p_period: diff === 'month' ? 'month' : 'day', p_device: deviceId()})});
       if(r.ok) return await r.json();
     }catch(e){}
     if(diff === 'month') return null;
@@ -1483,18 +1501,10 @@ async function loadEndBoard(){
   if(loadEndBoard.key === key) return; loadEndBoard.key = key;
   const data = (await fetchBoard(diff, parisDay())) || [];
   if(loadEndBoard.key !== key) return;
-  const me = (state.player || '').trim().toLowerCase();
   const top = (data || []).slice(0, 3);
-  let mineShown = false;
-  let html = top.map((r, i) => {
-    const mine = me && r.name.trim().toLowerCase() === me && r.score === state.pts;
-    if(mine) mineShown = true;
-    return '<div class="row' + (mine ? ' me' : '') + '"><span class="pos">' + (i + 1) + '</span><span class="nm">' + escapeHtml(r.name) + streakTag(r) + '</span><span class="sc">' + boardScore(r, diff) + '</span></div>';
-  }).join('');
-  if(!mineShown && state.rank && state.submitOk){
-    if(state.rank > top.length + 1) html += '<div class="row gap">⋯</div>';
-    html += '<div class="row me"><span class="pos">' + state.rank + '</span><span class="nm">' + escapeHtml(state.player || (UI[lang] || UI.fr).me) + '</span><span class="sc">' + boardScore({score: state.pts}, diff) + '</span></div>';
-  }
+  const built = boardRowsHtml(top, diff);
+  let html = built.html;
+  if(!built.found && state.rank && state.submitOk) html += meRowHtml(state.rank, top.length, state.pts, diff);
   if(!html){ box.hidden = true; return; }
   rows.innerHTML = html;
   box.hidden = false;
@@ -1537,15 +1547,19 @@ async function loadBoard(){
     renderRankPreview(data);
     return;
   }
-  const me = (state.player || '').trim().toLowerCase();
-  rows.innerHTML = data.map((r, i) => {
-    const mine = me && r.name.trim().toLowerCase() === me;
-    return '<div class="row' + (mine ? ' me' : '') + '">'
-      + '<span class="pos">' + (i + 1) + '</span>'
-      + '<span class="nm">' + escapeHtml(r.name) + streakTag(r) + '</span>'
-      + '<span class="sc">' + boardScore(r, state.boardDiff) + '</span>'
-      + '</div>';
-  }).join('');
+  const built = boardRowsHtml(data, state.boardDiff);
+  rows.innerHTML = built.html;
+  const rec = dailyStore()[parisDay()];
+  if(!built.found && state.boardDiff === 'daily' && boardDayValue() === parisDay() && rec && rec.done && typeof rec.pts === 'number'){
+    const diff = state.boardDiff;
+    introDailyRank(rec.pts).then(rank => {
+      if(!rank || state.boardDiff !== diff || boardDayValue() !== parisDay()) return;
+      const at = data.findIndex(r => r.score < rec.pts);
+      if(at < 0){ rows.innerHTML = built.html + meRowHtml(rank, data.length, rec.pts, 'daily'); return; }
+      const me = boardRow(at + 1, {name: rec.player || state.player || (UI[lang] || UI.fr).me, score: rec.pts}, 'daily', true);
+      rows.innerHTML = data.map((r, i) => (i === at ? me : '') + boardRow(i < at ? i + 1 : i + 2, r, 'daily', false)).join('');
+    });
+  }
   $('#boardNote').textContent = state.boardDiff === 'month' ? t('boardNoteMonth') : state.boardDiff !== 'daily' ? t('boardNoteArcade')
     : boardDayValue() === parisDay() ? t('boardNoteDaily') : t('boardNoteDay', {n: dayNo(boardDayValue())});
   renderRankPreview(data);
@@ -1556,21 +1570,14 @@ function renderRankPreview(data){
   if(!data || !data.length){ box.innerHTML = '<div class="empty">' + t('boardEmpty') + '</div>'; return; }
   const rec = state.boardDiff === 'daily' ? dailyStore()[parisDay()] : null;
   const done = rec && rec.done && typeof rec.pts === 'number';
-  const me = ((done && rec.player) || state.player || '').trim().toLowerCase();
-  let mineShown = false;
   const top = data.slice(0, done ? 3 : 5);
-  let html = top.map((r,i)=>{
-    const mine = me && r.name.trim().toLowerCase() === me && (!done || r.score === rec.pts);
-    if(mine) mineShown = true;
-    return '<div class="row'+(mine?' me':'')+'"><span class="pos">'+(i+1)+'</span><span class="nm">'+escapeHtml(r.name)+streakTag(r)+'</span><span class="sc">'+boardScore(r, state.boardDiff)+'</span></div>';
-  }).join('');
+  const built = boardRowsHtml(top, state.boardDiff), html = built.html;
   box.innerHTML = html;
-  if(!done || mineShown) return;
+  if(!done || built.found) return;
   const key = parisDay() + '|' + rec.pts; renderRankPreview.key = key;
   introDailyRank(rec.pts).then(rank => {
     if(!rank || renderRankPreview.key !== key || state.boardDiff !== 'daily') return;
-    box.innerHTML = html + (rank > top.length + 1 ? '<div class="row gap">⋯</div>' : '')
-      + '<div class="row me"><span class="pos">' + rank + '</span><span class="nm">' + escapeHtml(rec.player || state.player || (UI[lang] || UI.fr).me) + '</span><span class="sc">' + boardScore({score: rec.pts}, 'daily') + '</span></div>';
+    box.innerHTML = html + meRowHtml(rank, top.length, rec.pts, 'daily');
   });
 }
 async function introDailyRank(pts){
@@ -3300,6 +3307,7 @@ if(location.search.includes('selftest')){
     ok(boardQuery('arcade').indexOf('difficulty=eq.arcade') > -1,'classement record : scores arcade uniquement');
     ok(boardMax('arcade') === null && boardScore({score: 132}, 'arcade').indexOf('132') === 0,'record sans plafond');
     ok(document.querySelectorAll('#boardTabs .tab').length===3,'trois classements : du jour, mois et record');
+    ok(isMine({name: 'x', me: true}) && !isMine({name: 'x', me: false}) && boardRow(3, {name: 'A', score: 5}, 'daily', true).indexOf('row me') > -1,'classement : ma ligne surlignée partout pareil');
     ok(boardMax('month') === null && streakTag({streak: 3}).indexOf('🔥3') > -1 && streakTag({streak: 1}) === '','semaine en points, série affichée à partir de 2 jours');
     $('#photoTag').classList.add('hot'); ok(getComputedStyle($('#photoTag')).display !== 'none','étiquette rareté / orthographe visible'); $('#photoTag').classList.remove('hot');
     ok(clampDay(addDays(parisDay(), 3))===parisDay() && clampDay('2020-01-01')===DAILY_EPOCH,'historique borné entre la grille #1 et aujourd’hui');
