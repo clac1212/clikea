@@ -1554,8 +1554,8 @@ async function loadBoard(){
     const diff = state.boardDiff;
     introDailyRank(rec.pts).then(rank => {
       if(!rank || state.boardDiff !== diff || boardDayValue() !== parisDay()) return;
-      const at = data.findIndex(r => r.score < rec.pts);
-      if(at < 0){ rows.innerHTML = built.html + meRowHtml(rank, data.length, rec.pts, 'daily'); return; }
+      const at = rank - 1 <= data.length ? rank - 1 : -1;
+      if(at < 0 || at >= data.length){ rows.innerHTML = built.html + meRowHtml(rank, data.length, rec.pts, 'daily'); return; }
       const me = boardRow(at + 1, {name: rec.player || state.player || (UI[lang] || UI.fr).me, score: rec.pts}, 'daily', true);
       rows.innerHTML = data.map((r, i) => (i === at ? me : '') + boardRow(i < at ? i + 1 : i + 2, r, 'daily', false)).join('');
     });
@@ -1581,8 +1581,10 @@ function renderRankPreview(data){
   });
 }
 async function introDailyRank(pts){
+  const br = await boardRank(parisDay(), 'day');
+  if(br) return br.rank;
   try{
-    const r = await fetch(SB_REST + '/clikea_daily_scores?select=day&day=eq.' + parisDay() + '&score=gt.' + pts + '&limit=1', {headers: apiHeaders({'Prefer': 'count=exact'})});
+    const r = await fetch(SB_REST + '/clikea_daily_scores?select=day&day=eq.' + parisDay() + '&name=not.is.null&score=gte.' + pts + '&limit=1', {headers: apiHeaders({'Prefer': 'count=exact'})});
     const n = parseInt(((r.headers.get('content-range') || '').split('/')[1] || ''), 10);
     return isNaN(n) ? null : n + 1;
   }catch(e){ return null; }
@@ -1896,7 +1898,18 @@ async function submitDaily(){
   if(state.submitOk) loadDailyRank();
   setSubmitLine();
 }
+async function boardRank(day, period){
+  try{
+    const r = await fetch(SB_REST + '/rpc/clikea_daily_rank', {method: 'POST', headers: apiHeaders({'Content-Type': 'application/json'}),
+      body: JSON.stringify({p_day: day, p_period: period || 'day', p_device: deviceId()})});
+    if(!r.ok) return null;
+    const j = await r.json(); const x = Array.isArray(j) ? j[0] : j;
+    return x && x.rank ? x : null;
+  }catch(e){ return null; }
+}
 async function loadDailyRank(){
+  const br = await boardRank(state.day, 'day');
+  if(br){ state.rank = br.rank; state.rankTotal = br.total; state.submitOk = true; setSubmitLine(); return; }
   const base = SB_REST + '/clikea_daily_scores?select=day&day=eq.' + state.day;
   const count = async (url) => {
     const r = await fetch(url + '&limit=1', {headers: apiHeaders({'Prefer': 'count=exact'})});
