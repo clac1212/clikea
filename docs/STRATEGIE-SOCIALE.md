@@ -119,7 +119,17 @@ Chaque contenu porte une question qui appelle un commentaire ou un envoi (« env
 - Outil recommandé : **Postiz hébergé** (≈ 23–29 $/mois) : TikTok, Instagram, YouTube, X, Bluesky et Reddit, avec une API et un serveur MCP utilisables par l'agent.
 - Option gratuite : **Buffer** (3 canaux, 10 posts programmés par canal, export d'analytics payant).
 
-**Comptes à créer** : TikTok, Instagram (professionnel), YouTube, Bluesky, avec l'adresse oko@ comme pour X. Un code SMS peut être demandé.
+**Comptes** (état au 23 novembre 2026). Adresse commune : contact@clikeagame.com, une redirection OVH gratuite vers la boîte oko@ (pas de boîte propre, ne peut pas envoyer). Mots de passe générés et rangés dans le Vault OpenBot.
+
+| Compte | État | Outil |
+|---|---|---|
+| Instagram @clikeagame | créé, compte Creator (catégorie Jeu vidéo), avatar et bio | Buffer |
+| YouTube @clikeagame | créé (compte Google CLIKEA Game, validé par SMS), avatar, bannière, description, lien utm | Buffer |
+| Bluesky @clikeagame.bsky.social | créé, avatar, bannière, bio, e-mail passé sur contact@ | navigateur |
+| X @clikeagame | existant | navigateur |
+| TikTok | à créer dans l'appli mobile : TikTok refuse l'inscription depuis le web | Buffer (3e canal gardé libre) |
+
+- Buffer gratuit : compte contact@clikeagame.com, Instagram et YouTube reliés (2 canaux sur 3).
 - Bio : « Le jeu des noms IKEA. Jeu de fan, non affilié à IKEA. »
 - Pas de logo IKEA ni de « IKEA » dans le pseudo.
 
