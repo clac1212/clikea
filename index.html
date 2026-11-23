@@ -3397,11 +3397,20 @@ if(location.search.includes('selftest')){
     memUpdate(lvM, 'BILLY', false);
     ok(lvM.mem.BILLY.b === 0 && lvM.mem.BILLY.due < Date.now() + 1.1 * 86400000,'mémoire : raté → revient le lendemain');
     localStorage.removeItem(LEVEL_KEY);
+    // The daily-game tests above completed today: reset that fixture before checking exclusion.
+    localStorage.removeItem(DAILY_KEY);
     const rd0 = PRODUCTS.find(p => p.r && !p.k).n, td0 = PRODUCTS.find(p => p.k).n;
     RECENT_DAILY = new Set([rd0]); TODAY_DAILY = new Set([td0]);
+    // Even a due review must not expose an unplayed daily product.
+    const protectedLevel = levelStore();
+    protectedLevel.mem = {[td0]: {b:0, due:Date.now() - 1000}};
+    levelSave(protectedLevel);
     const rq = adaptiveQueue(20).map(i => PRODUCTS[i].n);
     ok(rq.indexOf(rd0) > -1,'partie libre : reprend les produits des derniers 10 du jour');
-    ok(rq.indexOf(td0) === -1,'partie libre : jamais un produit du 10 du jour pas encore joué');
+    ok(rq.indexOf(td0) === -1,'partie libre : jamais un produit du 10 du jour pas encore joué, même à revoir');
+    dailySave({day:parisDay(),done:true});
+    ok(adaptiveQueue(20).some(i => PRODUCTS[i].n === td0), 'partie libre : produit du quotidien autorisé après avoir terminé le 10 du jour');
+    localStorage.removeItem(DAILY_KEY);
     RECENT_DAILY = new Set(); TODAY_DAILY = new Set();
     ok(PRODUCTS.filter(p => p.r === 1).length >= 50 && PRODUCTS.filter(p => p.r === 2).length >= 100,'réseau exporté (cœur et déjà vus)');
     ok(PRODUCTS.every(p => p.o.every(v => v.normalize('NFD').replace(/[\u0300-\u036f]/g,'') !== p.n.normalize('NFD').replace(/[\u0300-\u036f]/g,''))),'aucune fausse orthographe qui ne change qu’un accent');
