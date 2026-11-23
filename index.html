@@ -305,6 +305,34 @@ body[data-screen="end"] .stickybar{display:block}
   .stickybar{position:static;border-top:0;background:transparent;padding-top:14px;padding-bottom:0}
 }
 /* écrans courts : le bandeau décoratif laisse la place au bouton Jouer */
+/* Ordinateur : partie en deux colonnes (photo à gauche, jeu à droite), fin de partie en deux colonnes
+   (ticket à gauche, actions à droite). Tout tient dans l'écran sans défiler. */
+@media (min-width:900px) and (min-height:560px){
+  #game .wrap.game{max-width:980px;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);column-gap:40px;align-items:start;padding-top:18px}
+  #game .prog,#game .qline{grid-column:1 / -1}
+  #game .photo{grid-column:1;grid-row:3 / span 8;width:100%;height:auto;aspect-ratio:1;max-height:calc(100vh - 230px);max-width:calc(100vh - 230px);margin:4px 0 0 auto;padding:10px}
+  #game .game.revealed .photo,#game .wrap.game.revealed .photo{width:100%;height:auto}
+  #game .clock,#game .ask,#game .modes,#game .choices,#game .cashbox,#game .feedback,#game .quitline{grid-column:2}
+  #game .ask{text-align:left;margin-top:10px;font-size:13px}
+  #game .modes{grid-template-columns:1fr;gap:10px}
+  #game .mode{display:grid;grid-template-columns:auto 1fr auto;align-items:center;column-gap:12px;text-align:left;padding:16px 18px}
+  #game .mode b{font-size:20px}
+  #game .mode i.pts{font-size:16px}
+  #game .choices{gap:10px}
+  #game .choice{padding:18px 12px;font-size:17px}
+  #game .cashbox input{font-size:20px;padding:16px}
+  #game .clock{text-align:left}
+  #game .quitline{text-align:left}
+  #game .feedback{margin-top:0}
+  .print .wrap{display:grid;grid-template-columns:360px minmax(0,460px);justify-content:center;column-gap:44px;align-items:start}
+  .print .wrap > *{grid-column:2;max-width:none;width:100%;margin-left:0;margin-right:0}
+  .print .wrap > .tk{grid-column:1;grid-row:1 / span 9;margin:12px 0}
+  .print .verdict{text-align:left;margin-top:12px}
+  .print .rankline{text-align:left}
+  .print .stickybar{display:block;position:static;background:transparent;border:0;padding:12px 0 0}
+  .print .stickybar-in{max-width:none;padding:0}
+  .print{padding-bottom:24px}
+}
 @media (max-height:720px){
   .band{display:none}
 }
@@ -2513,7 +2541,13 @@ $('#metaScore').textContent = '0 pt';
 (function shelf(){
   const box = $('#shelf');
   if(!box) return;
-  DECOR.forEach(p => {
+  // Assez de vignettes pour couvrir deux largeurs d'écran, puis la liste doublée :
+  // l'animation glisse de -50 %, la seconde moitié prend le relais sans trou.
+  const pool = DECOR.concat(PRODUCTS.filter(p => p.k && p.p != null).map(p => ({p: p.p, i: p.i})));
+  const need = Math.ceil(Math.max(screen.width || 0, window.innerWidth, 1600) / 96) + 2;
+  const list = [];
+  for(let k = 0; list.length < need; k++) list.push(pool[k % pool.length]);
+  list.concat(list).forEach(p => {
     const t = document.createElement('div');
     t.className = 'tile';
     const img = document.createElement('img');
@@ -2527,6 +2561,14 @@ $('#metaScore').textContent = '0 pt';
     }
     box.appendChild(t);
   });
+})();
+// Ordinateur : la barre « Partager » rejoint la colonne d'actions de l'écran de fin ; sur téléphone elle reste collée en bas.
+(function placeStickybar(){
+  const bar = document.querySelector('.stickybar'), col = document.querySelector('#end .wrap'), home = bar.parentNode, next = bar.nextSibling;
+  const mq = window.matchMedia('(min-width:900px) and (min-height:560px)');
+  const place = () => { if(mq.matches){ if(bar.parentNode !== col) col.appendChild(bar); } else if(bar.parentNode !== home){ home.insertBefore(bar, next); } };
+  place();
+  (mq.addEventListener ? mq.addEventListener('change', place) : mq.addListener(place));
 })();
 
 setTimeout(()=>{ try{ loadBoard(); }catch(e){} }, 0);
