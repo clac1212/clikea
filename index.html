@@ -447,7 +447,11 @@ body[data-screen="end"] .stickybar{display:block}
 
 /* ---------- pied & divers ---------- */
 footer{border-top:1px solid rgba(255,255,255,.16);color:#9fbdd6;font-size:11px}
-footer .wrap{padding:14px var(--pad);display:flex;gap:16px;flex-wrap:wrap;justify-content:space-between}
+footer .wrap{padding:14px var(--pad);display:flex;gap:10px 16px;flex-wrap:wrap;justify-content:space-between}
+footer .social{display:flex;flex-wrap:wrap;gap:6px 14px;align-items:center;width:100%;font-size:12px}
+footer .social span{font-weight:800;color:#fff;text-transform:uppercase;letter-spacing:.06em;font-size:11px}
+footer .social a{color:#fff;font-weight:700;text-decoration:none;border-bottom:1px solid rgba(255,255,255,.35)}
+footer .social a:hover{border-color:var(--yellow);color:var(--yellow)}
 .toast{position:fixed;left:50%;bottom:86px;transform:translateX(-50%) translateY(10px);background:#111;color:#fff;font-size:13px;font-weight:600;padding:10px 16px;opacity:0;pointer-events:none;transition:opacity .18s ease,transform .18s ease;z-index:80;max-width:90vw;text-align:center}
 .toast.on{opacity:1;transform:translateX(-50%)}
 
@@ -712,6 +716,15 @@ footer .wrap{padding:14px var(--pad);display:flex;gap:16px;flex-wrap:wrap;justif
 
 <footer>
   <div class="wrap">
+    <nav class="social" aria-label="CLIKEA">
+      <span id="followUs">Suis-nous</span>
+      <a href="https://www.instagram.com/clikeagame/" target="_blank" rel="noopener" data-net="instagram">Instagram</a>
+      <a href="https://www.tiktok.com/@clikeagame" target="_blank" rel="noopener" data-net="tiktok">TikTok</a>
+      <a href="https://www.youtube.com/@clikeagame" target="_blank" rel="noopener" data-net="youtube">YouTube</a>
+      <a href="https://x.com/clikeagame" target="_blank" rel="noopener" data-net="x">X</a>
+      <a href="https://bsky.app/profile/clikeagame.bsky.social" target="_blank" rel="noopener" data-net="bluesky">Bluesky</a>
+      <a href="mailto:contact@clikeagame.com" data-net="email">contact@clikeagame.com</a>
+    </nav>
     <span id="f2">Jeu de fan, non affilié à IKEA. IKEA est une marque d’Inter IKEA Systems B.V. Photos produit : ikea.com</span>
   </div>
 </footer>
@@ -758,7 +771,7 @@ fr:{
  boardLoading:'Chargement du classement…', boardEmpty:'Personne encore. Soyez le premier.',
  boardError:'Classement indisponible pour le moment.', rcDiff:'Niveau',
  rankLine:'Ta place : {rank} en {diff}', savedLine:'Score enregistré',
- fine:'20 produits · 100 points en jeu · pas de notice de montage',
+ followUs:'Suis-nous', fine:'20 produits · 100 points en jeu · pas de notice de montage',
  count:'20 produits', photoTag:'À vous de jouer',
  promptMode:'Choisissez votre mode',
  promptDuo:'Duo : deux noms, un seul est vrai',
@@ -809,7 +822,7 @@ en:{
  boardLoading:'Loading the leaderboard…', boardEmpty:'Nobody yet. Be the first.',
  boardError:'Leaderboard unavailable right now.', rcDiff:'Level',
  rankLine:'Your rank: {rank} in {diff}', savedLine:'Score saved',
- fine:'20 products · 100 points up for grabs · no assembly required',
+ followUs:'Follow us', fine:'20 products · 100 points up for grabs · no assembly required',
  count:'20 products', photoTag:'Your turn',
  promptMode:'Pick your mode',
  promptDuo:'Duo: two names, only one is right',
@@ -860,7 +873,7 @@ es:{
  boardLoading:'Cargando la clasificación…', boardEmpty:'Nadie todavía. Sé el primero.',
  boardError:'Clasificación no disponible por ahora.', rcDiff:'Nivel',
  rankLine:'Tu puesto: {rank} en {diff}', savedLine:'Puntuación guardada',
- fine:'20 productos · 100 puntos en juego · sin instrucciones de montaje',
+ followUs:'Síguenos', fine:'20 productos · 100 puntos en juego · sin instrucciones de montaje',
  count:'20 productos', photoTag:'Tu turno',
  promptMode:'Elige tu modo',
  promptDuo:'Dúo: dos nombres, solo uno es correcto',
@@ -911,7 +924,7 @@ de:{
  boardLoading:'Rangliste wird geladen…', boardEmpty:'Noch niemand. Seien Sie der Erste.',
  boardError:'Rangliste derzeit nicht verfügbar.', rcDiff:'Stufe',
  rankLine:'Ihr Platz: {rank} in {diff}', savedLine:'Punktzahl gespeichert',
- fine:'20 Produkte · 100 Punkte zu holen · keine Aufbauanleitung',
+ followUs:'Folge uns', fine:'20 Produkte · 100 Punkte zu holen · keine Aufbauanleitung',
  count:'20 Produkte', photoTag:'Sie sind dran',
  promptMode:'Wählen Sie den Modus',
  promptDuo:'Duo: zwei Namen, nur einer stimmt',
@@ -962,7 +975,7 @@ it:{
  boardLoading:'Caricamento della classifica…', boardEmpty:'Nessuno per ora. Sii il primo.',
  boardError:'Classifica non disponibile al momento.', rcDiff:'Livello',
  rankLine:'Il tuo posto: {rank} in {diff}', savedLine:'Punteggio salvato',
- fine:'20 prodotti · 100 punti in palio · senza istruzioni di montaggio',
+ followUs:'Seguici', fine:'20 prodotti · 100 punti in palio · senza istruzioni di montaggio',
  count:'20 prodotti', photoTag:'Tocca a te',
  promptMode:'Scegli la modalità',
  promptDuo:'Duo: due nomi, uno solo è giusto',
@@ -1013,7 +1026,7 @@ ko:{
  boardLoading:'순위를 불러오는 중…', boardEmpty:'아직 아무도 없어요. 첫 번째가 되어 보세요.',
  boardError:'지금은 순위를 볼 수 없어요.', rcDiff:'레벨',
  rankLine:'내 순위: {diff} {rank}위', savedLine:'점수 저장됨',
- fine:'제품 20개 · 100점 · 조립 설명서 없음',
+ followUs:'팔로우', fine:'제품 20개 · 100점 · 조립 설명서 없음',
  count:'제품 20개', photoTag:'당신 차례',
  promptMode:'모드를 고르세요',
  promptDuo:'듀오: 이름 두 개, 정답은 하나',
@@ -1095,6 +1108,7 @@ function applyLang(next, opts){
   if(nameInput){ nameInput.placeholder = L.whoPh; if(!nameInput.value && savedName()) nameInput.value = savedName(); }
   set('#startBtn', L.start);
   set('#fine', L.fine);
+  set('#followUs', L.followUs);
   set('#photoTag', L.photoTag);
   set('#m1t', L.m1); set('#m1s', L.m1s);
   set('#m2t', L.m2); set('#m2s', L.m2s);
@@ -2370,6 +2384,7 @@ $('#shareSheet').addEventListener('click', (e)=>{ if(e.target.id==='shareSheet')
 $('#shareNative').addEventListener('click', shareImage);
 document.addEventListener('keydown', (e)=>{ if(e.key==='Escape') closeShare(); });
 $('#quitBtn').addEventListener('click', ()=>{ stopClock(); show('intro'); renderDailyEntry(); });
+document.querySelectorAll('footer .social a').forEach(a => a.addEventListener('click', () => track('clikea_social_click', {net: a.dataset.net})));
 $('#logoHome').addEventListener('click', e => {
   e.preventDefault();
   stopClock(); leaveBoard();
@@ -3233,6 +3248,7 @@ if(location.search.includes('selftest')){
     ok(MAX_PTS===100,'max 100 points ('+MAX_PTS+')');
     ok(GAME_SIZE===20,'20 produits par partie ('+GAME_SIZE+')');
     ok(document.querySelector('#playerName')!==null,'champ nom présent');
+    ok(document.querySelectorAll('footer .social a').length===6 && document.querySelector('footer a[href^="mailto:contact@clikeagame.com"]'),'pied de page : réseaux et e-mail de contact');
     document.querySelector('#playerName').value = 'Testeur';
     startGame();
     ok(state.queue.length===20,'tirage de 20 ('+state.queue.length+')');
