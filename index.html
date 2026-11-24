@@ -1092,7 +1092,7 @@ function applyLang(next, opts){
   set('#r3t', L.r3t); html('#r3x', L.r3x);
   set('#whoLabel', L.who);
   const nameInput = document.querySelector('#playerName');
-  if(nameInput) nameInput.placeholder = L.whoPh;
+  if(nameInput){ nameInput.placeholder = L.whoPh; if(!nameInput.value && savedName()) nameInput.value = savedName(); }
   set('#startBtn', L.start);
   set('#fine', L.fine);
   set('#photoTag', L.photoTag);
@@ -1641,9 +1641,13 @@ function poolIndexes(diff){
   return PRODUCTS.map((p, i) => i).filter(i => !PRODUCTS[i].x && (diff === 'hard') !== easy.has(i));
 }
 
+
+function savedName(){ if(location.search.includes('selftest')) return ''; try{ return (localStorage.getItem('clikea_player') || '').trim().slice(0, 24); }catch(e){ return ''; } }
+function saveName(n){ if(location.search.includes('selftest')) return; n = (n || '').trim().slice(0, 24); if(!n) return; try{ localStorage.setItem('clikea_player', n); }catch(e){} }
 function beginGame(queue, kind, day, resume, slots){
   const input = $('#playerName');
-  state.player = ((input && input.value) || '').trim();
+  state.player = ((input && input.value) || '').trim() || savedName();
+  saveName(state.player);
   state.kind = kind; state.day = day;
   state.queue = queue;
   state.slots = slots || null;
@@ -1857,7 +1861,7 @@ function showDailyResult(rec){
   state.queue = new Array(DAILY_SIZE).fill(-1);
   state.pts = rec.pts; state.good = rec.good; state.results = rec.results.slice();
   state.bestStreak = rec.bestStreak; state.started = rec.started; state.secsSaved = rec.secs;
-  state.player = rec.player || ((($('#playerName') || {}).value) || '').trim();
+  state.player = rec.player || ((($('#playerName') || {}).value) || '').trim() || savedName();
   state.last = null; state.rank = null; state.rankTotal = null; state.beatPct = null;
   state.submitted = !!rec.sent; state.submitOk = rec.sent ? true : null; state.submitP = null;
   finish(true);
@@ -2233,6 +2237,7 @@ function submitEndName(){
   const name = ((el && el.value) || '').trim();
   if(!name){ toast(t('tEmpty')); if(el) el.focus(); return; }
   state.player = name.slice(0, 24);
+  saveName(state.player);
   const inp = $('#playerName'); if(inp) inp.value = state.player;
   const rc = $('#rcName'); if(rc) rc.textContent = state.player;
   const nr = $('#nameRow'); if(nr) nr.hidden = true;
